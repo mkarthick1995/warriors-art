@@ -7,15 +7,18 @@ extends Node
 
 var _rng := RandomNumberGenerator.new()
 
-## Reseed at the start of every match. Both clients must use the same seed.
+
+## Reseed at the start of every match. Setting `seed` fully resets the internal
+## state; both sides of a future netcode session must agree on the seed.
 func seed_match(seed_value: int) -> void:
 	_rng.seed = seed_value
-	_rng.state = 0
+
 
 ## Deterministic integer in [from, to] (inclusive).
-func randi_range(from: int, to: int) -> int:
+func next_int(from: int, to: int) -> int:
 	return _rng.randi_range(from, to)
 
+
 ## Deterministic float in [0, 1).
-func randf() -> float:
+func next_float() -> float:
 	return _rng.randf()

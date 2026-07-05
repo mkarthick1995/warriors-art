@@ -5,20 +5,27 @@
 [node name="Main" type="Node2D"]
 script = ExtResource("1_main")
 
-[node name="Title" type="Label" parent="."]
-offset_left = 660.0
-offset_top = 480.0
-offset_right = 1260.0
-offset_bottom = 600.0
+[node name="UI" type="CanvasLayer" parent="."]
+
+[node name="Center" type="CenterContainer" parent="UI"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBox" type="VBoxContainer" parent="UI/Center"]
+layout_mode = 2
+theme_override_constants/separation = 16
+alignment = 1
+
+[node name="Title" type="Label" parent="UI/Center/VBox"]
+layout_mode = 2
 theme_override_font_sizes/font_size = 64
 horizontal_alignment = 1
-vertical_alignment = 1
 text = "WARRIOR'S ART"
 
-[node name="Subtitle" type="Label" parent="."]
-offset_left = 560.0
-offset_top = 580.0
-offset_right = 1360.0
-offset_bottom = 640.0
+[node name="Subtitle" type="Label" parent="UI/Center/VBox"]
+layout_mode = 2
 horizontal_alignment = 1
 text = "Vertical-slice scaffold — see docs/IMPLEMENTATION_PLAN.md"

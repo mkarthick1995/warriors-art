@@ -11,8 +11,6 @@ var light: bool = false
 var medium: bool = false
 var heavy: bool = false
 
+
 func direction() -> Vector2i:
-	return Vector2i(
-		(1 if right else 0) - (1 if left else 0),
-		(1 if down else 0) - (1 if up else 0)
-	)
+	return Vector2i((1 if right else 0) - (1 if left else 0), (1 if down else 0) - (1 if up else 0))

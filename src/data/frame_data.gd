@@ -10,5 +10,6 @@ extends Resource
 @export var hitstun: int = 0
 ## Frames both fighters freeze on connect (game feel).
 @export var hitstop: int = 0
-## Knockback applied to the victim, in pixels/tick.
+## Knockback impulse applied to the victim, in pixels/second. Positive x is
+## "away from the attacker" — the resolver flips it by attacker facing.
 @export var knockback: Vector2 = Vector2.ZERO

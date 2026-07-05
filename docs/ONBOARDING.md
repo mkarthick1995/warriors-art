@@ -10,7 +10,7 @@ Start here. Goal: from zero to running the project and making your first PR.
 | **Git** | latest | |
 | **Git LFS** | latest | Run `git lfs install` once after installing. |
 | **Python** | 3.10+ | For the linters below. |
-| **gdtoolkit** | 4.x | `pip install "gdtoolkit==4.*"` → gives `gdformat` + `gdlint`. |
+| **gdtoolkit** | 4.x | `pip install "gdtoolkit==4.*"` → gives `gdformat` + `gdlint`. If they aren't on your PATH (common on Windows), use `python -m gdtoolkit.formatter` / `python -m gdtoolkit.linter` instead. |
 
 > Decide and record the exact Godot version at M0. Mismatched Godot versions can rewrite `.tscn`/`.godot` files and cause noisy diffs.
 

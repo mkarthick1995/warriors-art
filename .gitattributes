@@ -1,5 +1,6 @@
 # Normalize text line endings; keep GDScript/scene files as LF text.
 * text=auto eol=lf
+*.svg  text eol=lf
 *.gd   text eol=lf
 *.tscn text eol=lf
 *.tres text eol=lf
@@ -19,7 +20,6 @@
 *.gif   filter=lfs diff=lfs merge=lfs -text
 *.bmp   filter=lfs diff=lfs merge=lfs -text
 *.webp  filter=lfs diff=lfs merge=lfs -text
-*.svg   filter=lfs diff=lfs merge=lfs -text
 *.psd   filter=lfs diff=lfs merge=lfs -text
 *.aseprite filter=lfs diff=lfs merge=lfs -text
 *.ase   filter=lfs diff=lfs merge=lfs -text

@@ -30,7 +30,7 @@ Chosen over Unity because: free/open-source (no per-seat licensing for a 3-perso
 warriors-art/
 ├── project.godot
 ├── src/
-│   ├── autoload/            # singletons (GameState, Rng, Log, InputManager)
+│   ├── autoload/            # singletons (GameState, Rng, Log; InputManager in Phase 1)
 │   ├── core/               # deterministic sim
 │   │   ├── fighter_state_machine.gd
 │   │   ├── fighter.gd
@@ -88,12 +88,12 @@ See [Coding Standards §4](CODING_STANDARDS.md) for how these are reviewed.
 
 ## Autoloads (singletons)
 
-| Name | Responsibility |
-|---|---|
-| `GameState` | current mode, match config, scene routing |
-| `InputManager` | device→player mapping, remap config |
-| `Rng` | seeded deterministic RNG for the sim |
-| `Log` | leveled logging (replaces stray `print`) |
+| Name | Responsibility | Status |
+|---|---|---|
+| `GameState` | current mode, match config, scene routing | in repo |
+| `Rng` | seeded deterministic RNG for the sim (`seed_match`, `next_int`, `next_float`) | in repo |
+| `Log` | leveled logging (replaces stray `print`) | in repo |
+| `InputManager` | device→player mapping, remap config | planned (Phase 1) — fighters read `p1_/p2_` actions directly until then |
 
 ## Post-v1 seam: rollback netcode
 

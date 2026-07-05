@@ -2,9 +2,11 @@ class_name FighterStateMachine
 extends RefCounted
 ## Minimal, deterministic state machine for a fighter.
 ##
-## This is a Phase-1 skeleton: it owns the current State and gates transitions.
-## Per-state behaviour (movement, attack timing, cancel rules) is filled in as
-## the vertical slice is built — see docs/IMPLEMENTATION_PLAN.md, Phase 1.
+## Phase-1 skeleton: owns the current State, gates transitions, and times
+## hit/block stun. Per-state behaviour (movement, attack timing, cancel rules)
+## is filled in during the vertical slice — see docs/IMPLEMENTATION_PLAN.md.
+
+signal state_changed(from: State, to: State)
 
 enum State {
 	IDLE,
@@ -20,20 +22,44 @@ enum State {
 	KO,
 }
 
-signal state_changed(from: State, to: State)
-
 var current: State = State.IDLE
 ## Ticks spent in the current state (for timing recovery, stun, etc.).
 var time_in_state: int = 0
 
-## Transitions that are always illegal once KO'd, etc. are enforced here.
+var _stun_ticks: int = 0
+
+
+## Call once per fixed tick. Auto-exits stun states when their timer expires.
+func tick() -> void:
+	time_in_state += 1
+	if _stun_ticks > 0:
+		_stun_ticks -= 1
+		if _stun_ticks == 0 and is_stunned():
+			change_to(State.IDLE)
+
+
+func is_stunned() -> bool:
+	return current == State.HITSTUN or current == State.BLOCKSTUN
+
+
+func is_actionable() -> bool:
+	return (
+		current == State.IDLE
+		or current == State.WALK
+		or current == State.CROUCH
+		or current == State.JUMP
+		or current == State.BLOCK
+	)
+
+
 func can_transition(to: State) -> bool:
 	if current == State.KO:
 		return false
-	# You cannot act out of hit/block stun until it expires (checked by owner via time_in_state).
-	if current in [State.HITSTUN, State.BLOCKSTUN] and to not in [State.KO, State.KNOCKDOWN]:
-		return false
+	if is_stunned():
+		# Locked in until the stun timer expires; only KO/knockdown interrupts.
+		return _stun_ticks <= 0 or to == State.KO or to == State.KNOCKDOWN
 	return true
+
 
 func change_to(to: State) -> void:
 	if to == current or not can_transition(to):
@@ -43,9 +69,19 @@ func change_to(to: State) -> void:
 	time_in_state = 0
 	state_changed.emit(from, to)
 
-## Call once per fixed tick.
-func tick() -> void:
-	time_in_state += 1
 
-func is_actionable() -> bool:
-	return current in [State.IDLE, State.WALK, State.CROUCH, State.JUMP, State.BLOCK]
+## Force the fighter into hit/block stun for `ticks`. Bypasses can_transition
+## because stun is never refusable; re-entering the same stun refreshes it
+## (combos extend stun rather than being ignored).
+func enter_stun(kind: State, ticks: int) -> void:
+	assert(kind == State.HITSTUN or kind == State.BLOCKSTUN)
+	if current == State.KO:
+		return
+	_stun_ticks = ticks
+	if current == kind:
+		time_in_state = 0
+		return
+	var from := current
+	current = kind
+	time_in_state = 0
+	state_changed.emit(from, kind)
