@@ -1,0 +1,65 @@
+name: Character design concept
+description: One-page concept for a roster fighter (Phase 0 research output).
+labels: ["character", "design"]
+body:
+  - type: input
+    id: state
+    attributes:
+      label: State / region
+      placeholder: e.g. Kerala
+    validations:
+      required: true
+  - type: input
+    id: art
+    attributes:
+      label: Martial art
+      placeholder: e.g. Kalaripayattu
+    validations:
+      required: true
+  - type: input
+    id: name
+    attributes:
+      label: Fighter name (original)
+    validations:
+      required: true
+  - type: textarea
+    id: personality
+    attributes:
+      label: Personality & silhouette
+      description: Who are they? What makes their silhouette instantly readable?
+    validations:
+      required: true
+  - type: input
+    id: weapon
+    attributes:
+      label: Signature weapon
+  - type: input
+    id: archetype
+    attributes:
+      label: Archetype / role
+      placeholder: e.g. long-range zoner
+  - type: textarea
+    id: specials
+    attributes:
+      label: Three special moves
+      description: Name + input + what it does. Note the real technique each is based on.
+      value: |
+        1. **Name** (input) — effect. Based on: <real technique>
+        2. **Name** (input) — effect. Based on: <real technique>
+        3. **Name** (input) — effect. Based on: <real technique>
+    validations:
+      required: true
+  - type: input
+    id: super
+    attributes:
+      label: Super / ultimate (technique cam)
+  - type: input
+    id: percussion
+    attributes:
+      label: Regional percussion
+      placeholder: e.g. chenda
+  - type: textarea
+    id: reference
+    attributes:
+      label: Reference video / provenance
+      description: Links to reference footage confirming techniques are authentic and public-domain.

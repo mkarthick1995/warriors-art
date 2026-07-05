@@ -1,0 +1,57 @@
+; Engine configuration file.
+; Warrior's Art — Godot 4.x project.
+; It's best edited using the editor UI and not directly,
+; since the parameters that go here are not all obvious.
+
+config_version=5
+
+[application]
+
+config/name="Warrior's Art"
+config/description="A cinematic 2D State-vs-State Indian martial-arts fighting game."
+run/main_scene="res://scenes/Main.tscn"
+config/features=PackedStringArray("4.3", "Forward Plus")
+config/icon="res://icon.svg"
+
+[autoload]
+
+GameState="*res://src/autoload/game_state.gd"
+Rng="*res://src/autoload/rng.gd"
+Log="*res://src/autoload/log.gd"
+
+[display]
+
+window/size/viewport_width=1920
+window/size/viewport_height=1080
+window/stretch/mode="canvas_items"
+window/stretch/aspect="keep"
+
+[physics]
+
+; Fighting-game sim runs at a fixed 60 Hz tick — see docs/ARCHITECTURE.md.
+common/physics_ticks_per_second=60
+common/max_physics_steps_per_frame=8
+
+[rendering]
+
+textures/canvas_textures/default_texture_filter=0
+
+[input]
+
+; --- Player 1 (WASD + JKL / UIO) ---
+p1_left={ "deadzone": 0.5, "events": [] }
+p1_right={ "deadzone": 0.5, "events": [] }
+p1_up={ "deadzone": 0.5, "events": [] }
+p1_down={ "deadzone": 0.5, "events": [] }
+p1_light={ "deadzone": 0.5, "events": [] }
+p1_medium={ "deadzone": 0.5, "events": [] }
+p1_heavy={ "deadzone": 0.5, "events": [] }
+
+; --- Player 2 (Arrows + Numpad) ---
+p2_left={ "deadzone": 0.5, "events": [] }
+p2_right={ "deadzone": 0.5, "events": [] }
+p2_up={ "deadzone": 0.5, "events": [] }
+p2_down={ "deadzone": 0.5, "events": [] }
+p2_light={ "deadzone": 0.5, "events": [] }
+p2_medium={ "deadzone": 0.5, "events": [] }
+p2_heavy={ "deadzone": 0.5, "events": [] }

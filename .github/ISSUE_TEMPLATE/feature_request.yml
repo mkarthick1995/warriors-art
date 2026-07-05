@@ -1,0 +1,41 @@
+name: Feature / task
+description: A new system, mode, or improvement.
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: goal
+    attributes:
+      label: Goal
+      description: What should exist and why? Tie it to a design pillar / roadmap phase.
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - Core sim / engine
+        - Character / gameplay data
+        - Art / VFX / stages
+        - Audio
+        - UI / front-end
+        - Modes
+        - Tooling / CI
+    validations:
+      required: true
+  - type: dropdown
+    id: phase
+    attributes:
+      label: Roadmap phase
+      options:
+        - "Phase 0 - Foundations"
+        - "Phase 1 - Vertical Slice"
+        - "Phase 2 - Content pipeline"
+        - "Phase 3 - Roster & stages"
+        - "Phase 4 - Modes, UI & polish"
+        - "Phase 5 - Stretch / post-v1"
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance criteria
+      description: How do we know it's done?

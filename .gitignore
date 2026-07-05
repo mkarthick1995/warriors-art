@@ -1,0 +1,47 @@
+# Godot 4 ------------------------------------------------------------
+# Import cache & editor-generated data (regenerated locally on open)
+.godot/
+# Godot 3 legacy (harmless to keep)
+.import/
+export.cfg
+export_presets.cfg
+
+# Exported builds
+build/
+builds/
+*.exe
+*.pck
+*.zip
+*.x86_64
+*.dmg
+*.app
+
+# Mono / .NET (unused, but ignore if anyone toggles it)
+.mono/
+data_*/
+mono_crash.*.json
+
+# OS / editor cruft --------------------------------------------------
+.DS_Store
+Thumbs.db
+desktop.ini
+*~
+*.swp
+.vs/
+.vscode/*
+!.vscode/extensions.json
+.idea/
+
+# Python (linters/tools) ---------------------------------------------
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Logs / temp --------------------------------------------------------
+*.log
+logs/
+tmp/
+
+# Tooling local config -----------------------------------------------
+.claude/settings.local.json

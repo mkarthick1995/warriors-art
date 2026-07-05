@@ -1,0 +1,34 @@
+name: Bug report
+description: Something is broken or behaves wrong.
+labels: ["bug"]
+body:
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: Clear description of the bug and what you expected instead.
+    validations:
+      required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Pick character X
+        2. Do move Y
+        3. ...
+    validations:
+      required: true
+  - type: input
+    id: character-move
+    attributes:
+      label: Character / move / stage involved
+  - type: input
+    id: build
+    attributes:
+      label: Build / commit
+      description: Godot version and git commit hash if known.
+  - type: textarea
+    id: media
+    attributes:
+      label: Screenshot / gif / logs

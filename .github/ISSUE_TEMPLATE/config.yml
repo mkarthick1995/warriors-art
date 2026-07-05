@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Design discussion
+    url: https://github.com/mkarthick1995/warriors-art/discussions
+    about: For open-ended design or balance discussion, use Discussions instead of an issue.

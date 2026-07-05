@@ -1,0 +1,25 @@
+# Code owners — auto-requests review from the area lead for matching paths.
+# Replace the placeholder handles (@dev-a etc.) with real GitHub usernames.
+# Docs: https://docs.github.com/en/repositories/managing-your-repositories-settings-and-features/customizing-your-repository/about-code-owners
+
+# Default owner for everything not matched below.
+*                       @mkarthick1995
+
+# Systems / engine lead — the deterministic core sim.
+/src/core/              @dev-a
+/src/autoload/          @dev-a
+/.github/               @dev-a
+
+# Gameplay / content lead — character data, moves, modes.
+/src/data/              @dev-b
+/src/characters/        @dev-b
+/src/game/              @dev-b
+
+# Art / audio / UX lead — assets, stages, UI.
+/assets/                @dev-c
+/src/stages/            @dev-c
+/src/ui/                @dev-c
+/scenes/                @dev-c
+
+# Design docs — owned by the whole team; require a review.
+/docs/                  @mkarthick1995
