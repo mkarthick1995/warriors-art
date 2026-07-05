@@ -14,3 +14,22 @@ var heavy: bool = false
 
 func direction() -> Vector2i:
 	return Vector2i((1 if right else 0) - (1 if left else 0), (1 if down else 0) - (1 if up else 0))
+
+
+## Numpad-notation direction (1–9, 5 = neutral) relative to facing:
+## 6 is always "toward the opponent", 4 is "away" (fighting-game convention).
+func numpad(facing_right: bool) -> int:
+	var d := direction()
+	var x := d.x if facing_right else -d.x
+	return 5 + x - 3 * d.y
+
+
+func is_pressed(button: StringName) -> bool:
+	match button:
+		&"light":
+			return light
+		&"medium":
+			return medium
+		&"heavy":
+			return heavy
+	return false

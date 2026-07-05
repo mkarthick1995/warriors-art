@@ -3,36 +3,57 @@ extends CharacterBody2D
 ## A fighter in the sim. Deterministic: all gameplay advances in _physics_process
 ## at the fixed 60Hz tick. Rendering/VFX/audio must only REACT to this state,
 ## never drive it (see docs/ARCHITECTURE.md).
-##
-## Phase-1 skeleton: wires the state machine + input buffer + health/hit-stop.
-## Movement/attack execution is filled in during the vertical slice.
 
+## Emitted when this fighter's attack connects; the MatchController resolves it.
+signal landed_hit(victim: Fighter, frame: FrameData)
 signal took_damage(amount: int, health_remaining: int)
 signal knocked_out
 
 ## Fixed sim step. Matches physics_ticks_per_second in project.godot; use this,
 ## never wall-clock delta, for gameplay math.
 const TICK_DELTA := 1.0 / 60.0
+const MAX_METER := 1000
+## Blockstun is shorter than hitstun so blocking gives frame advantage.
+const BLOCKSTUN_REDUCTION := 6
+## Blocked hits deal this fraction of damage as chip (never below 1 health).
+const CHIP_DIVISOR := 10
+const BLOCK_PUSHBACK_SCALE := 0.6
 
 @export var data: CharacterData
-## 1 = facing right, -1 = facing left. Auto-managed by the match later.
+## 1 = facing right, -1 = facing left. The MatchController updates this.
 @export_enum("Left:-1", "Right:1") var facing: int = 1
 ## Which player controls this fighter (drives the p1_/p2_ input actions).
 @export_range(1, 2) var player_index: int = 1
+## Placeholder body tint until real sprites land (presentation reads this).
+@export var body_color: Color = Color(0.9, 0.5, 0.2)
 
 var health: int = 0
 var meter: int = 0
-## Ticks of hit-stop remaining (sim freeze for game feel). The hit resolver
-## applies it to BOTH fighters when a hit connects.
+## Ticks of sim freeze for game feel. The MatchController sets it on BOTH
+## fighters when a hit connects.
 var hitstop_ticks: int = 0
 
 var _sm := FighterStateMachine.new()
 var _inputs := InputBuffer.new()
+var _current_move: MoveData = null
+## Moves sorted longest-motion-first so "236L" wins over "2L" wins over "L".
+var _sorted_moves: Array[MoveData] = []
+
+@onready var _hitbox: Hitbox = $Hitbox
+@onready var _hurtbox: Hurtbox = $Hurtbox
 
 
 func _ready() -> void:
 	assert(data != null, "Fighter needs a CharacterData resource assigned.")
 	health = data.max_health
+	_hitbox.owner_fighter = self
+	_hurtbox.owner_fighter = self
+	_hitbox.hit_landed.connect(_on_hitbox_landed)
+	_sorted_moves = data.moves.duplicate()
+	_sorted_moves.sort_custom(
+		func(a: MoveData, b: MoveData) -> bool:
+			return a.motion_part().length() > b.motion_part().length()
+	)
 
 
 func _physics_process(_delta: float) -> void:
@@ -42,21 +63,21 @@ func _physics_process(_delta: float) -> void:
 		hitstop_ticks -= 1  # Frozen for game feel; inputs above still buffer.
 		return
 	_sm.tick()
-	if not is_on_floor():
-		velocity.y += data.gravity * TICK_DELTA
-	# TODO(phase1): drive movement + attacks from _inputs through _sm.
+	_tick_state()
 	move_and_slide()
 
 
-## Apply an incoming hit. Called by the hit resolver, never by the attacker
-## directly. `attacker_facing` sets knockback direction (correct on cross-ups,
-## where using the victim's own facing would push the wrong way).
+## Apply an incoming hit. Called by the MatchController, never by the attacker
+## directly. `attacker_facing` sets knockback direction (correct on cross-ups).
 func apply_hit(frame: FrameData, attacker_facing: int) -> void:
 	if _sm.current == FighterStateMachine.State.KO:
 		return
+	if _is_blocking(attacker_facing):
+		_apply_blocked_hit(frame, attacker_facing)
+		return
 	health = maxi(0, health - frame.damage)
 	took_damage.emit(frame.damage, health)
-	hitstop_ticks = frame.hitstop
+	_interrupt_attack()
 	# Weight scales knockback taken (heavier fighters move less) — NOT damage.
 	# Only x flips with facing; vertical knockback keeps its authored direction.
 	var kb := Vector2(frame.knockback.x * attacker_facing, frame.knockback.y)
@@ -70,6 +91,168 @@ func apply_hit(frame: FrameData, attacker_facing: int) -> void:
 
 func state() -> FighterStateMachine.State:
 	return _sm.current
+
+
+func is_stunned() -> bool:
+	return _sm.is_stunned()
+
+
+## Fresh state for a new round. Meter deliberately carries over between rounds.
+func reset_for_round(spawn: Vector2, face: int) -> void:
+	global_position = spawn
+	velocity = Vector2.ZERO
+	facing = face
+	health = data.max_health
+	hitstop_ticks = 0
+	_interrupt_attack()
+	_sm.reset()
+
+
+## The MatchController calls this while both fighters are grounded and free.
+func face_opponent(opponent_x: float) -> void:
+	if _sm.is_actionable() and is_on_floor():
+		facing = 1 if opponent_x > global_position.x else -1
+
+
+func _tick_state() -> void:
+	match _sm.current:
+		FighterStateMachine.State.IDLE, FighterStateMachine.State.WALK:
+			_tick_grounded()
+		FighterStateMachine.State.CROUCH:
+			_tick_crouch()
+		FighterStateMachine.State.JUMP:
+			_tick_airborne()
+		FighterStateMachine.State.ATTACK:
+			_tick_attack()
+		FighterStateMachine.State.HITSTUN, FighterStateMachine.State.BLOCKSTUN:
+			_tick_stunned()
+		FighterStateMachine.State.KO:
+			_apply_gravity()
+			velocity.x = move_toward(velocity.x, 0.0, data.walk_speed * TICK_DELTA * 10.0)
+		_:
+			_apply_gravity()
+
+
+func _tick_grounded() -> void:
+	if _try_start_attack():
+		return
+	var now := _inputs.current()
+	var x := now.direction().x
+	if _inputs_jump_pressed():
+		velocity.y = data.jump_velocity
+		velocity.x = x * data.walk_speed
+		_sm.change_to(FighterStateMachine.State.JUMP)
+		return
+	if now.direction().y > 0:
+		velocity.x = 0
+		_sm.change_to(FighterStateMachine.State.CROUCH)
+		return
+	velocity.x = x * data.walk_speed
+	_sm.change_to(FighterStateMachine.State.WALK if x != 0 else FighterStateMachine.State.IDLE)
+
+
+func _tick_crouch() -> void:
+	velocity.x = 0
+	if _try_start_attack():
+		return
+	if _inputs.current().direction().y <= 0:
+		_sm.change_to(FighterStateMachine.State.IDLE)
+
+
+func _tick_airborne() -> void:
+	_apply_gravity()
+	if is_on_floor() and velocity.y >= 0:
+		velocity.x = 0
+		_sm.change_to(FighterStateMachine.State.IDLE)
+	# TODO(phase1): air attacks.
+
+
+func _tick_attack() -> void:
+	_apply_gravity()
+	var m := _current_move
+	if m == null:  # Defensive: state and move should always agree.
+		_sm.change_to(FighterStateMachine.State.IDLE)
+		return
+	var t := _sm.time_in_state
+	var active_start := m.startup
+	var active_end := m.startup + m.active
+	if t >= active_start and t < active_end and not m.hitbox_frames.is_empty():
+		var fi := mini(t - active_start, m.hitbox_frames.size() - 1)
+		_hitbox.activate(m.hitbox_frames[fi], facing)
+		_hitbox.tick_active()
+	elif t >= active_end:
+		_hitbox.deactivate()
+	if t >= m.duration():
+		_current_move = null
+		_sm.change_to(FighterStateMachine.State.IDLE)
+
+
+func _tick_stunned() -> void:
+	_apply_gravity()
+	if is_on_floor():
+		velocity.x = move_toward(velocity.x, 0.0, data.walk_speed * TICK_DELTA * 8.0)
+
+
+func _apply_gravity() -> void:
+	if not is_on_floor():
+		velocity.y += data.gravity * TICK_DELTA
+
+
+## Try to start the best matching attack for this tick's inputs.
+func _try_start_attack() -> bool:
+	for move in _sorted_moves:
+		if not _inputs.just_pressed(move.button_part()):
+			continue
+		if not _move_input_satisfied(move):
+			continue
+		velocity.x = 0
+		_current_move = move
+		_sm.change_to(FighterStateMachine.State.ATTACK)
+		return true
+	return false
+
+
+func _move_input_satisfied(move: MoveData) -> bool:
+	var motion := move.motion_part()
+	if motion == "2":  # Crouching normal: just needs down held.
+		return _inputs.current().direction().y > 0
+	return _inputs.has_motion(motion, facing > 0)
+
+
+func _inputs_jump_pressed() -> bool:
+	return _inputs.current().direction().y < 0 and _inputs.peek(1).direction().y >= 0
+
+
+## Holding away from the attacker while grounded and free = block.
+func _is_blocking(attacker_facing: int) -> bool:
+	if not is_on_floor() or not _sm.is_actionable():
+		return false
+	var x := _inputs.current().direction().x
+	return x != 0 and x == attacker_facing
+
+
+func _apply_blocked_hit(frame: FrameData, attacker_facing: int) -> void:
+	var chip := frame.damage / CHIP_DIVISOR
+	health = maxi(1, health - chip)  # Chip never KOs.
+	if chip > 0:
+		took_damage.emit(chip, health)
+	velocity.x = frame.knockback.x * attacker_facing * BLOCK_PUSHBACK_SCALE
+	_sm.enter_stun(
+		FighterStateMachine.State.BLOCKSTUN, maxi(1, frame.hitstun - BLOCKSTUN_REDUCTION)
+	)
+
+
+func _interrupt_attack() -> void:
+	_current_move = null
+	_hitbox.deactivate()
+
+
+func _on_hitbox_landed(target: Hurtbox, frame: FrameData) -> void:
+	if _current_move != null:
+		meter = mini(MAX_METER, meter + _current_move.meter_gain)
+	var victim := target.owner_fighter as Fighter
+	if victim != null:
+		landed_hit.emit(victim, frame)
 
 
 ## Read this player's mapped actions into an InputButtons snapshot.

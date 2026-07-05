@@ -6,7 +6,7 @@ Start here. Goal: from zero to running the project and making your first PR.
 
 | Tool | Version | Notes |
 |---|---|---|
-| **Godot** | **4.x (standard / GDScript build, NOT .NET)** | Pin the exact version here once agreed: `4.x.y`. Everyone uses the same. |
+| **Godot** | **4.3-stable (standard / GDScript build, NOT .NET)** | Pinned — CI runs 4.3.0. Everyone uses the same version; mismatches rewrite scene files and cause noisy diffs. |
 | **Git** | latest | |
 | **Git LFS** | latest | Run `git lfs install` once after installing. |
 | **Python** | 3.10+ | For the linters below. |
@@ -43,7 +43,7 @@ Open `project.godot` in Godot. Let it import (this generates the local, git-igno
 
 - [ ] `gdformat src/` — no reformatting left to do.
 - [ ] `gdlint src/` — clean.
-- [ ] Tests pass (once GUT is set up): run the `tests/` suite.
+- [ ] Tests pass: `godot --headless --path . -s res://tests/run_tests.gd` and `-s res://tests/run_sim_smoke.gd` (both exit 0).
 - [ ] `git lfs status` — any new binaries are LFS-tracked, not committed raw.
 - [ ] No stray `print()` / debug scenes committed.
 

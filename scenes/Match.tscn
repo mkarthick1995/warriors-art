@@ -1,0 +1,164 @@
+[gd_scene load_steps=8 format=3]
+
+[ext_resource type="Script" path="res://src/game/match/match_controller.gd" id="1_controller"]
+[ext_resource type="PackedScene" path="res://scenes/Fighter.tscn" id="2_fighter"]
+[ext_resource type="Resource" path="res://src/characters/bengal_lathi/bengal_lathi.tres" id="3_lathi"]
+[ext_resource type="Script" path="res://src/game/match/match_camera.gd" id="4_camera"]
+[ext_resource type="Script" path="res://src/ui/match_hud.gd" id="5_hud"]
+
+[sub_resource type="RectangleShape2D" id="floor_shape"]
+size = Vector2(4400, 200)
+
+[sub_resource type="RectangleShape2D" id="wall_shape"]
+size = Vector2(200, 3000)
+
+[node name="Match" type="Node2D" node_paths=PackedStringArray("p1", "p2")]
+script = ExtResource("1_controller")
+p1 = NodePath("P1")
+p2 = NodePath("P2")
+
+[node name="Background" type="CanvasLayer" parent="."]
+layer = -1
+
+[node name="Sky" type="ColorRect" parent="Background"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.09, 0.08, 0.14, 1)
+
+[node name="Stage" type="Node2D" parent="."]
+
+[node name="Floor" type="StaticBody2D" parent="Stage"]
+collision_layer = 1
+collision_mask = 0
+
+[node name="FloorShape" type="CollisionShape2D" parent="Stage/Floor"]
+position = Vector2(0, 100)
+shape = SubResource("floor_shape")
+
+[node name="FloorVisual" type="Polygon2D" parent="Stage/Floor"]
+polygon = PackedVector2Array(-2200, 0, 2200, 0, 2200, 200, -2200, 200)
+color = Color(0.25, 0.18, 0.12, 1)
+
+[node name="WallL" type="StaticBody2D" parent="Stage"]
+position = Vector2(-1800, 0)
+collision_layer = 1
+collision_mask = 0
+
+[node name="WallLShape" type="CollisionShape2D" parent="Stage/WallL"]
+position = Vector2(0, -1400)
+shape = SubResource("wall_shape")
+
+[node name="WallR" type="StaticBody2D" parent="Stage"]
+position = Vector2(1800, 0)
+collision_layer = 1
+collision_mask = 0
+
+[node name="WallRShape" type="CollisionShape2D" parent="Stage/WallR"]
+position = Vector2(0, -1400)
+shape = SubResource("wall_shape")
+
+[node name="P1" parent="." instance=ExtResource("2_fighter")]
+position = Vector2(-400, 0)
+data = ExtResource("3_lathi")
+player_index = 1
+body_color = Color(1, 0.55, 0.15, 1)
+
+[node name="P2" parent="." instance=ExtResource("2_fighter")]
+position = Vector2(400, 0)
+data = ExtResource("3_lathi")
+facing = -1
+player_index = 2
+body_color = Color(0.15, 0.7, 0.35, 1)
+
+[node name="Camera" type="Camera2D" parent="." node_paths=PackedStringArray("p1", "p2")]
+position = Vector2(0, -150)
+zoom = Vector2(0.9, 0.9)
+script = ExtResource("4_camera")
+p1 = NodePath("../P1")
+p2 = NodePath("../P2")
+
+[node name="HUD" type="CanvasLayer" parent="." node_paths=PackedStringArray("controller")]
+script = ExtResource("5_hud")
+controller = NodePath("..")
+
+[node name="Root" type="Control" parent="HUD"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="P1Health" type="ProgressBar" parent="HUD/Root"]
+unique_name_in_owner = true
+offset_left = 40.0
+offset_top = 40.0
+offset_right = 860.0
+offset_bottom = 72.0
+show_percentage = false
+
+[node name="P2Health" type="ProgressBar" parent="HUD/Root"]
+unique_name_in_owner = true
+offset_left = 1060.0
+offset_top = 40.0
+offset_right = 1880.0
+offset_bottom = 72.0
+fill_mode = 1
+show_percentage = false
+
+[node name="P1Meter" type="ProgressBar" parent="HUD/Root"]
+unique_name_in_owner = true
+offset_left = 40.0
+offset_top = 84.0
+offset_right = 340.0
+offset_bottom = 100.0
+show_percentage = false
+
+[node name="P2Meter" type="ProgressBar" parent="HUD/Root"]
+unique_name_in_owner = true
+offset_left = 1580.0
+offset_top = 84.0
+offset_right = 1880.0
+offset_bottom = 100.0
+fill_mode = 1
+show_percentage = false
+
+[node name="TimerLabel" type="Label" parent="HUD/Root"]
+unique_name_in_owner = true
+offset_left = 890.0
+offset_top = 28.0
+offset_right = 1030.0
+offset_bottom = 84.0
+theme_override_font_sizes/font_size = 48
+horizontal_alignment = 1
+text = "99"
+
+[node name="P1Wins" type="Label" parent="HUD/Root"]
+unique_name_in_owner = true
+offset_left = 40.0
+offset_top = 104.0
+offset_right = 400.0
+offset_bottom = 132.0
+theme_override_font_sizes/font_size = 22
+
+[node name="P2Wins" type="Label" parent="HUD/Root"]
+unique_name_in_owner = true
+offset_left = 1520.0
+offset_top = 104.0
+offset_right = 1880.0
+offset_bottom = 132.0
+theme_override_font_sizes/font_size = 22
+horizontal_alignment = 2
+
+[node name="Message" type="Label" parent="HUD/Root"]
+unique_name_in_owner = true
+offset_left = 460.0
+offset_top = 380.0
+offset_right = 1460.0
+offset_bottom = 620.0
+theme_override_font_sizes/font_size = 72
+horizontal_alignment = 1
+vertical_alignment = 1

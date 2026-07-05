@@ -30,13 +30,15 @@ Goal: repo, tooling, and a project everyone can open and run.
 Goal: two identical placeholder fighters on one stage, one full round of readable combat. This validates engine choice and game feel.
 
 Build order (each item is testable on its own):
-1. **Fighter state machine** — idle, walk, dash, jump, crouch, block, hit-stun, KO. (`src/core/fighter_state_machine.gd`)
-2. **Input system** — buffered inputs, motion-input parser (QCF etc.), local 2-player device mapping. (`src/core/input_buffer.gd`)
-3. **Hit/hurtbox system** — data-driven boxes per animation frame; collision → damage/knockback. (`src/core/combat/`)
-4. **Two normals + one special** for the slice character (per the ideation "Next Steps"). Placeholder sprites are fine.
-5. **Round loop** — health bars, round timer, best-of-3, win/KO, rematch. (`src/game/match/`)
-6. **Game-feel pass** — hit-stop, hit-stun frames, screen-shake, one impact particle. This is where "fun" is won or lost.
-7. **One parallax stage** with a floor and camera that tracks both fighters.
+1. [x] **Fighter state machine** — idle, walk, jump, crouch, block, hit-stun, KO (dash + knockdown still TODO). (`src/core/fighter_state_machine.gd`)
+2. [x] **Input system** — buffered inputs, numpad motion parser (QCF etc.), keyboard 2-player mapping (gamepad mapping TODO). (`src/core/input_buffer.gd`)
+3. [x] **Hit/hurtbox system** — data-driven boxes per active frame, polled deterministically; blocking + chip. (`src/core/combat/`)
+4. [x] **Three normals + one special** for the slice character (Bengal Lathi placeholder, `src/characters/bengal_lathi/`). Placeholder colored-box sprites.
+5. [x] **Round loop** — health/meter bars, round timer, best-of-3, KO/timeout, rematch. (`src/game/match/`)
+6. [~] **Game-feel pass** — hit-stop + hit-flash done; screen-shake, impact particles, and real tuning still TODO. This is where "fun" is won or lost.
+7. [~] **Stage + camera** — flat placeholder stage with walls; camera tracks/zooms both fighters. Parallax backdrop TODO.
+
+Verified by headless tests (`tests/run_tests.gd` unit, `tests/run_sim_smoke.gd` end-to-end) — both run in CI.
 
 **Exit criteria:** an outside player can pick up a controller and have a fun 1v1 with the slice character. **Playtest with fresh eyes before Phase 2.**
 

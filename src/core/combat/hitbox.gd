@@ -14,29 +14,39 @@ signal hit_landed(target: Hurtbox, frame: FrameData)
 var _frame: FrameData = null
 ## Targets already hit during this activation — prevents multi-hitting per swing.
 var _already_hit: Array[Hurtbox] = []
+var _shape_node := CollisionShape2D.new()
+var _rect := RectangleShape2D.new()
 
 
 func _ready() -> void:
 	# Hitboxes probe hurtboxes, never the other way round.
 	monitoring = false
 	monitorable = false
+	# Shape is built in code: shapes defined in a shared .tscn would be one
+	# resource shared by BOTH fighters — resizing one would resize the other.
+	_shape_node.shape = _rect
+	add_child(_shape_node)
 
 
-## Turn this hitbox on with one active frame's data.
-func activate(frame: FrameData) -> void:
+## Enable for one active frame: position/size the box from data, flipped by
+## facing. Safe to call every active tick; the hit list persists per swing.
+func activate(frame: FrameData, facing: int) -> void:
 	_frame = frame
+	_rect.size = frame.hitbox_rect.size
+	var center := frame.hitbox_rect.get_center()
+	_shape_node.position = Vector2(center.x * facing, center.y)
 	monitoring = true
 
 
-## Turn off and clear the per-activation hit list (when the active window ends).
+## Turn off and clear the per-swing hit list (when the active window ends).
 func deactivate() -> void:
 	monitoring = false
 	_frame = null
 	_already_hit.clear()
 
 
-## Poll overlaps once per sim tick while active. The owner (hit resolver)
-## calls this at a fixed point in the tick order.
+## Poll overlaps once per sim tick while active. The owner fighter calls this
+## at a fixed point in the tick order.
 func tick_active() -> void:
 	if _frame == null:
 		return

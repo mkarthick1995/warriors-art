@@ -1,0 +1,119 @@
+[gd_resource type="Resource" script_class="CharacterData" load_steps=13 format=3]
+
+[ext_resource type="Script" path="res://src/data/character_data.gd" id="1"]
+[ext_resource type="Script" path="res://src/data/move_data.gd" id="2"]
+[ext_resource type="Script" path="res://src/data/frame_data.gd" id="3"]
+
+[sub_resource type="Resource" id="frame_jab"]
+script = ExtResource("3")
+hitbox_rect = Rect2(25, -125, 85, 24)
+damage = 40
+hitstun = 14
+hitstop = 5
+knockback = Vector2(160, 0)
+
+[sub_resource type="Resource" id="frame_low"]
+script = ExtResource("3")
+hitbox_rect = Rect2(25, -45, 80, 22)
+damage = 35
+hitstun = 13
+hitstop = 5
+knockback = Vector2(140, 0)
+
+[sub_resource type="Resource" id="frame_swing"]
+script = ExtResource("3")
+hitbox_rect = Rect2(20, -140, 110, 40)
+damage = 70
+hitstun = 20
+hitstop = 8
+knockback = Vector2(260, -60)
+
+[sub_resource type="Resource" id="frame_whirl_a"]
+script = ExtResource("3")
+hitbox_rect = Rect2(15, -130, 100, 50)
+damage = 60
+hitstun = 18
+hitstop = 6
+knockback = Vector2(200, -120)
+
+[sub_resource type="Resource" id="frame_whirl_b"]
+script = ExtResource("3")
+hitbox_rect = Rect2(20, -150, 130, 70)
+damage = 110
+hitstun = 26
+hitstop = 10
+knockback = Vector2(340, -420)
+
+[sub_resource type="Resource" id="move_jab"]
+script = ExtResource("2")
+display_name = "Lathi Jab"
+kind = 0
+input = "L"
+animation_name = "jab"
+startup = 4
+active = 3
+recovery = 9
+on_block = -2
+meter_gain = 25
+meter_cost = 0
+hitbox_frames = Array[ExtResource("3")]([SubResource("frame_jab")])
+technique_cam = false
+
+[sub_resource type="Resource" id="move_low"]
+script = ExtResource("2")
+display_name = "Low Rap"
+kind = 0
+input = "2L"
+animation_name = "low_rap"
+startup = 5
+active = 3
+recovery = 10
+on_block = -4
+meter_gain = 25
+meter_cost = 0
+hitbox_frames = Array[ExtResource("3")]([SubResource("frame_low")])
+technique_cam = false
+
+[sub_resource type="Resource" id="move_swing"]
+script = ExtResource("2")
+display_name = "Lathi Swing"
+kind = 0
+input = "M"
+animation_name = "swing"
+startup = 9
+active = 4
+recovery = 16
+on_block = -6
+meter_gain = 40
+meter_cost = 0
+hitbox_frames = Array[ExtResource("3")]([SubResource("frame_swing")])
+technique_cam = false
+
+[sub_resource type="Resource" id="move_whirl"]
+script = ExtResource("2")
+display_name = "Whirlwind Lathi"
+kind = 2
+input = "236L"
+animation_name = "whirlwind"
+startup = 11
+active = 8
+recovery = 19
+on_block = -8
+meter_gain = 70
+meter_cost = 0
+hitbox_frames = Array[ExtResource("3")]([SubResource("frame_whirl_a"), SubResource("frame_whirl_b")])
+technique_cam = false
+
+[resource]
+script = ExtResource("1")
+display_name = "Lathiyal (placeholder)"
+state_region = "Bengal"
+martial_art = "Lathi Khela"
+walk_speed = 220.0
+dash_speed = 480.0
+jump_velocity = -950.0
+gravity = 2400.0
+max_health = 950
+weight = 0.95
+moves = Array[ExtResource("2")]([SubResource("move_jab"), SubResource("move_low"), SubResource("move_swing"), SubResource("move_whirl")])
+percussion = "dhak"

@@ -35,8 +35,23 @@ func peek(ticks_ago: int) -> InputButtons:
 	return _frames[idx]
 
 
-## STUB: return true if a motion command (e.g. "236" = quarter-circle-forward)
-## was completed within the leniency window. Real parser lands in Phase 1.
-func has_motion(_motion: String, _facing_right: bool, _leniency: int = 12) -> bool:
-	# TODO(phase1): walk the buffer and match the directional sequence.
+## True if `button` went from released to pressed on the current tick.
+func just_pressed(button: StringName) -> bool:
+	return current().is_pressed(button) and not peek(1).is_pressed(button)
+
+
+## True if the numpad motion (e.g. "236" = quarter-circle-forward) was
+## completed within the last `leniency` ticks. Directions are matched as an
+## ordered subsequence, so brief stray inputs between steps don't break it.
+func has_motion(motion: String, facing_right: bool, leniency: int = 12) -> bool:
+	if motion.is_empty():
+		return true
+	var idx := 0
+	var window := mini(leniency, CAPACITY)
+	for t in range(window - 1, -1, -1):  # oldest → newest
+		var digit := str(peek(t).numpad(facing_right))
+		if digit == motion[idx]:
+			idx += 1
+			if idx == motion.length():
+				return true
 	return false

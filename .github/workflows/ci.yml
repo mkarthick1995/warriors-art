@@ -27,15 +27,24 @@ jobs:
       - name: Lint (gdlint)
         run: gdlint src/
 
-  # Uncomment once GUT tests exist under tests/ (Phase 1+).
-  # test:
-  #   name: Unit tests (GUT, headless Godot)
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - uses: actions/checkout@v4
-  #     - uses: chickensoft-games/setup-godot@v2
-  #       with:
-  #         version: 4.3.0
-  #         use-dotnet: false
-  #     - name: Run tests
-  #       run: godot --headless --path . -s addons/gut/gut_cmdln.gd -gexit
+  test:
+    name: Sim tests (headless Godot)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Godot 4.3
+        uses: chickensoft-games/setup-godot@v2
+        with:
+          version: 4.3.0
+          use-dotnet: false
+          include-templates: false
+
+      - name: Import assets
+        run: godot --headless --path . --import || true
+
+      - name: Unit tests
+        run: godot --headless --path . -s res://tests/run_tests.gd
+
+      - name: Gameplay smoke test
+        run: godot --headless --path . -s res://tests/run_sim_smoke.gd

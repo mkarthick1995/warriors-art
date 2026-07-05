@@ -29,6 +29,13 @@ var time_in_state: int = 0
 var _stun_ticks: int = 0
 
 
+## Hard reset for a new round (no state_changed signal — this isn't gameplay).
+func reset() -> void:
+	current = State.IDLE
+	time_in_state = 0
+	_stun_ticks = 0
+
+
 ## Call once per fixed tick. Auto-exits stun states when their timer expires.
 func tick() -> void:
 	time_in_state += 1
