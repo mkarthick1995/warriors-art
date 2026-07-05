@@ -13,3 +13,6 @@ extends Resource
 ## Knockback impulse applied to the victim, in pixels/second. Positive x is
 ## "away from the attacker" — the resolver flips it by attacker facing.
 @export var knockback: Vector2 = Vector2.ZERO
+## Launcher/sweep flag: the victim falls into a knockdown instead of
+## recovering from hitstun (air-stun is held until they land).
+@export var knockdown: bool = false

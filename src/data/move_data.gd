@@ -10,6 +10,8 @@ enum Kind { NORMAL, COMMAND_NORMAL, SPECIAL, SUPER }
 ## Numpad notation + button letter: "L" (standing light), "2M" (crouching
 ## medium), "236L" (quarter-circle-forward light). Button letter is last.
 @export var input: String = ""
+## Air moves are usable only while airborne; ground moves only on the floor.
+@export var air: bool = false
 @export var animation_name: String = ""
 
 @export_group("Timing (in 60Hz ticks)")

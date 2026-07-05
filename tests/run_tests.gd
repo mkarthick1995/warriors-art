@@ -12,6 +12,7 @@ func _initialize() -> void:
 	_test_input_buttons_numpad()
 	_test_input_buffer_edges()
 	_test_motion_parser()
+	_test_double_tap()
 	_test_state_machine_stun()
 	_test_state_machine_ko()
 	_test_move_data_parsing()
@@ -81,6 +82,25 @@ func _test_motion_parser() -> void:
 	_check(not buf3.has_motion("236", true, 12), "motion: stale inputs outside leniency rejected")
 
 
+func _test_double_tap() -> void:
+	var buf := InputBuffer.new()
+	buf.push(_buttons(1, 0))
+	buf.push(_buttons(0, 0))
+	buf.push(_buttons(1, 0))
+	_check(buf.double_tapped(1), "dash: tap-release-tap detected")
+	buf.push(_buttons(1, 0))
+	_check(not buf.double_tapped(1), "dash: only fires on the second tap's rising edge")
+	var opposite := InputBuffer.new()
+	opposite.push(_buttons(1, 0))
+	opposite.push(_buttons(-1, 0))
+	opposite.push(_buttons(1, 0))
+	_check(not opposite.double_tapped(1), "dash: opposite direction breaks the tap chain")
+	var held := InputBuffer.new()
+	held.push(_buttons(1, 0))
+	held.push(_buttons(1, 0))
+	_check(not held.double_tapped(1), "dash: held direction is not a double tap")
+
+
 func _test_state_machine_stun() -> void:
 	var sm := FighterStateMachine.new()
 	sm.enter_stun(FighterStateMachine.State.HITSTUN, 5)
@@ -115,6 +135,9 @@ func _test_move_data_parsing() -> void:
 	var n := MoveData.new()
 	n.input = "M"
 	_check(n.motion_part() == "" and n.button_part() == &"medium", "move input: plain normal")
+	var s := MoveData.new()
+	s.input = "236236L"
+	_check(s.motion_part() == "236236", "move input: double-QCF super motion extracted")
 
 
 func _test_character_resource_loads() -> void:
@@ -122,8 +145,16 @@ func _test_character_resource_loads() -> void:
 	_check(data != null, "resource: slice character loads")
 	if data == null:
 		return
-	_check(data.moves.size() == 4, "resource: 4 moves authored")
+	_check(data.moves.size() == 6, "resource: 6 moves authored")
 	_check(data.max_health > 0 and data.walk_speed > 0, "resource: sane stats")
+	_check(
+		(
+			data.super_move != null
+			and data.super_move.technique_cam
+			and data.super_move.meter_cost > 0
+		),
+		"resource: super has technique cam and a meter cost"
+	)
 	for m in data.moves:
 		_check(
 			not m.hitbox_frames.is_empty() and m.duration() > 0,

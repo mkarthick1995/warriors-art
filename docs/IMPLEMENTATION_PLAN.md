@@ -30,13 +30,15 @@ Goal: repo, tooling, and a project everyone can open and run.
 Goal: two identical placeholder fighters on one stage, one full round of readable combat. This validates engine choice and game feel.
 
 Build order (each item is testable on its own):
-1. [x] **Fighter state machine** — idle, walk, jump, crouch, block, hit-stun, KO (dash + knockdown still TODO). (`src/core/fighter_state_machine.gd`)
-2. [x] **Input system** — buffered inputs, numpad motion parser (QCF etc.), keyboard 2-player mapping (gamepad mapping TODO). (`src/core/input_buffer.gd`)
-3. [x] **Hit/hurtbox system** — data-driven boxes per active frame, polled deterministically; blocking + chip. (`src/core/combat/`)
-4. [x] **Three normals + one special** for the slice character (Bengal Lathi placeholder, `src/characters/bengal_lathi/`). Placeholder colored-box sprites.
+1. [x] **Fighter state machine** — idle, walk, dash (double-tap), jump, crouch, block, hit-stun, knockdown + wake-up, KO. (`src/core/fighter_state_machine.gd`)
+2. [x] **Input system** — buffered inputs, numpad motion parser (QCF, double-QCF), double-tap detection, keyboard 2-player mapping (gamepad mapping TODO). (`src/core/input_buffer.gd`)
+3. [x] **Hit/hurtbox system** — data-driven boxes per active frame, polled deterministically; blocking + chip; launcher knockdowns with air-stun held to landing. (`src/core/combat/`)
+4. [x] **Moveset** — slice character has 3 ground normals, 1 air normal, QCF special, EX special (meter), double-QCF super with technique cam (`src/characters/bengal_lathi/`). Placeholder colored-box sprites.
 5. [x] **Round loop** — health/meter bars, round timer, best-of-3, KO/timeout, rematch. (`src/game/match/`)
-6. [~] **Game-feel pass** — hit-stop + hit-flash done; screen-shake, impact particles, and real tuning still TODO. This is where "fun" is won or lost.
-7. [~] **Stage + camera** — flat placeholder stage with walls; camera tracks/zooms both fighters. Parallax backdrop TODO.
+6. [x] **Game-feel pass** — hit-stop, hit-flash, screen-shake (trauma model), hit sparks, KO + super slow-mo. Real *tuning* still needs human playtests.
+7. [~] **Stage + camera** — flat placeholder stage with walls; camera tracks/zooms/shakes. Parallax backdrop TODO.
+
+Also landed early from Phase 2: **training mode** (frozen timer, auto-refill, hitbox/state/input overlay — toggle H) and the **meter economy** (EX + super costs).
 
 Verified by headless tests (`tests/run_tests.gd` unit, `tests/run_sim_smoke.gd` end-to-end) — both run in CI.
 

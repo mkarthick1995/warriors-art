@@ -1,10 +1,11 @@
-[gd_scene load_steps=8 format=3]
+[gd_scene load_steps=9 format=3]
 
 [ext_resource type="Script" path="res://src/game/match/match_controller.gd" id="1_controller"]
 [ext_resource type="PackedScene" path="res://scenes/Fighter.tscn" id="2_fighter"]
 [ext_resource type="Resource" path="res://src/characters/bengal_lathi/bengal_lathi.tres" id="3_lathi"]
 [ext_resource type="Script" path="res://src/game/match/match_camera.gd" id="4_camera"]
 [ext_resource type="Script" path="res://src/ui/match_hud.gd" id="5_hud"]
+[ext_resource type="Script" path="res://src/game/match/juice.gd" id="6_juice"]
 
 [sub_resource type="RectangleShape2D" id="floor_shape"]
 size = Vector2(4400, 200)
@@ -79,6 +80,11 @@ zoom = Vector2(0.9, 0.9)
 script = ExtResource("4_camera")
 p1 = NodePath("../P1")
 p2 = NodePath("../P2")
+
+[node name="Juice" type="Node" parent="." node_paths=PackedStringArray("controller", "camera")]
+script = ExtResource("6_juice")
+controller = NodePath("..")
+camera = NodePath("../Camera")
 
 [node name="HUD" type="CanvasLayer" parent="." node_paths=PackedStringArray("controller")]
 script = ExtResource("5_hud")

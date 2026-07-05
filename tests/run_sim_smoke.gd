@@ -24,9 +24,13 @@ func _run(scene: Node) -> void:
 	await _until(func() -> bool: return controller.phase == MatchController.Phase.FIGHTING)
 	_check(true, "round starts fighting phase")
 
-	# 2. Walk P1 into jab range.
-	await _walk_into_range(p1, p2)
-	_check(p1.state() == FighterStateMachine.State.WALK, "p1 walked toward p2")
+	# 2. Walk P1 into jab range (assert WALK while the key is still held).
+	Input.action_press("p1_right")
+	await _until(func() -> bool: return p1.state() == FighterStateMachine.State.WALK)
+	_check(true, "p1 walks when holding forward")
+	await _until(func() -> bool: return p2.global_position.x - p1.global_position.x < 130.0)
+	Input.action_release("p1_right")
+	await _frames(1)
 
 	# 3. Jab — must connect and damage P2.
 	await _tap("p1_light")
@@ -47,7 +51,40 @@ func _run(scene: Node) -> void:
 		"blocked jab chipped instead of full damage"
 	)
 
-	# 5. Force a KO and confirm the round ends and the next round resets health.
+	# 5. Double-tap forward = dash.
+	await _until(func() -> bool: return not p2.is_stunned() and not p1.is_stunned())
+	await _frames(10)  # Let stale directional inputs fall out of the tap window.
+	Input.action_press("p1_right")
+	await _frames(2)
+	Input.action_release("p1_right")
+	await _frames(3)
+	Input.action_press("p1_right")
+	await _frames(2)
+	var dashed := p1.state() == FighterStateMachine.State.DASH
+	Input.action_release("p1_right")
+	_check(dashed, "double-tap forward dashes")
+	await _until(func() -> bool: return p1.state() == FighterStateMachine.State.IDLE)
+
+	# 6. QCF special launches P2 into a knockdown, then P2 wakes up.
+	await _walk_into_range(p1, p2)
+	await _qcf("p1", "light")
+	await _until(func() -> bool: return p2.state() == FighterStateMachine.State.KNOCKDOWN)
+	_check(true, "launcher special causes knockdown")
+	await _until(func() -> bool: return p2.state() == FighterStateMachine.State.IDLE)
+	_check(true, "p2 wakes up from knockdown")
+
+	# 7. Super: double-QCF with full meter spends it all and hits big.
+	p1.meter = Fighter.MAX_METER
+	var hp_before_super: int = p2.health
+	await _walk_into_range(p1, p2)
+	await _qcf("p1", "")
+	await _qcf("p1", "light")
+	await _frames(30)
+	_check(p1.meter == 0, "super consumed the full meter")
+	_check(p2.health <= hp_before_super - 80, "super connected for major damage")
+	await _until(func() -> bool: return p2.state() == FighterStateMachine.State.IDLE)
+
+	# 8. Force a KO and confirm the round ends and the next round resets health.
 	p2.health = 1
 	await _until(func() -> bool: return not p2.is_stunned())
 	await _walk_into_range(p1, p2)  # Knockback/pushback moved P2 out of reach.
@@ -97,3 +134,20 @@ func _walk_into_range(p1: Fighter, p2: Fighter) -> void:
 	Input.action_press("p1_right")
 	await _until(func() -> bool: return p2.global_position.x - p1.global_position.x < 130.0)
 	Input.action_release("p1_right")
+	await _frames(1)
+
+
+## Roll a quarter-circle-forward, optionally ending in a button tap.
+func _qcf(prefix: String, button: String) -> void:
+	Input.action_press(prefix + "_down")
+	await _frames(3)
+	Input.action_press(prefix + "_right")
+	await _frames(3)
+	Input.action_release(prefix + "_down")
+	await _frames(2)
+	if button != "":
+		Input.action_press(prefix + "_" + button)
+		await _frames(2)
+		Input.action_release(prefix + "_" + button)
+	Input.action_release(prefix + "_right")
+	await _frames(1)

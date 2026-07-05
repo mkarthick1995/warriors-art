@@ -45,6 +45,13 @@ func deactivate() -> void:
 	_already_hit.clear()
 
 
+## Local-space rect of the active box for debug drawing; zero-size if inactive.
+func debug_rect() -> Rect2:
+	if not monitoring or _frame == null:
+		return Rect2()
+	return Rect2(_shape_node.position - _rect.size * 0.5, _rect.size)
+
+
 ## Poll overlaps once per sim tick while active. The owner fighter calls this
 ## at a fixed point in the tick order.
 func tick_active() -> void:

@@ -44,8 +44,8 @@ See [`docs/GAME_DESIGN.md`](docs/GAME_DESIGN.md) for the full design brief.
 1. Install **Godot 4.3-stable (standard, GDScript build)** — https://godotengine.org/download
 2. Install **Git** and **Git LFS**: `git lfs install`
 3. Clone: `git clone https://github.com/mkarthick1995/warriors-art.git`
-4. Open `project.godot` in Godot and press F5 — Enter starts a local 1v1.
-   **P1:** WASD move, J/K light/medium, QCF+J special · **P2:** arrows + numpad 1/2
+4. Open `project.godot` in Godot and press F5 — Enter starts a local 1v1, T starts training mode (H toggles the hitbox overlay).
+   **P1:** WASD move, J/K light/medium, double-tap dash, QCF+J special, QCF+K EX (250 meter), QCF·QCF+J super (full meter) · **P2:** arrows + numpad 1/2
 5. Read [`docs/ONBOARDING.md`](docs/ONBOARDING.md).
 
 Headless tests: `godot --headless --path . -s res://tests/run_tests.gd` (unit) and `-s res://tests/run_sim_smoke.gd` (end-to-end). CI runs both plus `gdformat`/`gdlint`.

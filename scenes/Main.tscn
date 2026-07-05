@@ -28,5 +28,6 @@ text = "WARRIOR'S ART"
 [node name="Subtitle" type="Label" parent="UI/Center/VBox"]
 layout_mode = 2
 horizontal_alignment = 1
-text = "Press [Enter] — local 1v1 vertical slice
-P1: WASD move, J/K light/medium, QCF+J special · P2: arrows + numpad 1/2"
+text = "[Enter] local 1v1 · [T] training mode (H toggles hitboxes)
+P1: WASD + J/K · double-tap dash · QCF+J special · QCF+K EX · QCFx2+J super
+P2: arrows + numpad 1/2"

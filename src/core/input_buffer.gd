@@ -40,6 +40,24 @@ func just_pressed(button: StringName) -> bool:
 	return current().is_pressed(button) and not peek(1).is_pressed(button)
 
 
+## True if the horizontal direction `dir_x` (+1/-1) was tapped twice within
+## `window` ticks, with a neutral/release between the taps (dash input).
+## Only fires on the tick of the second tap's rising edge.
+func double_tapped(dir_x: int, window: int = 12) -> bool:
+	if current().direction().x != dir_x or peek(1).direction().x == dir_x:
+		return false
+	var saw_release := false
+	for t in range(1, mini(window, CAPACITY)):
+		var x := peek(t).direction().x
+		if x == -dir_x:
+			return false  # Opposite direction breaks the tap chain.
+		if x == 0:
+			saw_release = true
+		elif x == dir_x and saw_release:
+			return true
+	return false
+
+
 ## True if the numpad motion (e.g. "236" = quarter-circle-forward) was
 ## completed within the last `leniency` ticks. Directions are matched as an
 ## ordered subsequence, so brief stray inputs between steps don't break it.

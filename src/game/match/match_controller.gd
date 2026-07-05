@@ -20,6 +20,8 @@ const SPAWN_OFFSET := 400.0
 ## Kept as an export (not read from GameState) so the match is self-contained
 ## and testable; the front-end configures it when launching a match.
 @export var rounds_to_win: int = 2
+## Training mode: timer frozen, nothing is scored, fighters refill on KO.
+@export var training: bool = false
 
 var phase: Phase = Phase.PREROUND
 var round_number: int = 1
@@ -51,9 +53,10 @@ func _physics_process(_delta: float) -> void:
 		Phase.FIGHTING:
 			p1.face_opponent(p2.global_position.x)
 			p2.face_opponent(p1.global_position.x)
-			timer_ticks -= 1
-			if timer_ticks <= 0:
-				_resolve_timeout()
+			if not training:
+				timer_ticks -= 1
+				if timer_ticks <= 0:
+					_resolve_timeout()
 		Phase.ROUND_OVER:
 			if _phase_ticks >= ROUND_OVER_TICKS:
 				_start_round()
@@ -92,6 +95,11 @@ func _resolve_timeout() -> void:
 
 
 func _end_round(winner_index: int) -> void:
+	if training:
+		# Nothing is scored; refill both fighters where they stand.
+		p1.reset_for_round(p1.global_position, p1.facing)
+		p2.reset_for_round(p2.global_position, p2.facing)
+		return
 	phase = Phase.ROUND_OVER
 	_phase_ticks = 0
 	if winner_index > 0:

@@ -1,14 +1,28 @@
+class_name MatchCamera
 extends Camera2D
-## Frames both fighters: tracks their midpoint and widens as they separate.
+## Frames both fighters: tracks their midpoint, widens as they separate, and
+## shakes on impact (trauma model: intensity = trauma², decays over time).
 ## PRESENTATION ONLY — reads fighter positions, never affects the sim.
 
 const FRAME_MARGIN := 500.0
+const SHAKE_MAX_OFFSET := 26.0
+const TRAUMA_DECAY := 2.2
 
 @export var p1: Node2D
 @export var p2: Node2D
 @export var min_zoom := 0.75  ## Widest (fighters far apart).
 @export var max_zoom := 1.1  ## Tightest (fighters close).
 @export var follow_speed := 6.0
+
+var _trauma := 0.0
+## Presentation-only randomness — NOT part of the sim, so it doesn't go
+## through the seeded Rng autoload.
+var _shake_rng := RandomNumberGenerator.new()
+
+
+## Add shake energy (0–1). Stacks and clamps; big hits pass bigger values.
+func add_trauma(amount: float) -> void:
+	_trauma = minf(_trauma + amount, 1.0)
 
 
 func _process(delta: float) -> void:
@@ -21,3 +35,15 @@ func _process(delta: float) -> void:
 	global_position = global_position.lerp(mid, minf(follow_speed * delta, 1.0))
 	var z: float = lerpf(zoom.x, target_zoom, minf(follow_speed * delta, 1.0))
 	zoom = Vector2(z, z)
+	_tick_shake(delta)
+
+
+func _tick_shake(delta: float) -> void:
+	if _trauma <= 0.0:
+		offset = Vector2.ZERO
+		return
+	_trauma = maxf(0.0, _trauma - TRAUMA_DECAY * delta)
+	var strength := _trauma * _trauma * SHAKE_MAX_OFFSET
+	offset = Vector2(
+		_shake_rng.randf_range(-1.0, 1.0) * strength, _shake_rng.randf_range(-1.0, 1.0) * strength
+	)

@@ -1,0 +1,12 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/Match.tscn" id="1_match"]
+[ext_resource type="Script" path="res://src/ui/debug_overlay.gd" id="2_overlay"]
+
+[node name="Training" instance=ExtResource("1_match")]
+training = true
+
+[node name="DebugOverlay" type="Node2D" parent="." node_paths=PackedStringArray("controller")]
+z_index = 100
+script = ExtResource("2_overlay")
+controller = NodePath("..")

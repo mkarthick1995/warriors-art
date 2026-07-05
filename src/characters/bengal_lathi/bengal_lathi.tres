@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="CharacterData" load_steps=13 format=3]
+[gd_resource type="Resource" script_class="CharacterData" load_steps=21 format=3]
 
 [ext_resource type="Script" path="res://src/data/character_data.gd" id="1"]
 [ext_resource type="Script" path="res://src/data/move_data.gd" id="2"]
@@ -11,6 +11,7 @@ damage = 40
 hitstun = 14
 hitstop = 5
 knockback = Vector2(160, 0)
+knockdown = false
 
 [sub_resource type="Resource" id="frame_low"]
 script = ExtResource("3")
@@ -19,6 +20,7 @@ damage = 35
 hitstun = 13
 hitstop = 5
 knockback = Vector2(140, 0)
+knockdown = false
 
 [sub_resource type="Resource" id="frame_swing"]
 script = ExtResource("3")
@@ -27,6 +29,16 @@ damage = 70
 hitstun = 20
 hitstop = 8
 knockback = Vector2(260, -60)
+knockdown = false
+
+[sub_resource type="Resource" id="frame_air_jab"]
+script = ExtResource("3")
+hitbox_rect = Rect2(10, -95, 75, 45)
+damage = 45
+hitstun = 16
+hitstop = 6
+knockback = Vector2(120, 150)
+knockdown = false
 
 [sub_resource type="Resource" id="frame_whirl_a"]
 script = ExtResource("3")
@@ -35,6 +47,7 @@ damage = 60
 hitstun = 18
 hitstop = 6
 knockback = Vector2(200, -120)
+knockdown = true
 
 [sub_resource type="Resource" id="frame_whirl_b"]
 script = ExtResource("3")
@@ -43,12 +56,50 @@ damage = 110
 hitstun = 26
 hitstop = 10
 knockback = Vector2(340, -420)
+knockdown = true
+
+[sub_resource type="Resource" id="frame_ex_whirl_a"]
+script = ExtResource("3")
+hitbox_rect = Rect2(15, -135, 110, 60)
+damage = 80
+hitstun = 20
+hitstop = 8
+knockback = Vector2(220, -160)
+knockdown = true
+
+[sub_resource type="Resource" id="frame_ex_whirl_b"]
+script = ExtResource("3")
+hitbox_rect = Rect2(20, -155, 145, 80)
+damage = 150
+hitstun = 30
+hitstop = 12
+knockback = Vector2(420, -560)
+knockdown = true
+
+[sub_resource type="Resource" id="frame_super_a"]
+script = ExtResource("3")
+hitbox_rect = Rect2(15, -140, 115, 70)
+damage = 80
+hitstun = 24
+hitstop = 10
+knockback = Vector2(150, -100)
+knockdown = true
+
+[sub_resource type="Resource" id="frame_super_b"]
+script = ExtResource("3")
+hitbox_rect = Rect2(20, -160, 150, 90)
+damage = 220
+hitstun = 34
+hitstop = 14
+knockback = Vector2(520, -620)
+knockdown = true
 
 [sub_resource type="Resource" id="move_jab"]
 script = ExtResource("2")
 display_name = "Lathi Jab"
 kind = 0
 input = "L"
+air = false
 animation_name = "jab"
 startup = 4
 active = 3
@@ -64,6 +115,7 @@ script = ExtResource("2")
 display_name = "Low Rap"
 kind = 0
 input = "2L"
+air = false
 animation_name = "low_rap"
 startup = 5
 active = 3
@@ -79,6 +131,7 @@ script = ExtResource("2")
 display_name = "Lathi Swing"
 kind = 0
 input = "M"
+air = false
 animation_name = "swing"
 startup = 9
 active = 4
@@ -89,11 +142,28 @@ meter_cost = 0
 hitbox_frames = Array[ExtResource("3")]([SubResource("frame_swing")])
 technique_cam = false
 
+[sub_resource type="Resource" id="move_air_jab"]
+script = ExtResource("2")
+display_name = "Falling Strike"
+kind = 0
+input = "L"
+air = true
+animation_name = "air_jab"
+startup = 5
+active = 4
+recovery = 8
+on_block = -1
+meter_gain = 25
+meter_cost = 0
+hitbox_frames = Array[ExtResource("3")]([SubResource("frame_air_jab")])
+technique_cam = false
+
 [sub_resource type="Resource" id="move_whirl"]
 script = ExtResource("2")
 display_name = "Whirlwind Lathi"
 kind = 2
 input = "236L"
+air = false
 animation_name = "whirlwind"
 startup = 11
 active = 8
@@ -103,6 +173,38 @@ meter_gain = 70
 meter_cost = 0
 hitbox_frames = Array[ExtResource("3")]([SubResource("frame_whirl_a"), SubResource("frame_whirl_b")])
 technique_cam = false
+
+[sub_resource type="Resource" id="move_ex_whirl"]
+script = ExtResource("2")
+display_name = "EX Whirlwind Lathi"
+kind = 2
+input = "236M"
+air = false
+animation_name = "ex_whirlwind"
+startup = 9
+active = 10
+recovery = 17
+on_block = -6
+meter_gain = 0
+meter_cost = 250
+hitbox_frames = Array[ExtResource("3")]([SubResource("frame_ex_whirl_a"), SubResource("frame_ex_whirl_b")])
+technique_cam = false
+
+[sub_resource type="Resource" id="move_super"]
+script = ExtResource("2")
+display_name = "Storm of the Akhara"
+kind = 3
+input = "236236L"
+air = false
+animation_name = "super_storm"
+startup = 8
+active = 10
+recovery = 24
+on_block = -12
+meter_gain = 0
+meter_cost = 1000
+hitbox_frames = Array[ExtResource("3")]([SubResource("frame_super_a"), SubResource("frame_super_b")])
+technique_cam = true
 
 [resource]
 script = ExtResource("1")
@@ -115,5 +217,6 @@ jump_velocity = -950.0
 gravity = 2400.0
 max_health = 950
 weight = 0.95
-moves = Array[ExtResource("2")]([SubResource("move_jab"), SubResource("move_low"), SubResource("move_swing"), SubResource("move_whirl")])
+moves = Array[ExtResource("2")]([SubResource("move_jab"), SubResource("move_low"), SubResource("move_swing"), SubResource("move_air_jab"), SubResource("move_whirl"), SubResource("move_ex_whirl")])
+super_move = SubResource("move_super")
 percussion = "dhak"

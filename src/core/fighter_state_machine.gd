@@ -46,7 +46,7 @@ func tick() -> void:
 
 
 func is_stunned() -> bool:
-	return current == State.HITSTUN or current == State.BLOCKSTUN
+	return current == State.HITSTUN or current == State.BLOCKSTUN or current == State.KNOCKDOWN
 
 
 func is_actionable() -> bool:
@@ -77,11 +77,11 @@ func change_to(to: State) -> void:
 	state_changed.emit(from, to)
 
 
-## Force the fighter into hit/block stun for `ticks`. Bypasses can_transition
-## because stun is never refusable; re-entering the same stun refreshes it
-## (combos extend stun rather than being ignored).
+## Force the fighter into hit/block stun or a knockdown for `ticks`. Bypasses
+## can_transition because stun is never refusable; re-entering the same stun
+## refreshes it (combos extend stun rather than being ignored).
 func enter_stun(kind: State, ticks: int) -> void:
-	assert(kind == State.HITSTUN or kind == State.BLOCKSTUN)
+	assert(kind == State.HITSTUN or kind == State.BLOCKSTUN or kind == State.KNOCKDOWN)
 	if current == State.KO:
 		return
 	_stun_ticks = ticks
