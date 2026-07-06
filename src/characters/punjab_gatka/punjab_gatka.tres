@@ -1,0 +1,236 @@
+[gd_resource type="Resource" script_class="CharacterData" load_steps=23 format=3]
+
+[ext_resource type="Script" path="res://src/data/character_data.gd" id="1"]
+[ext_resource type="Script" path="res://src/data/move_data.gd" id="2"]
+[ext_resource type="Script" path="res://src/data/frame_data.gd" id="3"]
+[ext_resource type="Script" path="res://src/data/projectile_data.gd" id="4"]
+[ext_resource type="SpriteFrames" path="res://src/characters/punjab_gatka/punjab_gatka_frames.tres" id="5"]
+
+[sub_resource type="Resource" id="frame_slash"]
+script = ExtResource("3")
+hitbox_rect = Rect2(20, -125, 70, 26)
+damage = 45
+hitstun = 14
+hitstop = 5
+knockback = Vector2(160, 0)
+knockdown = false
+
+[sub_resource type="Resource" id="frame_low_cut"]
+script = ExtResource("3")
+hitbox_rect = Rect2(18, -45, 65, 22)
+damage = 40
+hitstun = 13
+hitstop = 5
+knockback = Vector2(140, 0)
+knockdown = false
+
+[sub_resource type="Resource" id="frame_twin_a"]
+script = ExtResource("3")
+hitbox_rect = Rect2(18, -130, 80, 32)
+damage = 80
+hitstun = 20
+hitstop = 8
+knockback = Vector2(230, -30)
+knockdown = false
+
+[sub_resource type="Resource" id="frame_twin_b"]
+script = ExtResource("3")
+hitbox_rect = Rect2(22, -135, 90, 36)
+damage = 65
+hitstun = 18
+hitstop = 7
+knockback = Vector2(210, -30)
+knockdown = false
+
+[sub_resource type="Resource" id="frame_air_slash"]
+script = ExtResource("3")
+hitbox_rect = Rect2(8, -90, 70, 45)
+damage = 50
+hitstun = 17
+hitstop = 6
+knockback = Vector2(110, 190)
+knockdown = false
+
+[sub_resource type="Resource" id="frame_chakram"]
+script = ExtResource("3")
+hitbox_rect = Rect2(-25, -25, 50, 50)
+damage = 65
+hitstun = 18
+hitstop = 6
+knockback = Vector2(200, -60)
+knockdown = false
+
+[sub_resource type="Resource" id="proj_chakram"]
+script = ExtResource("4")
+speed = 700.0
+lifetime_ticks = 220
+spawn_offset = Vector2(60, -110)
+frame = SubResource("frame_chakram")
+pierce = false
+color = Color(1, 0.85, 0.3, 1)
+
+[sub_resource type="Resource" id="frame_ex_chakram"]
+script = ExtResource("3")
+hitbox_rect = Rect2(-30, -30, 60, 60)
+damage = 100
+hitstun = 24
+hitstop = 8
+knockback = Vector2(280, -240)
+knockdown = true
+
+[sub_resource type="Resource" id="proj_ex_chakram"]
+script = ExtResource("4")
+speed = 920.0
+lifetime_ticks = 220
+spawn_offset = Vector2(60, -110)
+frame = SubResource("frame_ex_chakram")
+pierce = false
+color = Color(1, 0.55, 0.2, 1)
+
+[sub_resource type="Resource" id="frame_super_a"]
+script = ExtResource("3")
+hitbox_rect = Rect2(15, -135, 95, 65)
+damage = 90
+hitstun = 24
+hitstop = 12
+knockback = Vector2(130, -90)
+knockdown = true
+
+[sub_resource type="Resource" id="frame_super_b"]
+script = ExtResource("3")
+hitbox_rect = Rect2(20, -145, 120, 80)
+damage = 230
+hitstun = 34
+hitstop = 14
+knockback = Vector2(460, -560)
+knockdown = true
+
+[sub_resource type="Resource" id="move_slash"]
+script = ExtResource("2")
+display_name = "Teer Vaar"
+kind = 0
+input = "L"
+air = false
+animation_name = "slash"
+startup = 4
+active = 3
+recovery = 9
+on_block = -2
+meter_gain = 25
+meter_cost = 0
+hitbox_frames = Array[ExtResource("3")]([SubResource("frame_slash")])
+technique_cam = false
+
+[sub_resource type="Resource" id="move_low_cut"]
+script = ExtResource("2")
+display_name = "Neevi Kaat"
+kind = 0
+input = "2L"
+air = false
+animation_name = "low_cut"
+startup = 5
+active = 3
+recovery = 10
+on_block = -4
+meter_gain = 25
+meter_cost = 0
+hitbox_frames = Array[ExtResource("3")]([SubResource("frame_low_cut")])
+technique_cam = false
+
+[sub_resource type="Resource" id="move_twin"]
+script = ExtResource("2")
+display_name = "Dohri Vaar"
+kind = 0
+input = "M"
+air = false
+animation_name = "twin"
+startup = 8
+active = 5
+recovery = 15
+on_block = -6
+meter_gain = 40
+meter_cost = 0
+hitbox_frames = Array[ExtResource("3")]([SubResource("frame_twin_a"), SubResource("frame_twin_b")])
+technique_cam = false
+
+[sub_resource type="Resource" id="move_air_slash"]
+script = ExtResource("2")
+display_name = "Hawaai Vaar"
+kind = 0
+input = "L"
+air = true
+animation_name = "air_slash"
+startup = 6
+active = 5
+recovery = 8
+on_block = -1
+meter_gain = 25
+meter_cost = 0
+hitbox_frames = Array[ExtResource("3")]([SubResource("frame_air_slash")])
+technique_cam = false
+
+[sub_resource type="Resource" id="move_chakram"]
+script = ExtResource("2")
+display_name = "Chakram Sutt"
+kind = 2
+input = "236L"
+air = false
+animation_name = "chakram"
+startup = 13
+active = 2
+recovery = 20
+on_block = -6
+meter_gain = 40
+meter_cost = 0
+hitbox_frames = Array[ExtResource("3")]([])
+projectile = SubResource("proj_chakram")
+technique_cam = false
+
+[sub_resource type="Resource" id="move_ex_chakram"]
+script = ExtResource("2")
+display_name = "EX Chakram Sutt"
+kind = 2
+input = "236M"
+air = false
+animation_name = "ex_chakram"
+startup = 10
+active = 2
+recovery = 18
+on_block = -4
+meter_gain = 0
+meter_cost = 250
+hitbox_frames = Array[ExtResource("3")]([])
+projectile = SubResource("proj_ex_chakram")
+technique_cam = false
+
+[sub_resource type="Resource" id="move_super"]
+script = ExtResource("2")
+display_name = "Chakkar Jaal"
+kind = 3
+input = "236236L"
+air = false
+animation_name = "super_storm"
+startup = 8
+active = 10
+recovery = 25
+on_block = -13
+meter_gain = 0
+meter_cost = 1000
+hitbox_frames = Array[ExtResource("3")]([SubResource("frame_super_a"), SubResource("frame_super_b")])
+technique_cam = true
+
+[resource]
+script = ExtResource("1")
+display_name = "Gatkabaz (placeholder)"
+state_region = "Punjab"
+martial_art = "Gatka"
+walk_speed = 210.0
+dash_speed = 470.0
+jump_velocity = -930.0
+gravity = 2400.0
+max_health = 1000
+weight = 1.0
+moves = Array[ExtResource("2")]([SubResource("move_slash"), SubResource("move_low_cut"), SubResource("move_twin"), SubResource("move_air_slash"), SubResource("move_chakram"), SubResource("move_ex_chakram")])
+super_move = SubResource("move_super")
+sprite_frames = ExtResource("5")
+percussion = "dhol"

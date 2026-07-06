@@ -152,6 +152,7 @@ func _test_character_resource_loads() -> void:
 		"res://src/characters/bengal_lathi/bengal_lathi.tres",
 		"res://src/characters/varanasi_musti/varanasi_musti.tres",
 		"res://src/characters/tamilnadu_silambam/tamilnadu_silambam.tres",
+		"res://src/characters/punjab_gatka/punjab_gatka.tres",
 	]
 	for path in paths:
 		var short := path.get_file()
@@ -171,9 +172,17 @@ func _test_character_resource_loads() -> void:
 		)
 		for m in data.moves:
 			_check(
-				not m.hitbox_frames.is_empty() and m.duration() > 0,
-				"resource: %s move '%s' has frames and timing" % [short, m.display_name]
+				(not m.hitbox_frames.is_empty() or m.projectile != null) and m.duration() > 0,
+				"resource: %s move '%s' has frames/projectile and timing" % [short, m.display_name]
 			)
+			if m.projectile != null:
+				_check(
+					m.projectile.frame != null and m.projectile.speed > 0,
+					(
+						"resource: %s projectile '%s' has frame data and speed"
+						% [short, m.display_name]
+					)
+				)
 			_check(
 				m.button_part() != &"",
 				"resource: %s move '%s' input parses" % [short, m.display_name]

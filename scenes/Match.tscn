@@ -6,7 +6,7 @@
 [ext_resource type="Script" path="res://src/game/match/match_camera.gd" id="4_camera"]
 [ext_resource type="Script" path="res://src/ui/match_hud.gd" id="5_hud"]
 [ext_resource type="Script" path="res://src/game/match/juice.gd" id="6_juice"]
-[ext_resource type="Resource" path="res://src/characters/tamilnadu_silambam/tamilnadu_silambam.tres" id="7_silambam"]
+[ext_resource type="Resource" path="res://src/characters/punjab_gatka/punjab_gatka.tres" id="7_gatka"]
 [ext_resource type="Script" path="res://src/game/match/backdrop.gd" id="8_backdrop"]
 [ext_resource type="PackedScene" path="res://scenes/stages/GhatDusk.tscn" id="9_ghat"]
 [ext_resource type="PackedScene" path="res://scenes/stages/TempleDawn.tscn" id="10_temple"]
@@ -66,7 +66,7 @@ body_color = Color(1, 0.55, 0.15, 1)
 
 [node name="P2" parent="." instance=ExtResource("2_fighter")]
 position = Vector2(400, 0)
-data = ExtResource("7_silambam")
+data = ExtResource("7_gatka")
 facing = -1
 player_index = 2
 body_color = Color(0.15, 0.7, 0.35, 1)

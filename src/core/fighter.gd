@@ -6,6 +6,8 @@ extends CharacterBody2D
 
 ## Emitted when this fighter's attack connects; the MatchController resolves it.
 signal landed_hit(victim: Fighter, frame: FrameData)
+## Same, for projectile hits (no attacker hit-stop; knockback follows `dir`).
+signal landed_projectile_hit(victim: Fighter, frame: FrameData, dir: int)
 signal took_damage(amount: int, health_remaining: int)
 signal knocked_out
 ## Emitted whenever any attack begins (presentation plays the whiff/swing).
@@ -59,6 +61,8 @@ var _dash_dir: int = 1
 var _knockdown_pending: bool = false
 ## True while the MatchController is resolving our successful grab.
 var _throw_holding: bool = false
+## One projectile per move activation.
+var _projectile_fired: bool = false
 
 @onready var _hitbox: Hitbox = $Hitbox
 @onready var _hurtbox: Hurtbox = $Hurtbox
@@ -326,10 +330,13 @@ func _tick_attack() -> void:
 	var t := _sm.time_in_state
 	var active_start := m.startup
 	var active_end := m.startup + m.active
-	if t >= active_start and t < active_end and not m.hitbox_frames.is_empty():
-		var fi := mini(t - active_start, m.hitbox_frames.size() - 1)
-		_hitbox.activate(m.hitbox_frames[fi], facing)
-		_hitbox.tick_active()
+	if t >= active_start and t < active_end:
+		if m.projectile != null and not _projectile_fired:
+			_fire_projectile(m)
+		if not m.hitbox_frames.is_empty():
+			var fi := mini(t - active_start, m.hitbox_frames.size() - 1)
+			_hitbox.activate(m.hitbox_frames[fi], facing)
+			_hitbox.tick_active()
 	elif t >= active_end:
 		_hitbox.deactivate()
 	if t >= m.duration():
@@ -385,6 +392,7 @@ func _try_start_attack() -> bool:
 		if not airborne:
 			velocity.x = 0  # Air attacks keep jump momentum.
 		_current_move = move
+		_projectile_fired = false
 		_sm.change_to(FighterStateMachine.State.ATTACK)
 		attack_started.emit(move)
 		if move.technique_cam:
@@ -443,6 +451,23 @@ func _on_hitbox_landed(target: Hurtbox, frame: FrameData) -> void:
 	var victim := target.owner_fighter as Fighter
 	if victim != null:
 		landed_hit.emit(victim, frame)
+
+
+func _fire_projectile(move: MoveData) -> void:
+	_projectile_fired = true
+	var p := Projectile.new()
+	p.setup(self, move.projectile, facing)
+	p.position = (
+		global_position
+		+ Vector2(move.projectile.spawn_offset.x * facing, move.projectile.spawn_offset.y)
+	)
+	p.hit_landed.connect(_on_projectile_landed.bind(move.meter_gain))
+	get_parent().add_child(p)
+
+
+func _on_projectile_landed(victim: Fighter, frame: FrameData, dir: int, gain: int) -> void:
+	meter = mini(MAX_METER, meter + gain)
+	landed_projectile_hit.emit(victim, frame, dir)
 
 
 ## Read this player's mapped actions into an InputButtons snapshot.

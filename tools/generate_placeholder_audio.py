@@ -134,6 +134,9 @@ def main() -> None:
     # Tamil Nadu thavil: crisp, syncopated, temple-procession drive.
     write_wav(perc / "thavil_loop.wav", percussion_loop(
         150, 132, [1, 0, 0.7, 0, 0.9, 0.5, 0, 0.7, 1, 0, 0.6, 0.8, 0, 0.9, 0.5, 0]))
+    # Punjab dhol: driving bhangra pulse.
+    write_wav(perc / "dhol_loop.wav", percussion_loop(
+        120, 144, [1, 0, 0.5, 0.7, 1, 0, 0.7, 0, 1, 0.5, 0, 0.7, 1, 0, 0.7, 0.5]))
 
 
 if __name__ == "__main__":

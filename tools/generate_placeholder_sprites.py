@@ -36,6 +36,7 @@ def draw_pose(
     staff_angle: float | None = None,
     staff_offset: float = 0.0,
     staff_len: float = STAFF_LEN,
+    shield: bool = False,
     lying: float = 0.0,
 ) -> None:
     """Draw one stick-fighter pose. Angles in radians, 0 = toward +x (forward).
@@ -77,13 +78,17 @@ def draw_pose(
         hy = shoulder[1] - math.sin(ang) * arm_len
         d.line([shoulder, (hx, hy)], fill=BODY, width=LIMB_W - 1)
         hands[name] = (hx, hy)
-    # Staff (lathi/silambam) through the front hand.
+    # Staff/sword through the front hand.
     if staff_angle is not None:
         hx, hy = hands["front"]
         hx += staff_offset
         half = staff_len / 2
         dx, dy = math.cos(staff_angle) * half, -math.sin(staff_angle) * half
         d.line([(hx - dx, hy - dy), (hx + dx, hy + dy)], fill=STAFF, width=STAFF_W)
+    # Round shield (farri) on the rear hand.
+    if shield:
+        sx, sy = hands["rear"]
+        d.ellipse([sx - 16, sy - 16, sx + 16, sy + 16], fill=BODY)
 
 
 def lerp(a: float, b: float, t: float) -> float:
@@ -249,6 +254,80 @@ def silambar_animations() -> dict:
     }
 
 
+def gatka_animations() -> dict:
+    """Punjab Gatka dual-wielder: short sword (70) + round shield, chakram throw."""
+    s = {"staff_len": 70.0, "shield": True}
+    idle = [dict(hip_y=118 + bob, staff_angle=0.9, front_arm=-0.5, rear_arm=-2.6, **s)
+            for bob in (0, 2, 3, 2)]
+    walk = [
+        dict(
+            hip_y=116 + (2 if i % 3 == 0 else 0),
+            front_foot=lerp(30, -6, (i % 3) / 2.0),
+            rear_foot=lerp(-26, 8, (i % 3) / 2.0),
+            staff_angle=0.9, rear_arm=-2.6, **s,
+        )
+        for i in range(6)
+    ]
+    slash = [
+        dict(staff_angle=1.7, front_arm=1.4, rear_arm=-2.6, lean=-0.15, **s),
+        dict(staff_angle=0.6, front_arm=0.4, rear_arm=-2.6, lean=0.2, staff_offset=8, **s),
+        dict(staff_angle=-0.2, front_arm=-0.2, rear_arm=-2.6, lean=0.35, staff_offset=14, **s),
+        dict(staff_angle=0.3, front_arm=-0.3, rear_arm=-2.6, lean=0.15, **s),
+    ]
+    low_cut = [dict(**{**p, "hip_y": 150}) for p in slash]
+    twin = slash + [
+        dict(staff_angle=1.2, front_arm=1.0, rear_arm=-2.6, lean=0.0, **s),
+        dict(staff_angle=-0.3, front_arm=-0.3, rear_arm=-2.6, lean=0.4, staff_offset=16, **s),
+    ]
+    throw = [
+        dict(staff_angle=0.9, front_arm=-2.6, rear_arm=-0.5, lean=-0.25, **s),
+        dict(staff_angle=0.9, front_arm=-2.9, rear_arm=-0.4, lean=-0.35, **s),
+        dict(staff_angle=0.9, front_arm=0.1, rear_arm=-0.6, lean=0.4, **s),
+        dict(staff_angle=0.9, front_arm=0.0, rear_arm=-0.6, lean=0.45, **s),
+    ]
+    air = [
+        dict(hip_y=110, front_foot=10, rear_foot=-8, staff_angle=-0.7, front_arm=-0.7,
+             rear_arm=-2.6, **s),
+        dict(hip_y=110, front_foot=12, rear_foot=-6, staff_angle=-0.9, front_arm=-0.9,
+             rear_arm=-2.6, staff_offset=8, **s),
+        dict(hip_y=110, front_foot=12, rear_foot=-6, staff_angle=-0.9, front_arm=-0.9,
+             rear_arm=-2.6, staff_offset=10, **s),
+    ]
+    spin = [dict(staff_angle=i * math.tau / 6, front_arm=i * math.tau / 6, rear_arm=-2.6,
+                 lean=0.1, **s) for i in range(6)]
+    hit = [
+        dict(lean=-0.45, front_arm=1.8, rear_arm=1.4, staff_angle=1.5, **s),
+        dict(lean=-0.6, front_arm=2.0, rear_arm=1.7, staff_angle=1.7, hip_y=122, **s),
+    ]
+    jump = [
+        dict(hip_y=112, front_foot=12, rear_foot=-10, staff_angle=1.0, rear_arm=-2.6, **s),
+        dict(hip_y=104, front_foot=6, rear_foot=-4, staff_angle=0.95, rear_arm=-2.6, **s),
+        dict(hip_y=112, front_foot=14, rear_foot=-12, staff_angle=1.0, rear_arm=-2.6, **s),
+    ]
+    crouch = [dict(hip_y=146, front_foot=30, rear_foot=-24, staff_angle=1.1, rear_arm=-2.6, **s),
+              dict(hip_y=148, front_foot=30, rear_foot=-24, staff_angle=1.1, rear_arm=-2.6, **s)]
+    knockdown = [
+        dict(lean=-0.8, hip_y=140, front_arm=2.2, rear_arm=1.9, **s),
+        dict(lying=1.0),
+        dict(lying=1.0),
+    ]
+    return {
+        "idle": (8, idle),
+        "walk": (10, walk),
+        "slash": (20, slash),
+        "low_cut": (18, low_cut),
+        "twin": (16, twin),
+        "chakram": (14, throw),
+        "ex_chakram": (16, throw),
+        "super_storm": (16, spin + spin[:3] + [slash[2]] * 2),
+        "air_slash": (15, air),
+        "hit": (12, hit),
+        "jump": (8, jump),
+        "crouch": (8, crouch),
+        "knockdown": (10, knockdown),
+    }
+
+
 def write_strips(character: str, animations: dict) -> None:
     out_dir = Path("assets/sprites") / character
     out_dir.mkdir(parents=True, exist_ok=True)
@@ -267,3 +346,4 @@ def write_strips(character: str, animations: dict) -> None:
 if __name__ == "__main__":
     write_strips("bengal_lathi", lathiyal_animations())
     write_strips("tamilnadu_silambam", silambar_animations())
+    write_strips("punjab_gatka", gatka_animations())

@@ -27,7 +27,10 @@ enum Kind { NORMAL, COMMAND_NORMAL, SPECIAL, SUPER }
 
 @export_group("Per-frame hit data")
 ## One FrameData per active frame (or a shared one). Length ideally == active.
+## May be empty for pure projectile moves.
 @export var hitbox_frames: Array[FrameData] = []
+## Fired on the first active tick (chakram etc.). Null = melee-only move.
+@export var projectile: ProjectileData
 
 @export_group("Presentation")
 ## Super only: trigger the slow-motion technique cam on activation.

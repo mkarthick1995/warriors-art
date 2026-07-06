@@ -102,7 +102,18 @@ func _run(scene: Node) -> void:
 	_check(p2.health <= hp_before_super - 80, "super connected for major damage")
 	await _until(func() -> bool: return p2.state() == FighterStateMachine.State.IDLE)
 
-	# 9. Force a KO and confirm the round ends and the next round resets health.
+	# 9. Projectile: P2 (Gatka) throws a chakram across the screen at P1.
+	await _until(func() -> bool: return not p1.is_stunned() and not p2.is_stunned())
+	var hp_before_chakram: int = p1.health
+	await _qcf("p2", "light", "left")  # P2 faces left, so QCF rolls left.
+	await _until(func() -> bool: return p1.health < hp_before_chakram)
+	_check(
+		p1.health == hp_before_chakram - 65,
+		"chakram projectile crossed the screen and dealt its damage"
+	)
+	await _until(func() -> bool: return not p1.is_stunned())
+
+	# 10. Force a KO and confirm the round ends and the next round resets health.
 	p2.health = 1
 	await _until(func() -> bool: return not p2.is_stunned())
 	await _walk_into_range(p1, p2)  # Knockback/pushback moved P2 out of reach.
@@ -155,11 +166,12 @@ func _walk_into_range(p1: Fighter, p2: Fighter, gap: float = 130.0) -> void:
 	await _frames(1)
 
 
-## Roll a quarter-circle-forward, optionally ending in a button tap.
-func _qcf(prefix: String, button: String) -> void:
+## Roll a quarter-circle toward `dir` ("right"/"left" = the fighter's
+## forward), optionally ending in a button tap.
+func _qcf(prefix: String, button: String, dir: String = "right") -> void:
 	Input.action_press(prefix + "_down")
 	await _frames(3)
-	Input.action_press(prefix + "_right")
+	Input.action_press(prefix + "_" + dir)
 	await _frames(3)
 	Input.action_release(prefix + "_down")
 	await _frames(2)
@@ -167,5 +179,5 @@ func _qcf(prefix: String, button: String) -> void:
 		Input.action_press(prefix + "_" + button)
 		await _frames(2)
 		Input.action_release(prefix + "_" + button)
-	Input.action_release(prefix + "_right")
+	Input.action_release(prefix + "_" + dir)
 	await _frames(1)

@@ -65,6 +65,8 @@ func _ready() -> void:
 	_center = (p1.global_position + p2.global_position) * 0.5
 	p1.landed_hit.connect(_on_hit.bind(p1))
 	p2.landed_hit.connect(_on_hit.bind(p2))
+	p1.landed_projectile_hit.connect(_on_projectile_hit)
+	p2.landed_projectile_hit.connect(_on_projectile_hit)
 	p1.knocked_out.connect(_on_ko.bind(2))
 	p2.knocked_out.connect(_on_ko.bind(1))
 	_start_round()
@@ -167,6 +169,15 @@ func _clear_throw() -> void:
 	_throw_ticks = 0
 
 
+## Projectile hits: victim takes the hit and hit-stop; the firer (far away)
+## gets none. Knockback follows the projectile's travel direction.
+func _on_projectile_hit(victim: Fighter, frame: FrameData, dir: int) -> void:
+	if phase != Phase.FIGHTING:
+		return
+	victim.apply_hit(frame, dir)
+	victim.hitstop_ticks = frame.hitstop
+
+
 func _on_ko(winner_index: int) -> void:
 	if phase != Phase.FIGHTING:
 		return
@@ -201,6 +212,8 @@ func _end_round(winner_index: int) -> void:
 
 func _start_round() -> void:
 	_clear_throw()
+	for p in get_tree().get_nodes_in_group("projectiles"):
+		p.queue_free()  # No projectiles survive into a new round.
 	round_number = wins[0] + wins[1] + 1
 	timer_ticks = ROUND_SECONDS * 60
 	p1.reset_for_round(_center + Vector2(-SPAWN_OFFSET, 0), 1)
