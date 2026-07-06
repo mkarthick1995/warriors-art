@@ -63,7 +63,9 @@ Goal: make adding characters cheap and the combat model complete.
 
 Goal: build out to 6–8 characters and 4–6 stages, in parallel.
 
-**Progress:** **6 characters** — Bengal Lathi (rushdown), Varanasi Musti (brawler), Tamil Nadu Silambam (zoner), Punjab Gatka (chakram projectile), Kerala Kalaripayattu (urumi all-rounder), Manipur Thang-Ta (sword/spear technical) — hitting the launch-roster minimum; all placeholder art/names pending research issues #1–#6. **4 stages** (GhatDusk, TempleDawn, BackwaterDusk, WheatFields) with random pick. Projectile system landed (closed #9). Title screen: keys 1–6 pick P2 until the Phase 4 select screen. Remaining Phase 3 work: replace placeholders with researched concepts + real art, balance passes, optionally Maharashtra/Bihar for 7–8.
+**Progress — buildable scope complete:** **8 characters** (full design-doc roster): Bengal Lathi (rushdown), Varanasi Musti (brawler), Tamil Nadu Silambam (zoner), Punjab Gatka (chakram projectile), Kerala Kalaripayattu (urumi all-rounder), Manipur Thang-Ta (sword/spear technical), Maharashtra Mardani Khel (armored bruiser, tethered vita throw), Bihar Pari-Khanda (balanced sword-and-board). **6 stages**: GhatDusk, TempleDawn, BackwaterDusk, WheatFields, HillVillage, FortRampart — random pick per match. Title screen keys 1–8 pick P2 until the Phase 4 select screen.
+
+**Remaining Phase 3 work is human-gated:** researched movesets/names replacing placeholders (issues #1–#6, plus stance-switching for Thang-Ta and shield-parry for Pari-Khanda as engine follow-ups once designed), real art/audio via the pipelines, and playtest-driven balance passes.
 
 - [ ] Divide roster across the three devs (see Roadmap ownership). Each character: concept → moveset → animations → frame-data tuning → balance pass.
 - [ ] Region stages with parallax + regional percussion, one per priority character.

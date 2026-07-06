@@ -1,0 +1,55 @@
+[gd_scene format=3]
+
+[node name="FortRampart" type="ParallaxBackground"]
+
+[node name="SkyLayer" type="ParallaxLayer" parent="."]
+motion_scale = Vector2(0.05, 0.02)
+
+[node name="Sky" type="Polygon2D" parent="SkyLayer"]
+polygon = PackedVector2Array(-6000, -2600, 6000, -2600, 6000, 600, -6000, 600)
+vertex_colors = PackedColorArray(0.25, 0.28, 0.35, 1, 0.25, 0.28, 0.35, 1, 0.6, 0.58, 0.5, 1, 0.6, 0.58, 0.5, 1)
+
+[node name="FarLayer" type="ParallaxLayer" parent="."]
+motion_scale = Vector2(0.12, 0.04)
+
+[node name="Sahyadris" type="Polygon2D" parent="FarLayer"]
+polygon = PackedVector2Array(-6000, 600, -6000, -120, -4200, -460, -2600, -200, -800, -560, 800, -300, 2600, -520, 4400, -180, 6000, -380, 6000, 600)
+color = Color(0.22, 0.26, 0.3, 1)
+
+[node name="MidLayer" type="ParallaxLayer" parent="."]
+motion_scale = Vector2(0.32, 0.1)
+
+[node name="RampartWall" type="Polygon2D" parent="MidLayer"]
+polygon = PackedVector2Array(-6000, 600, -6000, -60, 6000, -60, 6000, 600)
+color = Color(0.16, 0.15, 0.14, 1)
+
+[node name="Crenels" type="Polygon2D" parent="MidLayer"]
+polygon = PackedVector2Array(-2000, -60, -2000, -130, -1880, -130, -1880, -60, -1760, -60, -1760, -130, -1640, -130, -1640, -60, -1520, -60, -1520, -130, -1400, -130, -1400, -60)
+color = Color(0.16, 0.15, 0.14, 1)
+
+[node name="Crenels2" type="Polygon2D" parent="MidLayer"]
+polygon = PackedVector2Array(1000, -60, 1000, -130, 1120, -130, 1120, -60, 1240, -60, 1240, -130, 1360, -130, 1360, -60, 1480, -60, 1480, -130, 1600, -130, 1600, -60)
+color = Color(0.16, 0.15, 0.14, 1)
+
+[node name="Bastion" type="Polygon2D" parent="MidLayer"]
+polygon = PackedVector2Array(-900, -60, -450, -60, -480, -420, -870, -420)
+color = Color(0.13, 0.12, 0.11, 1)
+
+[node name="BastionTop" type="Polygon2D" parent="MidLayer"]
+polygon = PackedVector2Array(-890, -420, -890, -480, -800, -480, -800, -420, -720, -420, -720, -480, -630, -480, -630, -420, -550, -420, -550, -480, -460, -480, -460, -420)
+color = Color(0.13, 0.12, 0.11, 1)
+
+[node name="FlagPole" type="Polygon2D" parent="MidLayer"]
+polygon = PackedVector2Array(-680, -480, -672, -480, -672, -700, -680, -700)
+color = Color(0.13, 0.12, 0.11, 1)
+
+[node name="Flag" type="Polygon2D" parent="MidLayer"]
+polygon = PackedVector2Array(-672, -700, -560, -670, -672, -640)
+color = Color(0.85, 0.5, 0.15, 1)
+
+[node name="NearLayer" type="ParallaxLayer" parent="."]
+motion_scale = Vector2(0.6, 0.25)
+
+[node name="Cannon" type="Polygon2D" parent="NearLayer"]
+polygon = PackedVector2Array(-1500, 250, -1500, 150, -1460, 110, -1250, 90, -1240, 130, -1440, 160, -1430, 250)
+color = Color(0.09, 0.09, 0.1, 1)

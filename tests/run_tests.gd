@@ -155,6 +155,8 @@ func _test_character_resource_loads() -> void:
 		"res://src/characters/punjab_gatka/punjab_gatka.tres",
 		"res://src/characters/kerala_kalari/kerala_kalari.tres",
 		"res://src/characters/manipur_thangta/manipur_thangta.tres",
+		"res://src/characters/maharashtra_mardani/maharashtra_mardani.tres",
+		"res://src/characters/bihar_parikhanda/bihar_parikhanda.tres",
 	]
 	for path in paths:
 		var short := path.get_file()

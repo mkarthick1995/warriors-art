@@ -1,0 +1,224 @@
+[gd_resource type="Resource" script_class="CharacterData" load_steps=22 format=3]
+
+[ext_resource type="Script" path="res://src/data/character_data.gd" id="1"]
+[ext_resource type="Script" path="res://src/data/move_data.gd" id="2"]
+[ext_resource type="Script" path="res://src/data/frame_data.gd" id="3"]
+[ext_resource type="SpriteFrames" path="res://src/characters/bihar_parikhanda/bihar_parikhanda_frames.tres" id="4"]
+
+[sub_resource type="Resource" id="frame_slash"]
+script = ExtResource("3")
+hitbox_rect = Rect2(20, -122, 78, 25)
+damage = 45
+hitstun = 14
+hitstop = 5
+knockback = Vector2(155, 0)
+knockdown = false
+
+[sub_resource type="Resource" id="frame_low_slash"]
+script = ExtResource("3")
+hitbox_rect = Rect2(18, -44, 70, 21)
+damage = 41
+hitstun = 13
+hitstop = 5
+knockback = Vector2(135, 0)
+knockdown = false
+
+[sub_resource type="Resource" id="frame_bash"]
+script = ExtResource("3")
+hitbox_rect = Rect2(15, -120, 70, 55)
+damage = 75
+hitstun = 20
+hitstop = 9
+knockback = Vector2(340, 0)
+knockdown = false
+
+[sub_resource type="Resource" id="frame_air_slash"]
+script = ExtResource("3")
+hitbox_rect = Rect2(8, -92, 76, 46)
+damage = 52
+hitstun = 17
+hitstop = 6
+knockback = Vector2(115, 190)
+knockdown = false
+
+[sub_resource type="Resource" id="frame_overhead_a"]
+script = ExtResource("3")
+hitbox_rect = Rect2(20, -165, 85, 95)
+damage = 88
+hitstun = 24
+hitstop = 9
+knockback = Vector2(240, -420)
+knockdown = true
+
+[sub_resource type="Resource" id="frame_overhead_b"]
+script = ExtResource("3")
+hitbox_rect = Rect2(25, -145, 95, 105)
+damage = 72
+hitstun = 22
+hitstop = 8
+knockback = Vector2(220, -380)
+knockdown = true
+
+[sub_resource type="Resource" id="frame_ex_overhead_a"]
+script = ExtResource("3")
+hitbox_rect = Rect2(20, -175, 95, 105)
+damage = 128
+hitstun = 28
+hitstop = 11
+knockback = Vector2(280, -520)
+knockdown = true
+
+[sub_resource type="Resource" id="frame_ex_overhead_b"]
+script = ExtResource("3")
+hitbox_rect = Rect2(25, -155, 108, 115)
+damage = 98
+hitstun = 24
+hitstop = 9
+knockback = Vector2(260, -460)
+knockdown = true
+
+[sub_resource type="Resource" id="frame_super_a"]
+script = ExtResource("3")
+hitbox_rect = Rect2(22, -138, 160, 62)
+damage = 92
+hitstun = 24
+hitstop = 13
+knockback = Vector2(135, -90)
+knockdown = true
+
+[sub_resource type="Resource" id="frame_super_b"]
+script = ExtResource("3")
+hitbox_rect = Rect2(32, -148, 195, 82)
+damage = 220
+hitstun = 34
+hitstop = 14
+knockback = Vector2(470, -530)
+knockdown = true
+
+[sub_resource type="Resource" id="move_slash"]
+script = ExtResource("2")
+display_name = "Khanda Vaar"
+kind = 0
+input = "L"
+air = false
+animation_name = "slash"
+startup = 4
+active = 3
+recovery = 9
+on_block = -2
+meter_gain = 25
+meter_cost = 0
+hitbox_frames = Array[ExtResource("3")]([SubResource("frame_slash")])
+technique_cam = false
+
+[sub_resource type="Resource" id="move_low_slash"]
+script = ExtResource("2")
+display_name = "Neeche Kaat"
+kind = 0
+input = "2L"
+air = false
+animation_name = "low_slash"
+startup = 5
+active = 3
+recovery = 10
+on_block = -3
+meter_gain = 25
+meter_cost = 0
+hitbox_frames = Array[ExtResource("3")]([SubResource("frame_low_slash")])
+technique_cam = false
+
+[sub_resource type="Resource" id="move_bash"]
+script = ExtResource("2")
+display_name = "Pari Prahar"
+kind = 0
+input = "M"
+air = false
+animation_name = "bash"
+startup = 9
+active = 4
+recovery = 15
+on_block = -4
+meter_gain = 40
+meter_cost = 0
+hitbox_frames = Array[ExtResource("3")]([SubResource("frame_bash")])
+technique_cam = false
+
+[sub_resource type="Resource" id="move_air_slash"]
+script = ExtResource("2")
+display_name = "Hawa Kaat"
+kind = 0
+input = "L"
+air = true
+animation_name = "air_slash"
+startup = 6
+active = 5
+recovery = 8
+on_block = -1
+meter_gain = 25
+meter_cost = 0
+hitbox_frames = Array[ExtResource("3")]([SubResource("frame_air_slash")])
+technique_cam = false
+
+[sub_resource type="Resource" id="move_overhead"]
+script = ExtResource("2")
+display_name = "Chhalaang Kaat"
+kind = 2
+input = "236L"
+air = false
+animation_name = "overhead"
+startup = 12
+active = 5
+recovery = 20
+on_block = -9
+meter_gain = 70
+meter_cost = 0
+hitbox_frames = Array[ExtResource("3")]([SubResource("frame_overhead_a"), SubResource("frame_overhead_b")])
+technique_cam = false
+
+[sub_resource type="Resource" id="move_ex_overhead"]
+script = ExtResource("2")
+display_name = "EX Chhalaang Kaat"
+kind = 2
+input = "236M"
+air = false
+animation_name = "ex_overhead"
+startup = 10
+active = 6
+recovery = 18
+on_block = -7
+meter_gain = 0
+meter_cost = 250
+hitbox_frames = Array[ExtResource("3")]([SubResource("frame_ex_overhead_a"), SubResource("frame_ex_overhead_b")])
+technique_cam = false
+
+[sub_resource type="Resource" id="move_super"]
+script = ExtResource("2")
+display_name = "Veer Vijay"
+kind = 3
+input = "236236L"
+air = false
+animation_name = "super_vijay"
+startup = 8
+active = 11
+recovery = 26
+on_block = -13
+meter_gain = 0
+meter_cost = 1000
+hitbox_frames = Array[ExtResource("3")]([SubResource("frame_super_a"), SubResource("frame_super_b")])
+technique_cam = true
+
+[resource]
+script = ExtResource("1")
+display_name = "Khanda Yoddha (placeholder)"
+state_region = "Bihar"
+martial_art = "Pari-Khanda"
+walk_speed = 205.0
+dash_speed = 460.0
+jump_velocity = -930.0
+gravity = 2400.0
+max_health = 1000
+weight = 1.0
+moves = Array[ExtResource("2")]([SubResource("move_slash"), SubResource("move_low_slash"), SubResource("move_bash"), SubResource("move_air_slash"), SubResource("move_overhead"), SubResource("move_ex_overhead")])
+super_move = SubResource("move_super")
+sprite_frames = ExtResource("4")
+percussion = "dholak"

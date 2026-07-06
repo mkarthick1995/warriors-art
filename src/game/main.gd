@@ -10,6 +10,8 @@ const ROSTER: Array[String] = [
 	"res://src/characters/punjab_gatka/punjab_gatka.tres",
 	"res://src/characters/kerala_kalari/kerala_kalari.tres",
 	"res://src/characters/manipur_thangta/manipur_thangta.tres",
+	"res://src/characters/maharashtra_mardani/maharashtra_mardani.tres",
+	"res://src/characters/bihar_parikhanda/bihar_parikhanda.tres",
 ]
 
 @onready var _subtitle: Label = $UI/Center/VBox/Subtitle
@@ -30,7 +32,7 @@ func _unhandled_input(event: InputEvent) -> void:
 			GameState.set_mode(GameState.Mode.TRAINING)
 			GameState.change_scene("res://scenes/Training.tscn")
 			return
-		if key >= KEY_1 and key <= KEY_6:
+		if key >= KEY_1 and key <= KEY_8:
 			var idx := key - KEY_1
 			GameState.p2_character_path = ROSTER[idx]
 			var picked: CharacterData = load(ROSTER[idx])

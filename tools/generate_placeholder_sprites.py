@@ -498,6 +498,156 @@ def thangta_animations() -> dict:
     }
 
 
+def mardani_animations() -> dict:
+    """Maharashtra Mardani Khel: patta gauntlet-sword bruiser, vita throw."""
+    p = {"staff_len": 95.0}
+    idle = [dict(hip_y=120 + bob, staff_angle=0.5, front_arm=-0.4, **p) for bob in (0, 1, 2, 1)]
+    walk = [
+        dict(
+            hip_y=118 + (2 if i % 3 == 0 else 0),
+            front_foot=lerp(26, -4, (i % 3) / 2.0),
+            rear_foot=lerp(-22, 6, (i % 3) / 2.0),
+            staff_angle=0.5, **p,
+        )
+        for i in range(6)
+    ]
+    patta = [
+        dict(staff_angle=1.5, front_arm=1.2, lean=-0.1, **p),
+        dict(staff_angle=0.5, front_arm=0.3, lean=0.2, staff_offset=10, **p),
+        dict(staff_angle=-0.1, front_arm=-0.1, lean=0.3, staff_offset=16, **p),
+        dict(staff_angle=0.3, front_arm=-0.3, lean=0.1, **p),
+    ]
+    low_patta = [dict(**{**q, "hip_y": 150}) for q in patta]
+    chhed = [
+        dict(staff_angle=0.4, front_arm=-0.4, lean=-0.2, **p),
+        dict(staff_angle=0.05, front_arm=-0.05, staff_offset=30, lean=0.35, **p),
+        dict(staff_angle=0.0, front_arm=0.0, staff_offset=42, lean=0.5, front_foot=40, **p),
+        dict(staff_angle=0.2, front_arm=-0.25, staff_offset=14, lean=0.2, **p),
+    ]
+    vita = [
+        dict(staff_angle=0.5, staff_len=120.0, front_arm=-2.7, rear_arm=-0.5, lean=-0.3),
+        dict(staff_angle=0.3, staff_len=120.0, front_arm=-2.9, rear_arm=-0.4, lean=-0.35),
+        dict(staff_angle=0.05, staff_len=120.0, front_arm=0.1, rear_arm=-0.6, lean=0.45),
+        dict(staff_angle=0.0, staff_len=120.0, front_arm=0.0, rear_arm=-0.6, lean=0.5),
+    ]
+    spin = [dict(staff_angle=i * math.tau / 6, front_arm=i * math.tau / 6, lean=0.1, **p)
+            for i in range(6)]
+    air = [
+        dict(hip_y=112, front_foot=10, rear_foot=-8, staff_angle=-0.7, front_arm=-0.7, **p),
+        dict(hip_y=112, front_foot=12, rear_foot=-6, staff_angle=-0.9, front_arm=-0.9,
+             staff_offset=8, **p),
+        dict(hip_y=112, front_foot=12, rear_foot=-6, staff_angle=-0.9, front_arm=-0.9,
+             staff_offset=10, **p),
+    ]
+    hit = [
+        dict(lean=-0.4, front_arm=1.8, rear_arm=1.4, staff_angle=1.4, **p),
+        dict(lean=-0.5, front_arm=2.0, rear_arm=1.7, staff_angle=1.6, hip_y=124, **p),
+    ]
+    jump = [
+        dict(hip_y=114, front_foot=12, rear_foot=-10, staff_angle=0.6, **p),
+        dict(hip_y=108, front_foot=6, rear_foot=-4, staff_angle=0.55, **p),
+        dict(hip_y=114, front_foot=14, rear_foot=-12, staff_angle=0.6, **p),
+    ]
+    crouch = [dict(hip_y=148, front_foot=28, rear_foot=-22, staff_angle=0.7, **p),
+              dict(hip_y=150, front_foot=28, rear_foot=-22, staff_angle=0.7, **p)]
+    knockdown = [
+        dict(lean=-0.8, hip_y=142, front_arm=2.2, rear_arm=1.9),
+        dict(lying=1.0),
+        dict(lying=1.0),
+    ]
+    return {
+        "idle": (8, idle),
+        "walk": (9, walk),
+        "patta": (20, patta),
+        "low_patta": (18, low_patta),
+        "chhed": (16, chhed),
+        "vita": (14, vita),
+        "ex_vita": (16, vita),
+        "super_vaadal": (16, spin + spin[:3] + [chhed[2]] * 2),
+        "air_patta": (15, air),
+        "hit": (12, hit),
+        "jump": (8, jump),
+        "crouch": (8, crouch),
+        "knockdown": (10, knockdown),
+    }
+
+
+def parikhanda_animations() -> dict:
+    """Bihar Pari-Khanda: balanced khanda sword + pari shield."""
+    k = {"staff_len": 82.0, "shield": True}
+    idle = [dict(hip_y=118 + bob, staff_angle=1.1, front_arm=-0.55, rear_arm=-2.5, **k)
+            for bob in (0, 2, 3, 2)]
+    walk = [
+        dict(
+            hip_y=116 + (2 if i % 3 == 0 else 0),
+            front_foot=lerp(28, -6, (i % 3) / 2.0),
+            rear_foot=lerp(-24, 8, (i % 3) / 2.0),
+            staff_angle=1.1, rear_arm=-2.5, **k,
+        )
+        for i in range(6)
+    ]
+    slash = [
+        dict(staff_angle=1.8, front_arm=1.5, rear_arm=-2.5, lean=-0.15, **k),
+        dict(staff_angle=0.7, front_arm=0.5, rear_arm=-2.5, lean=0.15, staff_offset=8, **k),
+        dict(staff_angle=-0.15, front_arm=-0.15, rear_arm=-2.5, lean=0.3, staff_offset=12, **k),
+        dict(staff_angle=0.4, front_arm=-0.3, rear_arm=-2.5, lean=0.1, **k),
+    ]
+    low_slash = [dict(**{**q, "hip_y": 150}) for q in slash]
+    bash = [
+        dict(staff_angle=1.3, front_arm=-2.8, rear_arm=-0.6, lean=-0.2, **k),
+        dict(staff_angle=1.3, front_arm=-3.0, rear_arm=-0.3, lean=0.15, **k),
+        dict(staff_angle=1.3, front_arm=-3.1, rear_arm=-0.1, lean=0.4, front_foot=36, **k),
+        dict(staff_angle=1.3, front_arm=-2.9, rear_arm=-0.4, lean=0.15, **k),
+    ]
+    overhead = [
+        dict(staff_angle=2.2, front_arm=1.9, rear_arm=-2.5, lean=-0.25, **k),
+        dict(staff_angle=1.6, front_arm=1.3, rear_arm=-2.5, lean=0.0, **k),
+        dict(staff_angle=0.35, front_arm=0.2, rear_arm=-2.5, lean=0.4, staff_offset=12, **k),
+        dict(staff_angle=-0.4, front_arm=-0.45, rear_arm=-2.5, lean=0.5, staff_offset=14, **k),
+    ]
+    spin = [dict(staff_angle=i * math.tau / 6, front_arm=i * math.tau / 6, rear_arm=-2.5,
+                 lean=0.1, **k) for i in range(6)]
+    air = [
+        dict(hip_y=110, front_foot=10, rear_foot=-8, staff_angle=-0.7, front_arm=-0.7,
+             rear_arm=-2.5, **k),
+        dict(hip_y=110, front_foot=12, rear_foot=-6, staff_angle=-0.9, front_arm=-0.9,
+             rear_arm=-2.5, staff_offset=8, **k),
+        dict(hip_y=110, front_foot=12, rear_foot=-6, staff_angle=-0.9, front_arm=-0.9,
+             rear_arm=-2.5, staff_offset=10, **k),
+    ]
+    hit = [
+        dict(lean=-0.45, front_arm=1.8, rear_arm=1.4, staff_angle=1.5, **k),
+        dict(lean=-0.6, front_arm=2.0, rear_arm=1.7, staff_angle=1.7, hip_y=122, **k),
+    ]
+    jump = [
+        dict(hip_y=112, front_foot=12, rear_foot=-10, staff_angle=1.2, rear_arm=-2.5, **k),
+        dict(hip_y=104, front_foot=6, rear_foot=-4, staff_angle=1.15, rear_arm=-2.5, **k),
+        dict(hip_y=112, front_foot=14, rear_foot=-12, staff_angle=1.2, rear_arm=-2.5, **k),
+    ]
+    crouch = [dict(hip_y=146, front_foot=30, rear_foot=-24, staff_angle=1.2, rear_arm=-2.5, **k),
+              dict(hip_y=148, front_foot=30, rear_foot=-24, staff_angle=1.2, rear_arm=-2.5, **k)]
+    knockdown = [
+        dict(lean=-0.8, hip_y=140, front_arm=2.2, rear_arm=1.9),
+        dict(lying=1.0),
+        dict(lying=1.0),
+    ]
+    return {
+        "idle": (8, idle),
+        "walk": (10, walk),
+        "slash": (20, slash),
+        "low_slash": (18, low_slash),
+        "bash": (18, bash),
+        "overhead": (16, overhead),
+        "ex_overhead": (18, overhead),
+        "super_vijay": (16, spin + spin[:3] + [overhead[3]] * 2),
+        "air_slash": (15, air),
+        "hit": (12, hit),
+        "jump": (8, jump),
+        "crouch": (8, crouch),
+        "knockdown": (10, knockdown),
+    }
+
+
 def write_strips(character: str, animations: dict) -> None:
     out_dir = Path("assets/sprites") / character
     out_dir.mkdir(parents=True, exist_ok=True)
@@ -519,3 +669,5 @@ if __name__ == "__main__":
     write_strips("punjab_gatka", gatka_animations())
     write_strips("kerala_kalari", kalari_animations())
     write_strips("manipur_thangta", thangta_animations())
+    write_strips("maharashtra_mardani", mardani_animations())
+    write_strips("bihar_parikhanda", parikhanda_animations())

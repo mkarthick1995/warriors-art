@@ -143,6 +143,12 @@ def main() -> None:
     # Manipur pung: warm, measured.
     write_wav(perc / "pung_loop.wav", percussion_loop(
         105, 108, [1, 0, 0, 0.6, 0.8, 0, 0.5, 0, 1, 0, 0.6, 0, 0.8, 0.5, 0, 0.4]))
+    # Maharashtra dhol-tasha: sharp, martial, processional.
+    write_wav(perc / "tasha_loop.wav", percussion_loop(
+        260, 150, [1, 0.6, 0.8, 0, 1, 0, 0.7, 0.6, 1, 0.6, 0.8, 0, 1, 0.7, 0, 0.6]))
+    # Bihar dholak: rolling folk pulse.
+    write_wav(perc / "dholak_loop.wav", percussion_loop(
+        140, 120, [1, 0, 0.6, 0.5, 0.9, 0, 0.5, 0, 1, 0.5, 0.6, 0, 0.9, 0, 0.6, 0.5]))
 
 
 if __name__ == "__main__":

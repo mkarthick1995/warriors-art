@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3]
+[gd_scene load_steps=17 format=3]
 
 [ext_resource type="Script" path="res://src/game/match/match_controller.gd" id="1_controller"]
 [ext_resource type="PackedScene" path="res://scenes/Fighter.tscn" id="2_fighter"]
@@ -12,6 +12,8 @@
 [ext_resource type="PackedScene" path="res://scenes/stages/TempleDawn.tscn" id="10_temple"]
 [ext_resource type="PackedScene" path="res://scenes/stages/BackwaterDusk.tscn" id="11_backwater"]
 [ext_resource type="PackedScene" path="res://scenes/stages/WheatFields.tscn" id="12_wheat"]
+[ext_resource type="PackedScene" path="res://scenes/stages/HillVillage.tscn" id="13_hill"]
+[ext_resource type="PackedScene" path="res://scenes/stages/FortRampart.tscn" id="14_fort"]
 
 [sub_resource type="RectangleShape2D" id="floor_shape"]
 size = Vector2(4400, 200)
@@ -26,7 +28,7 @@ p2 = NodePath("P2")
 
 [node name="Backdrop" type="Node" parent="."]
 script = ExtResource("8_backdrop")
-stages = Array[PackedScene]([ExtResource("9_ghat"), ExtResource("10_temple"), ExtResource("11_backwater"), ExtResource("12_wheat")])
+stages = Array[PackedScene]([ExtResource("9_ghat"), ExtResource("10_temple"), ExtResource("11_backwater"), ExtResource("12_wheat"), ExtResource("13_hill"), ExtResource("14_fort")])
 
 [node name="Stage" type="Node2D" parent="."]
 

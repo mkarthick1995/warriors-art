@@ -1,0 +1,227 @@
+[gd_resource type="Resource" script_class="CharacterData" load_steps=24 format=3]
+
+[ext_resource type="Script" path="res://src/data/character_data.gd" id="1"]
+[ext_resource type="Script" path="res://src/data/move_data.gd" id="2"]
+[ext_resource type="Script" path="res://src/data/frame_data.gd" id="3"]
+[ext_resource type="Script" path="res://src/data/projectile_data.gd" id="4"]
+[ext_resource type="SpriteFrames" path="res://src/characters/maharashtra_mardani/maharashtra_mardani_frames.tres" id="5"]
+
+[sub_resource type="Resource" id="frame_patta"]
+script = ExtResource("3")
+hitbox_rect = Rect2(22, -124, 88, 26)
+damage = 48
+hitstun = 15
+hitstop = 6
+knockback = Vector2(150, 0)
+knockdown = false
+
+[sub_resource type="Resource" id="frame_low_patta"]
+script = ExtResource("3")
+hitbox_rect = Rect2(20, -44, 80, 22)
+damage = 44
+hitstun = 14
+hitstop = 5
+knockback = Vector2(130, 0)
+knockdown = false
+
+[sub_resource type="Resource" id="frame_chhed"]
+script = ExtResource("3")
+hitbox_rect = Rect2(28, -128, 112, 30)
+damage = 90
+hitstun = 22
+hitstop = 9
+knockback = Vector2(250, -30)
+knockdown = false
+
+[sub_resource type="Resource" id="frame_air_patta"]
+script = ExtResource("3")
+hitbox_rect = Rect2(8, -92, 82, 46)
+damage = 55
+hitstun = 18
+hitstop = 7
+knockback = Vector2(110, 195)
+knockdown = false
+
+[sub_resource type="Resource" id="frame_vita"]
+script = ExtResource("3")
+hitbox_rect = Rect2(-22, -14, 44, 28)
+damage = 70
+hitstun = 19
+hitstop = 6
+knockback = Vector2(210, -50)
+knockdown = false
+
+[sub_resource type="Resource" id="proj_vita"]
+script = ExtResource("4")
+speed = 620.0
+lifetime_ticks = 42
+spawn_offset = Vector2(65, -110)
+frame = SubResource("frame_vita")
+pierce = false
+color = Color(0.85, 0.75, 0.55, 1)
+
+[sub_resource type="Resource" id="frame_ex_vita"]
+script = ExtResource("3")
+hitbox_rect = Rect2(-26, -16, 52, 32)
+damage = 105
+hitstun = 25
+hitstop = 8
+knockback = Vector2(300, -240)
+knockdown = true
+
+[sub_resource type="Resource" id="proj_ex_vita"]
+script = ExtResource("4")
+speed = 760.0
+lifetime_ticks = 48
+spawn_offset = Vector2(65, -110)
+frame = SubResource("frame_ex_vita")
+pierce = false
+color = Color(1, 0.6, 0.25, 1)
+
+[sub_resource type="Resource" id="frame_super_a"]
+script = ExtResource("3")
+hitbox_rect = Rect2(22, -138, 150, 64)
+damage = 95
+hitstun = 24
+hitstop = 13
+knockback = Vector2(130, -85)
+knockdown = true
+
+[sub_resource type="Resource" id="frame_super_b"]
+script = ExtResource("3")
+hitbox_rect = Rect2(30, -148, 185, 84)
+damage = 225
+hitstun = 34
+hitstop = 14
+knockback = Vector2(450, -520)
+knockdown = true
+
+[sub_resource type="Resource" id="move_patta"]
+script = ExtResource("2")
+display_name = "Patta Vaar"
+kind = 0
+input = "L"
+air = false
+animation_name = "patta"
+startup = 5
+active = 3
+recovery = 10
+on_block = -3
+meter_gain = 25
+meter_cost = 0
+hitbox_frames = Array[ExtResource("3")]([SubResource("frame_patta")])
+technique_cam = false
+
+[sub_resource type="Resource" id="move_low_patta"]
+script = ExtResource("2")
+display_name = "Khalcha Vaar"
+kind = 0
+input = "2L"
+air = false
+animation_name = "low_patta"
+startup = 6
+active = 3
+recovery = 11
+on_block = -4
+meter_gain = 25
+meter_cost = 0
+hitbox_frames = Array[ExtResource("3")]([SubResource("frame_low_patta")])
+technique_cam = false
+
+[sub_resource type="Resource" id="move_chhed"]
+script = ExtResource("2")
+display_name = "Dandpatta Chhed"
+kind = 0
+input = "M"
+air = false
+animation_name = "chhed"
+startup = 10
+active = 4
+recovery = 17
+on_block = -7
+meter_gain = 40
+meter_cost = 0
+hitbox_frames = Array[ExtResource("3")]([SubResource("frame_chhed")])
+technique_cam = false
+
+[sub_resource type="Resource" id="move_air_patta"]
+script = ExtResource("2")
+display_name = "Hawai Patta"
+kind = 0
+input = "L"
+air = true
+animation_name = "air_patta"
+startup = 7
+active = 5
+recovery = 8
+on_block = -1
+meter_gain = 25
+meter_cost = 0
+hitbox_frames = Array[ExtResource("3")]([SubResource("frame_air_patta")])
+technique_cam = false
+
+[sub_resource type="Resource" id="move_vita"]
+script = ExtResource("2")
+display_name = "Vita Fek"
+kind = 2
+input = "236L"
+air = false
+animation_name = "vita"
+startup = 12
+active = 2
+recovery = 19
+on_block = -5
+meter_gain = 40
+meter_cost = 0
+hitbox_frames = Array[ExtResource("3")]([])
+projectile = SubResource("proj_vita")
+technique_cam = false
+
+[sub_resource type="Resource" id="move_ex_vita"]
+script = ExtResource("2")
+display_name = "EX Vita Fek"
+kind = 2
+input = "236M"
+air = false
+animation_name = "ex_vita"
+startup = 10
+active = 2
+recovery = 17
+on_block = -3
+meter_gain = 0
+meter_cost = 250
+hitbox_frames = Array[ExtResource("3")]([])
+projectile = SubResource("proj_ex_vita")
+technique_cam = false
+
+[sub_resource type="Resource" id="move_super"]
+script = ExtResource("2")
+display_name = "Maratha Vaadal"
+kind = 3
+input = "236236L"
+air = false
+animation_name = "super_vaadal"
+startup = 9
+active = 10
+recovery = 26
+on_block = -13
+meter_gain = 0
+meter_cost = 1000
+hitbox_frames = Array[ExtResource("3")]([SubResource("frame_super_a"), SubResource("frame_super_b")])
+technique_cam = true
+
+[resource]
+script = ExtResource("1")
+display_name = "Mardani Veer (placeholder)"
+state_region = "Maharashtra"
+martial_art = "Mardani Khel"
+walk_speed = 175.0
+dash_speed = 420.0
+jump_velocity = -880.0
+gravity = 2400.0
+max_health = 1100
+weight = 1.2
+moves = Array[ExtResource("2")]([SubResource("move_patta"), SubResource("move_low_patta"), SubResource("move_chhed"), SubResource("move_air_patta"), SubResource("move_vita"), SubResource("move_ex_vita")])
+super_move = SubResource("move_super")
+sprite_frames = ExtResource("5")
+percussion = "tasha"

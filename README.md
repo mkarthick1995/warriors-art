@@ -47,7 +47,7 @@ See [`docs/GAME_DESIGN.md`](docs/GAME_DESIGN.md) for the full design brief.
 1. Install **Godot 4.3-stable (standard, GDScript build)** — https://godotengine.org/download
 2. Install **Git** and **Git LFS**: `git lfs install`
 3. Clone: `git clone https://github.com/mkarthick1995/warriors-art.git`
-4. Open `project.godot` in Godot and press F5 — keys **1–6** pick P2's fighter (all six styles playable), **Enter** starts a local 1v1 on a random stage, **T** starts training mode (H toggles the hitbox overlay).
+4. Open `project.godot` in Godot and press F5 — keys **1–8** pick P2's fighter (the full eight-style roster is playable), **Enter** starts a local 1v1 on one of six random stages, **T** starts training mode (H toggles the hitbox overlay).
    **P1:** WASD move, J/K light/medium, J+K throw, double-tap dash, motion specials (QCF+J, QCF·QCF+J super on full meter) · **P2:** arrows + numpad 1/2 (numpad 1+2 throw).
    **Gamepads:** controller 1 → P1, controller 2 → P2 (D-pad/stick + bottom/left face buttons; bottom+left together = throw).
 5. Read [`docs/ONBOARDING.md`](docs/ONBOARDING.md).
