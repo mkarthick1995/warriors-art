@@ -100,7 +100,7 @@ position = Vector2(0, 100)
 shape = SubResource("floor_shape")
 
 [node name="FloorVisual" type="Polygon2D" parent="Stage/Floor"]
-polygon = PackedVector2Array(-2200, 0, 2200, 0, 2200, 200, -2200, 200)
+polygon = PackedVector2Array(-6000, 0, 6000, 0, 6000, 1400, -6000, 1400)
 color = Color(0.25, 0.18, 0.12, 1)
 
 [node name="WallL" type="StaticBody2D" parent="Stage"]

@@ -35,6 +35,8 @@ See [`docs/GAME_DESIGN.md`](docs/GAME_DESIGN.md) for the full design brief.
 | [Roadmap](docs/ROADMAP.md) | Milestones, timeline, ownership |
 | [Game Design](docs/GAME_DESIGN.md) | Roster, mechanics, modes, art & audio direction |
 | [Architecture](docs/ARCHITECTURE.md) | Code structure, core systems, data model |
+| [Character Authoring](docs/CHARACTER_AUTHORING.md) | Build a fighter from data — no engine code |
+| [Art Pipeline](docs/ART_PIPELINE.md) | Sprite-strip convention → SpriteFrames build |
 | [Coding Standards](docs/CODING_STANDARDS.md) | GDScript style, naming, review rules |
 | [Git Workflow](docs/GIT_WORKFLOW.md) | Branching, commits, PRs, LFS |
 | [Onboarding](docs/ONBOARDING.md) | New-contributor setup (start here) |

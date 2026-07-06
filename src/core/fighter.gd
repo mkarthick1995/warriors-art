@@ -117,9 +117,20 @@ func state() -> FighterStateMachine.State:
 	return _sm.current
 
 
+## Ticks spent in the current state (presentation uses this to restart anims).
+func state_ticks() -> int:
+	return _sm.time_in_state
+
+
 ## Read-only access for the training-mode overlay (debug display).
 func inputs() -> InputBuffer:
 	return _inputs
+
+
+## The move currently executing, or null (presentation reads this to pick
+## the attack animation).
+func current_move() -> MoveData:
+	return _current_move
 
 
 ## Active hitbox rect in this fighter's local space, or zero-size when inactive.

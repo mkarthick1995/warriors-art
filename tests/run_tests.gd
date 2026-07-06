@@ -176,3 +176,16 @@ func _test_character_resource_loads() -> void:
 				m.button_part() != &"",
 				"resource: %s move '%s' input parses" % [short, m.display_name]
 			)
+		if data.sprite_frames != null:
+			# Sprite contract: idle/walk must exist; attack anims should match
+			# the moves so the right animation plays (fallback is idle).
+			for required in ["idle", "walk"]:
+				_check(
+					data.sprite_frames.has_animation(required),
+					"sprites: %s has required '%s' animation" % [short, required]
+				)
+			for m in data.moves:
+				_check(
+					data.sprite_frames.has_animation(m.animation_name),
+					"sprites: %s has animation for move '%s'" % [short, m.display_name]
+				)

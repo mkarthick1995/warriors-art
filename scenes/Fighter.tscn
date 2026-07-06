@@ -37,6 +37,9 @@ script = ExtResource("4_visual")
 [node name="Body" type="Polygon2D" parent="Visual"]
 polygon = PackedVector2Array(-30, -160, 30, -160, 30, 0, -30, 0)
 
+[node name="Sprite" type="AnimatedSprite2D" parent="Visual"]
+position = Vector2(0, -96)
+
 [node name="StateLabel" type="Label" parent="Visual"]
 offset_left = -60.0
 offset_top = -200.0
