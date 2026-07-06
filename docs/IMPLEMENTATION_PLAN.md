@@ -63,7 +63,7 @@ Goal: make adding characters cheap and the combat model complete.
 
 Goal: build out to 6–8 characters and 4–6 stages, in parallel.
 
-**Progress:** 3 characters (Bengal Lathi rushdown, Varanasi Musti brawler, Tamil Nadu Silambam zoner — all placeholder art/names pending research issues #1–#6) and 2 stages (GhatDusk, TempleDawn) with a random-pick backdrop system. A projectile system (issue #9) is the known engine gap blocking the Punjab chakram kit.
+**Progress:** **6 characters** — Bengal Lathi (rushdown), Varanasi Musti (brawler), Tamil Nadu Silambam (zoner), Punjab Gatka (chakram projectile), Kerala Kalaripayattu (urumi all-rounder), Manipur Thang-Ta (sword/spear technical) — hitting the launch-roster minimum; all placeholder art/names pending research issues #1–#6. **4 stages** (GhatDusk, TempleDawn, BackwaterDusk, WheatFields) with random pick. Projectile system landed (closed #9). Title screen: keys 1–6 pick P2 until the Phase 4 select screen. Remaining Phase 3 work: replace placeholders with researched concepts + real art, balance passes, optionally Maharashtra/Bihar for 7–8.
 
 - [ ] Divide roster across the three devs (see Roadmap ownership). Each character: concept → moveset → animations → frame-data tuning → balance pass.
 - [ ] Region stages with parallax + regional percussion, one per priority character.

@@ -1,0 +1,63 @@
+[gd_scene format=3]
+
+[node name="BackwaterDusk" type="ParallaxBackground"]
+
+[node name="SkyLayer" type="ParallaxLayer" parent="."]
+motion_scale = Vector2(0.05, 0.02)
+
+[node name="Sky" type="Polygon2D" parent="SkyLayer"]
+polygon = PackedVector2Array(-6000, -2600, 6000, -2600, 6000, 600, -6000, 600)
+vertex_colors = PackedColorArray(0.06, 0.13, 0.18, 1, 0.06, 0.13, 0.18, 1, 0.55, 0.5, 0.28, 1, 0.55, 0.5, 0.28, 1)
+
+[node name="FarLayer" type="ParallaxLayer" parent="."]
+motion_scale = Vector2(0.15, 0.05)
+
+[node name="Water" type="Polygon2D" parent="FarLayer"]
+polygon = PackedVector2Array(-6000, -140, 6000, -140, 6000, 600, -6000, 600)
+color = Color(0.09, 0.2, 0.22, 1)
+
+[node name="HouseboatHull" type="Polygon2D" parent="FarLayer"]
+polygon = PackedVector2Array(-1000, -140, -280, -140, -360, -60, -920, -60)
+color = Color(0.07, 0.1, 0.1, 1)
+
+[node name="HouseboatRoof" type="Polygon2D" parent="FarLayer"]
+polygon = PackedVector2Array(-880, -140, -400, -140, -430, -260, -560, -300, -750, -300, -850, -260)
+color = Color(0.07, 0.1, 0.1, 1)
+
+[node name="FarPalms" type="Polygon2D" parent="FarLayer"]
+polygon = PackedVector2Array(1400, -140, 1500, -320, 1650, -360, 1800, -300, 1900, -160, 1750, -140)
+color = Color(0.06, 0.11, 0.1, 1)
+
+[node name="MidLayer" type="ParallaxLayer" parent="."]
+motion_scale = Vector2(0.35, 0.12)
+
+[node name="Bank" type="Polygon2D" parent="MidLayer"]
+polygon = PackedVector2Array(-6000, 40, 6000, 40, 6000, 600, -6000, 600)
+color = Color(0.08, 0.12, 0.09, 1)
+
+[node name="PalmTrunkM1" type="Polygon2D" parent="MidLayer"]
+polygon = PackedVector2Array(-1560, -240, -1528, -240, -1515, 60, -1570, 60)
+color = Color(0.06, 0.09, 0.07, 1)
+
+[node name="PalmLeavesM1" type="Polygon2D" parent="MidLayer"]
+polygon = PackedVector2Array(-1544, -240, -1700, -320, -1595, -230, -1650, -150, -1544, -210, -1440, -145, -1485, -230, -1380, -310, -1525, -260, -1544, -380, -1562, -260)
+color = Color(0.06, 0.09, 0.07, 1)
+
+[node name="PalmTrunkM2" type="Polygon2D" parent="MidLayer"]
+polygon = PackedVector2Array(2100, -300, 2135, -300, 2150, 60, 2090, 60)
+color = Color(0.06, 0.09, 0.07, 1)
+
+[node name="PalmLeavesM2" type="Polygon2D" parent="MidLayer"]
+polygon = PackedVector2Array(2117, -300, 1960, -380, 2065, -290, 2010, -210, 2117, -270, 2220, -205, 2175, -290, 2280, -370, 2135, -320, 2117, -440, 2099, -320)
+color = Color(0.06, 0.09, 0.07, 1)
+
+[node name="NearLayer" type="ParallaxLayer" parent="."]
+motion_scale = Vector2(0.6, 0.25)
+
+[node name="Reeds1" type="Polygon2D" parent="NearLayer"]
+polygon = PackedVector2Array(-1200, 250, -1180, -80, -1165, 250, -1150, -60, -1135, 250, -1120, -90, -1100, 250)
+color = Color(0.05, 0.08, 0.06, 1)
+
+[node name="Reeds2" type="Polygon2D" parent="NearLayer"]
+polygon = PackedVector2Array(1000, 250, 1020, -70, 1035, 250, 1050, -95, 1065, 250, 1080, -60, 1100, 250)
+color = Color(0.05, 0.08, 0.06, 1)

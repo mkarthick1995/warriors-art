@@ -1,0 +1,51 @@
+[gd_scene format=3]
+
+[node name="WheatFields" type="ParallaxBackground"]
+
+[node name="SkyLayer" type="ParallaxLayer" parent="."]
+motion_scale = Vector2(0.05, 0.02)
+
+[node name="Sky" type="Polygon2D" parent="SkyLayer"]
+polygon = PackedVector2Array(-6000, -2600, 6000, -2600, 6000, 600, -6000, 600)
+vertex_colors = PackedColorArray(0.55, 0.35, 0.18, 1, 0.55, 0.35, 0.18, 1, 1, 0.82, 0.45, 1, 1, 0.82, 0.45, 1)
+
+[node name="FarLayer" type="ParallaxLayer" parent="."]
+motion_scale = Vector2(0.15, 0.05)
+
+[node name="Sun" type="Polygon2D" parent="FarLayer"]
+polygon = PackedVector2Array(200, -390, 290, -353, 327, -263, 290, -173, 200, -136, 110, -173, 73, -263, 110, -353)
+color = Color(1, 0.95, 0.75, 1)
+
+[node name="FarField" type="Polygon2D" parent="FarLayer"]
+polygon = PackedVector2Array(-6000, -160, 6000, -160, 6000, 600, -6000, 600)
+color = Color(0.72, 0.52, 0.2, 1)
+
+[node name="Farmhouse" type="Polygon2D" parent="FarLayer"]
+polygon = PackedVector2Array(-1450, -160, -1150, -160, -1150, -300, -1300, -380, -1450, -300)
+color = Color(0.3, 0.18, 0.12, 1)
+
+[node name="MidLayer" type="ParallaxLayer" parent="."]
+motion_scale = Vector2(0.35, 0.12)
+
+[node name="MidField" type="Polygon2D" parent="MidLayer"]
+polygon = PackedVector2Array(-6000, -40, 6000, -40, 6000, 600, -6000, 600)
+color = Color(0.62, 0.42, 0.15, 1)
+
+[node name="TreeM" type="Polygon2D" parent="MidLayer"]
+polygon = PackedVector2Array(1500, -60, 1580, -300, 1720, -340, 1840, -240, 1810, -80, 1660, -20, 1520, -30)
+color = Color(0.25, 0.16, 0.1, 1)
+
+[node name="TrunkM" type="Polygon2D" parent="MidLayer"]
+polygon = PackedVector2Array(1650, -50, 1700, -50, 1700, 100, 1650, 100)
+color = Color(0.25, 0.16, 0.1, 1)
+
+[node name="NearLayer" type="ParallaxLayer" parent="."]
+motion_scale = Vector2(0.6, 0.25)
+
+[node name="Wheat1" type="Polygon2D" parent="NearLayer"]
+polygon = PackedVector2Array(-1500, 250, -1485, -30, -1470, 250, -1455, -50, -1440, 250, -1425, -20, -1410, 250, -1395, -55, -1380, 250)
+color = Color(0.5, 0.33, 0.12, 1)
+
+[node name="Wheat2" type="Polygon2D" parent="NearLayer"]
+polygon = PackedVector2Array(900, 250, 915, -40, 930, 250, 945, -60, 960, 250, 975, -25, 990, 250, 1005, -50, 1020, 250)
+color = Color(0.5, 0.33, 0.12, 1)

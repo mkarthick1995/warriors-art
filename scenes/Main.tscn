@@ -28,6 +28,6 @@ text = "WARRIOR'S ART"
 [node name="Subtitle" type="Label" parent="UI/Center/VBox"]
 layout_mode = 2
 horizontal_alignment = 1
-text = "[Enter] local 1v1 · [T] training mode (H toggles hitboxes)
-P1: WASD + J/K · double-tap dash · QCF+J special · QCF+K EX · QCFx2+J super
-P2: arrows + numpad 1/2"
+text = "[Enter] local 1v1 · [T] training (H = hitboxes) · [1-6] pick P2 fighter
+1 Lathi · 2 Musti · 3 Silambam · 4 Gatka · 5 Kalari · 6 Thang-Ta
+P1: WASD + J/K (J+K throw) · P2: arrows + numpad 1/2 · gamepads supported"

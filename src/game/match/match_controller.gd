@@ -62,6 +62,11 @@ func _ready() -> void:
 		p1.set_character(p1_character)
 	if p2_character != null:
 		p2.set_character(p2_character)
+	# Title-screen pick (fetched dynamically: no compile-time autoload
+	# dependency, so headless -s test runs still load this script).
+	var gs: Node = get_node_or_null("/root/GameState")
+	if p2_character == null and gs != null and gs.p2_character_path != "":
+		p2.set_character(load(gs.p2_character_path))
 	_center = (p1.global_position + p2.global_position) * 0.5
 	p1.landed_hit.connect(_on_hit.bind(p1))
 	p2.landed_hit.connect(_on_hit.bind(p2))

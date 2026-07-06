@@ -137,6 +137,12 @@ def main() -> None:
     # Punjab dhol: driving bhangra pulse.
     write_wav(perc / "dhol_loop.wav", percussion_loop(
         120, 144, [1, 0, 0.5, 0.7, 1, 0, 0.7, 0, 1, 0.5, 0, 0.7, 1, 0, 0.7, 0.5]))
+    # Kerala chenda: bright, fast, rolling.
+    write_wav(perc / "chenda_loop.wav", percussion_loop(
+        200, 160, [1, 0.5, 0.7, 0.5, 1, 0, 0.8, 0.5, 1, 0.5, 0.7, 0, 1, 0.6, 0.8, 0.5]))
+    # Manipur pung: warm, measured.
+    write_wav(perc / "pung_loop.wav", percussion_loop(
+        105, 108, [1, 0, 0, 0.6, 0.8, 0, 0.5, 0, 1, 0, 0.6, 0, 0.8, 0.5, 0, 0.4]))
 
 
 if __name__ == "__main__":

@@ -1,6 +1,18 @@
 extends Node2D
-## Title/boot screen. Enter starts a local 1v1; T starts training mode.
-## A real front-end (character/stage select) replaces this in Phase 4.
+## Title/boot screen. Enter starts a local 1v1; T starts training mode;
+## number keys pick P2's character (a stopgap until the Phase 4 select screen).
+
+## Order matches the 1–6 keys shown on the title screen.
+const ROSTER: Array[String] = [
+	"res://src/characters/bengal_lathi/bengal_lathi.tres",
+	"res://src/characters/varanasi_musti/varanasi_musti.tres",
+	"res://src/characters/tamilnadu_silambam/tamilnadu_silambam.tres",
+	"res://src/characters/punjab_gatka/punjab_gatka.tres",
+	"res://src/characters/kerala_kalari/kerala_kalari.tres",
+	"res://src/characters/manipur_thangta/manipur_thangta.tres",
+]
+
+@onready var _subtitle: Label = $UI/Center/VBox/Subtitle
 
 
 func _ready() -> void:
@@ -13,6 +25,16 @@ func _unhandled_input(event: InputEvent) -> void:
 		GameState.change_scene("res://scenes/Match.tscn")
 		return
 	if event is InputEventKey and event.pressed and not event.echo:
-		if (event as InputEventKey).physical_keycode == KEY_T:
+		var key := (event as InputEventKey).physical_keycode
+		if key == KEY_T:
 			GameState.set_mode(GameState.Mode.TRAINING)
 			GameState.change_scene("res://scenes/Training.tscn")
+			return
+		if key >= KEY_1 and key <= KEY_6:
+			var idx := key - KEY_1
+			GameState.p2_character_path = ROSTER[idx]
+			var picked: CharacterData = load(ROSTER[idx])
+			_subtitle.text = (
+				"P2: %s (%s)\n[Enter] fight · [T] training"
+				% [picked.display_name, picked.martial_art]
+			)

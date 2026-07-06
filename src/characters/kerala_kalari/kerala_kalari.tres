@@ -1,0 +1,224 @@
+[gd_resource type="Resource" script_class="CharacterData" load_steps=22 format=3]
+
+[ext_resource type="Script" path="res://src/data/character_data.gd" id="1"]
+[ext_resource type="Script" path="res://src/data/move_data.gd" id="2"]
+[ext_resource type="Script" path="res://src/data/frame_data.gd" id="3"]
+[ext_resource type="SpriteFrames" path="res://src/characters/kerala_kalari/kerala_kalari_frames.tres" id="4"]
+
+[sub_resource type="Resource" id="frame_dagger"]
+script = ExtResource("3")
+hitbox_rect = Rect2(18, -120, 62, 22)
+damage = 42
+hitstun = 14
+hitstop = 5
+knockback = Vector2(150, 0)
+knockdown = false
+
+[sub_resource type="Resource" id="frame_low_dagger"]
+script = ExtResource("3")
+hitbox_rect = Rect2(16, -42, 58, 20)
+damage = 38
+hitstun = 13
+hitstop = 5
+knockback = Vector2(130, 0)
+knockdown = false
+
+[sub_resource type="Resource" id="frame_lash"]
+script = ExtResource("3")
+hitbox_rect = Rect2(25, -135, 155, 38)
+damage = 75
+hitstun = 20
+hitstop = 8
+knockback = Vector2(270, -60)
+knockdown = false
+
+[sub_resource type="Resource" id="frame_air_lash"]
+script = ExtResource("3")
+hitbox_rect = Rect2(8, -95, 105, 48)
+damage = 52
+hitstun = 17
+hitstop = 6
+knockback = Vector2(110, 190)
+knockdown = false
+
+[sub_resource type="Resource" id="frame_spin_a"]
+script = ExtResource("3")
+hitbox_rect = Rect2(20, -140, 165, 55)
+damage = 95
+hitstun = 24
+hitstop = 9
+knockback = Vector2(330, -180)
+knockdown = true
+
+[sub_resource type="Resource" id="frame_spin_b"]
+script = ExtResource("3")
+hitbox_rect = Rect2(25, -150, 195, 65)
+damage = 80
+hitstun = 22
+hitstop = 8
+knockback = Vector2(310, -160)
+knockdown = true
+
+[sub_resource type="Resource" id="frame_ex_spin_a"]
+script = ExtResource("3")
+hitbox_rect = Rect2(20, -145, 185, 65)
+damage = 135
+hitstun = 28
+hitstop = 11
+knockback = Vector2(390, -300)
+knockdown = true
+
+[sub_resource type="Resource" id="frame_ex_spin_b"]
+script = ExtResource("3")
+hitbox_rect = Rect2(25, -155, 215, 75)
+damage = 105
+hitstun = 24
+hitstop = 9
+knockback = Vector2(350, -260)
+knockdown = true
+
+[sub_resource type="Resource" id="frame_super_a"]
+script = ExtResource("3")
+hitbox_rect = Rect2(25, -140, 180, 65)
+damage = 95
+hitstun = 24
+hitstop = 13
+knockback = Vector2(140, -90)
+knockdown = true
+
+[sub_resource type="Resource" id="frame_super_b"]
+script = ExtResource("3")
+hitbox_rect = Rect2(35, -150, 220, 85)
+damage = 215
+hitstun = 34
+hitstop = 14
+knockback = Vector2(490, -540)
+knockdown = true
+
+[sub_resource type="Resource" id="move_dagger"]
+script = ExtResource("2")
+display_name = "Kattari Kuthu"
+kind = 0
+input = "L"
+air = false
+animation_name = "dagger"
+startup = 4
+active = 3
+recovery = 8
+on_block = -2
+meter_gain = 25
+meter_cost = 0
+hitbox_frames = Array[ExtResource("3")]([SubResource("frame_dagger")])
+technique_cam = false
+
+[sub_resource type="Resource" id="move_low_dagger"]
+script = ExtResource("2")
+display_name = "Thazhe Vettu"
+kind = 0
+input = "2L"
+air = false
+animation_name = "low_dagger"
+startup = 5
+active = 3
+recovery = 9
+on_block = -3
+meter_gain = 25
+meter_cost = 0
+hitbox_frames = Array[ExtResource("3")]([SubResource("frame_low_dagger")])
+technique_cam = false
+
+[sub_resource type="Resource" id="move_lash"]
+script = ExtResource("2")
+display_name = "Urumi Veeccu"
+kind = 0
+input = "M"
+air = false
+animation_name = "lash"
+startup = 11
+active = 5
+recovery = 19
+on_block = -8
+meter_gain = 40
+meter_cost = 0
+hitbox_frames = Array[ExtResource("3")]([SubResource("frame_lash")])
+technique_cam = false
+
+[sub_resource type="Resource" id="move_air_lash"]
+script = ExtResource("2")
+display_name = "Chattam Veeccu"
+kind = 0
+input = "L"
+air = true
+animation_name = "air_lash"
+startup = 6
+active = 5
+recovery = 8
+on_block = -1
+meter_gain = 25
+meter_cost = 0
+hitbox_frames = Array[ExtResource("3")]([SubResource("frame_air_lash")])
+technique_cam = false
+
+[sub_resource type="Resource" id="move_spin"]
+script = ExtResource("2")
+display_name = "Urumi Chuzhattu"
+kind = 2
+input = "236L"
+air = false
+animation_name = "urumi_spin"
+startup = 13
+active = 6
+recovery = 26
+on_block = -12
+meter_gain = 70
+meter_cost = 0
+hitbox_frames = Array[ExtResource("3")]([SubResource("frame_spin_a"), SubResource("frame_spin_b")])
+technique_cam = false
+
+[sub_resource type="Resource" id="move_ex_spin"]
+script = ExtResource("2")
+display_name = "EX Urumi Chuzhattu"
+kind = 2
+input = "236M"
+air = false
+animation_name = "ex_urumi_spin"
+startup = 10
+active = 8
+recovery = 24
+on_block = -10
+meter_gain = 0
+meter_cost = 250
+hitbox_frames = Array[ExtResource("3")]([SubResource("frame_ex_spin_a"), SubResource("frame_ex_spin_b")])
+technique_cam = false
+
+[sub_resource type="Resource" id="move_super"]
+script = ExtResource("2")
+display_name = "Marma Vettu"
+kind = 3
+input = "236236L"
+air = false
+animation_name = "super_marma"
+startup = 8
+active = 11
+recovery = 27
+on_block = -14
+meter_gain = 0
+meter_cost = 1000
+hitbox_frames = Array[ExtResource("3")]([SubResource("frame_super_a"), SubResource("frame_super_b")])
+technique_cam = true
+
+[resource]
+script = ExtResource("1")
+display_name = "Kalari Abhyasi (placeholder)"
+state_region = "Kerala"
+martial_art = "Kalaripayattu"
+walk_speed = 230.0
+dash_speed = 500.0
+jump_velocity = -1000.0
+gravity = 2400.0
+max_health = 920
+weight = 0.9
+moves = Array[ExtResource("2")]([SubResource("move_dagger"), SubResource("move_low_dagger"), SubResource("move_lash"), SubResource("move_air_lash"), SubResource("move_spin"), SubResource("move_ex_spin")])
+super_move = SubResource("move_super")
+sprite_frames = ExtResource("4")
+percussion = "chenda"

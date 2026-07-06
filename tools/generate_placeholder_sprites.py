@@ -37,6 +37,7 @@ def draw_pose(
     staff_offset: float = 0.0,
     staff_len: float = STAFF_LEN,
     shield: bool = False,
+    whip_curve: float = 0.0,
     lying: float = 0.0,
 ) -> None:
     """Draw one stick-fighter pose. Angles in radians, 0 = toward +x (forward).
@@ -78,8 +79,21 @@ def draw_pose(
         hy = shoulder[1] - math.sin(ang) * arm_len
         d.line([shoulder, (hx, hy)], fill=BODY, width=LIMB_W - 1)
         hands[name] = (hx, hy)
-    # Staff/sword through the front hand.
-    if staff_angle is not None:
+    # Weapon through/from the front hand.
+    if staff_angle is not None and whip_curve != 0.0:
+        # Urumi: flexible blade drawn as a curving polyline FROM the hand.
+        hx, hy = hands["front"]
+        hx += staff_offset
+        seg = staff_len / 8.0
+        ang = staff_angle
+        pts = [(hx, hy)]
+        for _ in range(8):
+            hx += math.cos(ang) * seg
+            hy -= math.sin(ang) * seg
+            pts.append((hx, hy))
+            ang -= whip_curve
+        d.line(pts, fill=STAFF, width=STAFF_W - 2, joint="curve")
+    elif staff_angle is not None:
         hx, hy = hands["front"]
         hx += staff_offset
         half = staff_len / 2
@@ -328,6 +342,162 @@ def gatka_animations() -> dict:
     }
 
 
+def kalari_animations() -> dict:
+    """Kerala Kalaripayattu: urumi whip-sword (curved), acrobatic stance."""
+    w = {"staff_len": 130.0}
+    idle = [dict(hip_y=116 + bob, staff_angle=-1.1, whip_curve=0.12, front_arm=-0.7, **w)
+            for bob in (0, 2, 3, 2)]
+    walk = [
+        dict(
+            hip_y=114 + (2 if i % 3 == 0 else 0),
+            front_foot=lerp(32, -8, (i % 3) / 2.0),
+            rear_foot=lerp(-28, 8, (i % 3) / 2.0),
+            staff_angle=-1.1, whip_curve=0.12, front_arm=-0.7, **w,
+        )
+        for i in range(6)
+    ]
+    dagger = [
+        dict(staff_angle=0.6, staff_len=45.0, front_arm=-0.3),
+        dict(staff_angle=0.1, staff_len=45.0, front_arm=-0.05, staff_offset=16, lean=0.3),
+        dict(staff_angle=0.0, staff_len=45.0, front_arm=0.0, staff_offset=22, lean=0.35),
+        dict(staff_angle=0.4, staff_len=45.0, front_arm=-0.3, staff_offset=6),
+    ]
+    low_dagger = [dict(**{**p, "hip_y": 150}) for p in dagger]
+    lash = [
+        dict(staff_angle=2.0, whip_curve=-0.2, front_arm=1.8, lean=-0.25, **w),
+        dict(staff_angle=1.2, whip_curve=0.1, front_arm=1.0, lean=0.0, **w),
+        dict(staff_angle=0.5, whip_curve=0.28, front_arm=0.3, lean=0.3, **w),
+        dict(staff_angle=0.1, whip_curve=0.34, front_arm=0.0, lean=0.45, staff_offset=8, **w),
+        dict(staff_angle=-0.2, whip_curve=0.3, front_arm=-0.3, lean=0.35, **w),
+    ]
+    spin_whip = [
+        dict(staff_angle=i * math.tau / 6, whip_curve=0.3, front_arm=i * math.tau / 6,
+             lean=0.1, **w)
+        for i in range(6)
+    ]
+    air = [
+        dict(hip_y=108, front_foot=14, rear_foot=-10, staff_angle=-0.6, whip_curve=0.25,
+             front_arm=-0.6, **w),
+        dict(hip_y=108, front_foot=16, rear_foot=-8, staff_angle=-0.85, whip_curve=0.3,
+             front_arm=-0.85, staff_offset=8, **w),
+        dict(hip_y=108, front_foot=16, rear_foot=-8, staff_angle=-0.85, whip_curve=0.3,
+             front_arm=-0.85, staff_offset=10, **w),
+    ]
+    hit = [
+        dict(lean=-0.45, front_arm=1.8, rear_arm=1.4, staff_angle=1.4, whip_curve=0.2, **w),
+        dict(lean=-0.6, front_arm=2.0, rear_arm=1.7, staff_angle=1.6, whip_curve=0.2,
+             hip_y=122, **w),
+    ]
+    jump = [
+        dict(hip_y=110, front_foot=12, rear_foot=-10, staff_angle=-1.0, whip_curve=0.15, **w),
+        dict(hip_y=102, front_foot=6, rear_foot=-4, staff_angle=-0.95, whip_curve=0.15, **w),
+        dict(hip_y=110, front_foot=14, rear_foot=-12, staff_angle=-1.0, whip_curve=0.15, **w),
+    ]
+    crouch = [
+        dict(hip_y=146, front_foot=30, rear_foot=-24, staff_angle=-1.0, whip_curve=0.15, **w),
+        dict(hip_y=148, front_foot=30, rear_foot=-24, staff_angle=-1.0, whip_curve=0.15, **w),
+    ]
+    knockdown = [
+        dict(lean=-0.8, hip_y=140, front_arm=2.2, rear_arm=1.9),
+        dict(lying=1.0),
+        dict(lying=1.0),
+    ]
+    return {
+        "idle": (8, idle),
+        "walk": (10, walk),
+        "dagger": (20, dagger),
+        "low_dagger": (18, low_dagger),
+        "lash": (14, lash),
+        "urumi_spin": (14, spin_whip),
+        "ex_urumi_spin": (16, spin_whip),
+        "super_marma": (16, spin_whip + [lash[3]] * 3),
+        "air_lash": (15, air),
+        "hit": (12, hit),
+        "jump": (8, jump),
+        "crouch": (8, crouch),
+        "knockdown": (10, knockdown),
+    }
+
+
+def thangta_animations() -> dict:
+    """Manipur Thang-Ta: sword (short) normals, spear (long) specials."""
+    sword = {"staff_len": 75.0}
+    spear = {"staff_len": 145.0}
+    idle = [dict(hip_y=118 + bob, staff_angle=0.7, front_arm=-0.5, **sword)
+            for bob in (0, 2, 3, 2)]
+    walk = [
+        dict(
+            hip_y=116 + (2 if i % 3 == 0 else 0),
+            front_foot=lerp(30, -6, (i % 3) / 2.0),
+            rear_foot=lerp(-26, 8, (i % 3) / 2.0),
+            staff_angle=0.7, **sword,
+        )
+        for i in range(6)
+    ]
+    slash = [
+        dict(staff_angle=1.6, front_arm=1.3, lean=-0.15, **sword),
+        dict(staff_angle=0.5, front_arm=0.3, lean=0.2, staff_offset=8, **sword),
+        dict(staff_angle=-0.2, front_arm=-0.2, lean=0.35, staff_offset=12, **sword),
+        dict(staff_angle=0.3, front_arm=-0.3, lean=0.15, **sword),
+    ]
+    low_slash = [dict(**{**p, "hip_y": 150}) for p in slash]
+    thrust = [
+        dict(staff_angle=0.25, front_arm=-0.4, **spear),
+        dict(staff_angle=0.05, front_arm=-0.1, staff_offset=28, lean=0.3, **spear),
+        dict(staff_angle=0.0, front_arm=0.0, staff_offset=46, lean=0.45, **spear),
+        dict(staff_angle=0.15, front_arm=-0.25, staff_offset=16, lean=0.2, **spear),
+    ]
+    charge = [
+        dict(staff_angle=0.4, front_arm=0.3, lean=-0.15, **spear),
+        dict(staff_angle=0.1, front_arm=0.05, lean=0.25, staff_offset=24, **spear),
+        dict(staff_angle=0.0, front_arm=0.0, lean=0.55, staff_offset=54, front_foot=44, **spear),
+        dict(staff_angle=0.0, front_arm=0.0, lean=0.6, staff_offset=58, front_foot=46, **spear),
+        dict(staff_angle=0.2, front_arm=-0.2, lean=0.3, staff_offset=20, **spear),
+    ]
+    spin = [dict(staff_angle=i * math.tau / 6, front_arm=i * math.tau / 6, lean=0.1, **spear)
+            for i in range(6)]
+    air = [
+        dict(hip_y=110, front_foot=10, rear_foot=-8, staff_angle=-0.7, front_arm=-0.7, **spear),
+        dict(hip_y=110, front_foot=12, rear_foot=-6, staff_angle=-0.9, front_arm=-0.9,
+             staff_offset=10, **spear),
+        dict(hip_y=110, front_foot=12, rear_foot=-6, staff_angle=-0.9, front_arm=-0.9,
+             staff_offset=12, **spear),
+    ]
+    hit = [
+        dict(lean=-0.45, front_arm=1.8, rear_arm=1.4, staff_angle=1.5, **sword),
+        dict(lean=-0.6, front_arm=2.0, rear_arm=1.7, staff_angle=1.7, hip_y=122, **sword),
+    ]
+    jump = [
+        dict(hip_y=112, front_foot=12, rear_foot=-10, staff_angle=0.8, **sword),
+        dict(hip_y=104, front_foot=6, rear_foot=-4, staff_angle=0.75, **sword),
+        dict(hip_y=112, front_foot=14, rear_foot=-12, staff_angle=0.8, **sword),
+    ]
+    crouch = [
+        dict(hip_y=146, front_foot=30, rear_foot=-24, staff_angle=0.9, **sword),
+        dict(hip_y=148, front_foot=30, rear_foot=-24, staff_angle=0.9, **sword),
+    ]
+    knockdown = [
+        dict(lean=-0.8, hip_y=140, front_arm=2.2, rear_arm=1.9),
+        dict(lying=1.0),
+        dict(lying=1.0),
+    ]
+    return {
+        "idle": (8, idle),
+        "walk": (10, walk),
+        "slash": (20, slash),
+        "low_slash": (18, low_slash),
+        "thrust": (18, thrust),
+        "charge": (16, charge),
+        "ex_charge": (18, charge),
+        "super_chainu": (16, spin + spin[:3] + [charge[3]] * 2),
+        "air_thrust": (15, air),
+        "hit": (12, hit),
+        "jump": (8, jump),
+        "crouch": (8, crouch),
+        "knockdown": (10, knockdown),
+    }
+
+
 def write_strips(character: str, animations: dict) -> None:
     out_dir = Path("assets/sprites") / character
     out_dir.mkdir(parents=True, exist_ok=True)
@@ -347,3 +517,5 @@ if __name__ == "__main__":
     write_strips("bengal_lathi", lathiyal_animations())
     write_strips("tamilnadu_silambam", silambar_animations())
     write_strips("punjab_gatka", gatka_animations())
+    write_strips("kerala_kalari", kalari_animations())
+    write_strips("manipur_thangta", thangta_animations())

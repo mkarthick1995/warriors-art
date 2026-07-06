@@ -1,0 +1,224 @@
+[gd_resource type="Resource" script_class="CharacterData" load_steps=22 format=3]
+
+[ext_resource type="Script" path="res://src/data/character_data.gd" id="1"]
+[ext_resource type="Script" path="res://src/data/move_data.gd" id="2"]
+[ext_resource type="Script" path="res://src/data/frame_data.gd" id="3"]
+[ext_resource type="SpriteFrames" path="res://src/characters/manipur_thangta/manipur_thangta_frames.tres" id="4"]
+
+[sub_resource type="Resource" id="frame_slash"]
+script = ExtResource("3")
+hitbox_rect = Rect2(20, -122, 72, 24)
+damage = 44
+hitstun = 14
+hitstop = 5
+knockback = Vector2(155, 0)
+knockdown = false
+
+[sub_resource type="Resource" id="frame_low_slash"]
+script = ExtResource("3")
+hitbox_rect = Rect2(18, -44, 66, 21)
+damage = 40
+hitstun = 13
+hitstop = 5
+knockback = Vector2(135, 0)
+knockdown = false
+
+[sub_resource type="Resource" id="frame_thrust"]
+script = ExtResource("3")
+hitbox_rect = Rect2(30, -128, 135, 26)
+damage = 70
+hitstun = 20
+hitstop = 8
+knockback = Vector2(260, -40)
+knockdown = false
+
+[sub_resource type="Resource" id="frame_air_thrust"]
+script = ExtResource("3")
+hitbox_rect = Rect2(10, -98, 115, 46)
+damage = 52
+hitstun = 17
+hitstop = 6
+knockback = Vector2(115, 185)
+knockdown = false
+
+[sub_resource type="Resource" id="frame_charge_a"]
+script = ExtResource("3")
+hitbox_rect = Rect2(35, -128, 145, 40)
+damage = 92
+hitstun = 24
+hitstop = 9
+knockback = Vector2(330, -170)
+knockdown = true
+
+[sub_resource type="Resource" id="frame_charge_b"]
+script = ExtResource("3")
+hitbox_rect = Rect2(45, -132, 180, 45)
+damage = 78
+hitstun = 22
+hitstop = 8
+knockback = Vector2(310, -150)
+knockdown = true
+
+[sub_resource type="Resource" id="frame_ex_charge_a"]
+script = ExtResource("3")
+hitbox_rect = Rect2(35, -135, 165, 50)
+damage = 132
+hitstun = 28
+hitstop = 11
+knockback = Vector2(390, -280)
+knockdown = true
+
+[sub_resource type="Resource" id="frame_ex_charge_b"]
+script = ExtResource("3")
+hitbox_rect = Rect2(45, -140, 205, 55)
+damage = 102
+hitstun = 24
+hitstop = 9
+knockback = Vector2(350, -240)
+knockdown = true
+
+[sub_resource type="Resource" id="frame_super_a"]
+script = ExtResource("3")
+hitbox_rect = Rect2(25, -138, 175, 62)
+damage = 92
+hitstun = 24
+hitstop = 13
+knockback = Vector2(135, -90)
+knockdown = true
+
+[sub_resource type="Resource" id="frame_super_b"]
+script = ExtResource("3")
+hitbox_rect = Rect2(35, -148, 215, 82)
+damage = 218
+hitstun = 34
+hitstop = 14
+knockback = Vector2(480, -530)
+knockdown = true
+
+[sub_resource type="Resource" id="move_slash"]
+script = ExtResource("2")
+display_name = "Thang Haiba"
+kind = 0
+input = "L"
+air = false
+animation_name = "slash"
+startup = 4
+active = 3
+recovery = 9
+on_block = -2
+meter_gain = 25
+meter_cost = 0
+hitbox_frames = Array[ExtResource("3")]([SubResource("frame_slash")])
+technique_cam = false
+
+[sub_resource type="Resource" id="move_low_slash"]
+script = ExtResource("2")
+display_name = "Makha Thang"
+kind = 0
+input = "2L"
+air = false
+animation_name = "low_slash"
+startup = 5
+active = 3
+recovery = 10
+on_block = -4
+meter_gain = 25
+meter_cost = 0
+hitbox_frames = Array[ExtResource("3")]([SubResource("frame_low_slash")])
+technique_cam = false
+
+[sub_resource type="Resource" id="move_thrust"]
+script = ExtResource("2")
+display_name = "Ta Thaba"
+kind = 0
+input = "M"
+air = false
+animation_name = "thrust"
+startup = 9
+active = 4
+recovery = 16
+on_block = -6
+meter_gain = 40
+meter_cost = 0
+hitbox_frames = Array[ExtResource("3")]([SubResource("frame_thrust")])
+technique_cam = false
+
+[sub_resource type="Resource" id="move_air_thrust"]
+script = ExtResource("2")
+display_name = "Kanglei Ta"
+kind = 0
+input = "L"
+air = true
+animation_name = "air_thrust"
+startup = 6
+active = 5
+recovery = 8
+on_block = -1
+meter_gain = 25
+meter_cost = 0
+hitbox_frames = Array[ExtResource("3")]([SubResource("frame_air_thrust")])
+technique_cam = false
+
+[sub_resource type="Resource" id="move_charge"]
+script = ExtResource("2")
+display_name = "Ta Chongba"
+kind = 2
+input = "236L"
+air = false
+animation_name = "charge"
+startup = 11
+active = 5
+recovery = 21
+on_block = -9
+meter_gain = 70
+meter_cost = 0
+hitbox_frames = Array[ExtResource("3")]([SubResource("frame_charge_a"), SubResource("frame_charge_b")])
+technique_cam = false
+
+[sub_resource type="Resource" id="move_ex_charge"]
+script = ExtResource("2")
+display_name = "EX Ta Chongba"
+kind = 2
+input = "236M"
+air = false
+animation_name = "ex_charge"
+startup = 9
+active = 6
+recovery = 19
+on_block = -7
+meter_gain = 0
+meter_cost = 250
+hitbox_frames = Array[ExtResource("3")]([SubResource("frame_ex_charge_a"), SubResource("frame_ex_charge_b")])
+technique_cam = false
+
+[sub_resource type="Resource" id="move_super"]
+script = ExtResource("2")
+display_name = "Thang-Ta Chainu"
+kind = 3
+input = "236236L"
+air = false
+animation_name = "super_chainu"
+startup = 8
+active = 11
+recovery = 26
+on_block = -13
+meter_gain = 0
+meter_cost = 1000
+hitbox_frames = Array[ExtResource("3")]([SubResource("frame_super_a"), SubResource("frame_super_b")])
+technique_cam = true
+
+[resource]
+script = ExtResource("1")
+display_name = "Huyen Lallong (placeholder)"
+state_region = "Manipur"
+martial_art = "Thang-Ta"
+walk_speed = 200.0
+dash_speed = 450.0
+jump_velocity = -930.0
+gravity = 2400.0
+max_health = 980
+weight = 1.0
+moves = Array[ExtResource("2")]([SubResource("move_slash"), SubResource("move_low_slash"), SubResource("move_thrust"), SubResource("move_air_thrust"), SubResource("move_charge"), SubResource("move_ex_charge")])
+super_move = SubResource("move_super")
+sprite_frames = ExtResource("4")
+percussion = "pung"
