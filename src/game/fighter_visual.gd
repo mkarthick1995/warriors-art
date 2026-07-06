@@ -21,6 +21,8 @@ const STATE_ANIMS := {
 }
 
 var _use_sprites := false
+## Tracks character swaps (set_character can run after our _ready).
+var _configured_data: CharacterData = null
 
 @onready var _fighter: Fighter = get_parent()
 @onready var _body: Polygon2D = $Body
@@ -29,16 +31,23 @@ var _use_sprites := false
 
 
 func _ready() -> void:
+	_configure()
+
+
+func _configure() -> void:
+	_configured_data = _fighter.data
 	_use_sprites = _fighter.data != null and _fighter.data.sprite_frames != null
+	_sprite.visible = _use_sprites
+	_body.visible = not _use_sprites
 	if _use_sprites:
 		_sprite.sprite_frames = _fighter.data.sprite_frames
-		_body.visible = false
 	else:
-		_sprite.visible = false
 		_body.color = _fighter.body_color
 
 
 func _process(_delta: float) -> void:
+	if _fighter.data != _configured_data:
+		_configure()
 	scale.x = float(_fighter.facing)
 	_state_label.scale.x = scale.x  # Keep the debug text readable when flipped.
 	_state_label.text = FighterStateMachine.State.keys()[_fighter.state()]

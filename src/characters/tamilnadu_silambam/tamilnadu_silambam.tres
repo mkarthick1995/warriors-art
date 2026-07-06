@@ -1,0 +1,233 @@
+[gd_resource type="Resource" script_class="CharacterData" load_steps=22 format=3]
+
+[ext_resource type="Script" path="res://src/data/character_data.gd" id="1"]
+[ext_resource type="Script" path="res://src/data/move_data.gd" id="2"]
+[ext_resource type="Script" path="res://src/data/frame_data.gd" id="3"]
+[ext_resource type="SpriteFrames" path="res://src/characters/tamilnadu_silambam/tamilnadu_silambam_frames.tres" id="4"]
+
+[sub_resource type="Resource" id="frame_poke"]
+script = ExtResource("3")
+hitbox_rect = Rect2(35, -125, 125, 22)
+damage = 40
+hitstun = 14
+hitstop = 5
+knockback = Vector2(170, 0)
+knockdown = false
+
+[sub_resource type="Resource" id="frame_low_poke"]
+script = ExtResource("3")
+hitbox_rect = Rect2(30, -45, 115, 20)
+damage = 38
+hitstun = 13
+hitstop = 5
+knockback = Vector2(150, 0)
+knockdown = false
+
+[sub_resource type="Resource" id="frame_spin_a"]
+script = ExtResource("3")
+hitbox_rect = Rect2(25, -135, 140, 35)
+damage = 72
+hitstun = 20
+hitstop = 8
+knockback = Vector2(280, -50)
+knockdown = false
+
+[sub_resource type="Resource" id="frame_spin_b"]
+script = ExtResource("3")
+hitbox_rect = Rect2(30, -140, 160, 40)
+damage = 60
+hitstun = 18
+hitstop = 7
+knockback = Vector2(260, -40)
+knockdown = false
+
+[sub_resource type="Resource" id="frame_air_poke"]
+script = ExtResource("3")
+hitbox_rect = Rect2(10, -100, 110, 45)
+damage = 50
+hitstun = 17
+hitstop = 6
+knockback = Vector2(110, 180)
+knockdown = false
+
+[sub_resource type="Resource" id="frame_lunge_a"]
+script = ExtResource("3")
+hitbox_rect = Rect2(40, -130, 150, 45)
+damage = 90
+hitstun = 24
+hitstop = 9
+knockback = Vector2(320, -160)
+knockdown = true
+
+[sub_resource type="Resource" id="frame_lunge_b"]
+script = ExtResource("3")
+hitbox_rect = Rect2(50, -135, 190, 50)
+damage = 75
+hitstun = 22
+hitstop = 8
+knockback = Vector2(300, -140)
+knockdown = true
+
+[sub_resource type="Resource" id="frame_ex_lunge_a"]
+script = ExtResource("3")
+hitbox_rect = Rect2(40, -140, 170, 55)
+damage = 130
+hitstun = 28
+hitstop = 11
+knockback = Vector2(380, -260)
+knockdown = true
+
+[sub_resource type="Resource" id="frame_ex_lunge_b"]
+script = ExtResource("3")
+hitbox_rect = Rect2(50, -145, 215, 60)
+damage = 100
+hitstun = 24
+hitstop = 9
+knockback = Vector2(340, -220)
+knockdown = true
+
+[sub_resource type="Resource" id="frame_super_a"]
+script = ExtResource("3")
+hitbox_rect = Rect2(30, -140, 170, 60)
+damage = 90
+hitstun = 24
+hitstop = 13
+knockback = Vector2(140, -90)
+knockdown = true
+
+[sub_resource type="Resource" id="frame_super_b"]
+script = ExtResource("3")
+hitbox_rect = Rect2(40, -150, 210, 80)
+damage = 210
+hitstun = 34
+hitstop = 14
+knockback = Vector2(480, -520)
+knockdown = true
+
+[sub_resource type="Resource" id="move_poke"]
+script = ExtResource("2")
+display_name = "Nuni Kuthu"
+kind = 0
+input = "L"
+air = false
+animation_name = "poke"
+startup = 5
+active = 3
+recovery = 11
+on_block = -3
+meter_gain = 25
+meter_cost = 0
+hitbox_frames = Array[ExtResource("3")]([SubResource("frame_poke")])
+technique_cam = false
+
+[sub_resource type="Resource" id="move_low_poke"]
+script = ExtResource("2")
+display_name = "Keezh Veechu"
+kind = 0
+input = "2L"
+air = false
+animation_name = "low_poke"
+startup = 6
+active = 3
+recovery = 12
+on_block = -5
+meter_gain = 25
+meter_cost = 0
+hitbox_frames = Array[ExtResource("3")]([SubResource("frame_low_poke")])
+technique_cam = false
+
+[sub_resource type="Resource" id="move_spin"]
+script = ExtResource("2")
+display_name = "Suzhal Adi"
+kind = 0
+input = "M"
+air = false
+animation_name = "spin"
+startup = 10
+active = 6
+recovery = 18
+on_block = -7
+meter_gain = 40
+meter_cost = 0
+hitbox_frames = Array[ExtResource("3")]([SubResource("frame_spin_a"), SubResource("frame_spin_b")])
+technique_cam = false
+
+[sub_resource type="Resource" id="move_air_poke"]
+script = ExtResource("2")
+display_name = "Paaichal Kuthu"
+kind = 0
+input = "L"
+air = true
+animation_name = "air_poke"
+startup = 6
+active = 5
+recovery = 8
+on_block = -1
+meter_gain = 25
+meter_cost = 0
+hitbox_frames = Array[ExtResource("3")]([SubResource("frame_air_poke")])
+technique_cam = false
+
+[sub_resource type="Resource" id="move_lunge"]
+script = ExtResource("2")
+display_name = "Neetta Thallu"
+kind = 2
+input = "236L"
+air = false
+animation_name = "lunge"
+startup = 12
+active = 5
+recovery = 22
+on_block = -10
+meter_gain = 70
+meter_cost = 0
+hitbox_frames = Array[ExtResource("3")]([SubResource("frame_lunge_a"), SubResource("frame_lunge_b")])
+technique_cam = false
+
+[sub_resource type="Resource" id="move_ex_lunge"]
+script = ExtResource("2")
+display_name = "EX Neetta Thallu"
+kind = 2
+input = "236M"
+air = false
+animation_name = "ex_lunge"
+startup = 9
+active = 6
+recovery = 20
+on_block = -8
+meter_gain = 0
+meter_cost = 250
+hitbox_frames = Array[ExtResource("3")]([SubResource("frame_ex_lunge_a"), SubResource("frame_ex_lunge_b")])
+technique_cam = false
+
+[sub_resource type="Resource" id="move_super"]
+script = ExtResource("2")
+display_name = "Veera Suzharchi"
+kind = 3
+input = "236236L"
+air = false
+animation_name = "super_spin"
+startup = 9
+active = 12
+recovery = 26
+on_block = -13
+meter_gain = 0
+meter_cost = 1000
+hitbox_frames = Array[ExtResource("3")]([SubResource("frame_super_a"), SubResource("frame_super_b")])
+technique_cam = true
+
+[resource]
+script = ExtResource("1")
+display_name = "Silambar (placeholder)"
+state_region = "Tamil Nadu"
+martial_art = "Silambam"
+walk_speed = 205.0
+dash_speed = 460.0
+jump_velocity = -920.0
+gravity = 2400.0
+max_health = 970
+weight = 0.95
+moves = Array[ExtResource("2")]([SubResource("move_poke"), SubResource("move_low_poke"), SubResource("move_spin"), SubResource("move_air_poke"), SubResource("move_lunge"), SubResource("move_ex_lunge")])
+super_move = SubResource("move_super")
+sprite_frames = ExtResource("4")
+percussion = "thavil"

@@ -33,6 +33,11 @@ const TECH_STUN := 12
 @export var rounds_to_win: int = 2
 ## Training mode: timer frozen, nothing is scored, fighters refill on KO.
 @export var training: bool = false
+## Optional character overrides (null = keep the fighter's scene default).
+## The future character-select screen sets these; Training uses p2 for the
+## dummy. Applied in _ready, before the first round starts.
+@export var p1_character: CharacterData
+@export var p2_character: CharacterData
 
 var phase: Phase = Phase.PREROUND
 var round_number: int = 1
@@ -53,6 +58,10 @@ var _announce_ticks: int = 0
 
 func _ready() -> void:
 	assert(p1 != null and p2 != null, "MatchController needs both fighters assigned.")
+	if p1_character != null:
+		p1.set_character(p1_character)
+	if p2_character != null:
+		p2.set_character(p2_character)
 	_center = (p1.global_position + p2.global_position) * 0.5
 	p1.landed_hit.connect(_on_hit.bind(p1))
 	p2.landed_hit.connect(_on_hit.bind(p2))

@@ -66,10 +66,18 @@ var _throw_holding: bool = false
 
 func _ready() -> void:
 	assert(data != null, "Fighter needs a CharacterData resource assigned.")
-	health = data.max_health
 	_hitbox.owner_fighter = self
 	_hurtbox.owner_fighter = self
 	_hitbox.hit_landed.connect(_on_hitbox_landed)
+	set_character(data)
+
+
+## Assign/replace the character (used by scene defaults and the future
+## character select). Re-derives everything cached from the data.
+func set_character(new_data: CharacterData) -> void:
+	data = new_data
+	health = data.max_health
+	meter = 0
 	_sorted_moves = data.moves.duplicate()
 	if data.super_move != null:
 		_sorted_moves.append(data.super_move)

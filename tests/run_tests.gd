@@ -151,6 +151,7 @@ func _test_character_resource_loads() -> void:
 	var paths: Array[String] = [
 		"res://src/characters/bengal_lathi/bengal_lathi.tres",
 		"res://src/characters/varanasi_musti/varanasi_musti.tres",
+		"res://src/characters/tamilnadu_silambam/tamilnadu_silambam.tres",
 	]
 	for path in paths:
 		var short := path.get_file()

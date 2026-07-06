@@ -35,6 +35,7 @@ def draw_pose(
     rear_foot: float = -18.0,
     staff_angle: float | None = None,
     staff_offset: float = 0.0,
+    staff_len: float = STAFF_LEN,
     lying: float = 0.0,
 ) -> None:
     """Draw one stick-fighter pose. Angles in radians, 0 = toward +x (forward).
@@ -76,11 +77,11 @@ def draw_pose(
         hy = shoulder[1] - math.sin(ang) * arm_len
         d.line([shoulder, (hx, hy)], fill=BODY, width=LIMB_W - 1)
         hands[name] = (hx, hy)
-    # Staff (lathi) through the front hand.
+    # Staff (lathi/silambam) through the front hand.
     if staff_angle is not None:
         hx, hy = hands["front"]
         hx += staff_offset
-        half = STAFF_LEN / 2
+        half = staff_len / 2
         dx, dy = math.cos(staff_angle) * half, -math.sin(staff_angle) * half
         d.line([(hx - dx, hy - dy), (hx + dx, hy + dy)], fill=STAFF, width=STAFF_W)
 
@@ -168,6 +169,86 @@ def lathiyal_animations() -> dict:
     }
 
 
+def silambar_animations() -> dict:
+    """Tamil Nadu Silambam zoner: longer staff (150), horizontal spin style."""
+    s = {"staff_len": 150.0}
+    idle = [dict(hip_y=118 + bob, staff_angle=0.35, front_arm=-0.4, **s) for bob in (0, 2, 3, 2)]
+    walk = [
+        dict(
+            hip_y=116 + (2 if i % 3 == 0 else 0),
+            front_foot=lerp(30, -6, (i % 3) / 2.0),
+            rear_foot=lerp(-26, 8, (i % 3) / 2.0),
+            staff_angle=0.35,
+            **s,
+        )
+        for i in range(6)
+    ]
+    poke = [
+        dict(staff_angle=0.3, front_arm=-0.4, **s),
+        dict(staff_angle=0.05, front_arm=-0.1, staff_offset=26, lean=0.3, **s),
+        dict(staff_angle=0.0, front_arm=0.0, staff_offset=44, lean=0.45, **s),
+        dict(staff_angle=0.2, front_arm=-0.3, staff_offset=14, lean=0.2, **s),
+    ]
+    low_poke = [
+        dict(hip_y=150, staff_angle=-0.1, front_arm=-0.3, **s),
+        dict(hip_y=152, staff_angle=-0.25, front_arm=-0.1, staff_offset=34, lean=0.35, **s),
+        dict(hip_y=152, staff_angle=-0.28, front_arm=-0.1, staff_offset=40, lean=0.35, **s),
+        dict(hip_y=150, staff_angle=-0.1, front_arm=-0.3, staff_offset=10, **s),
+    ]
+    spin = [
+        dict(staff_angle=i * math.tau / 6, front_arm=i * math.tau / 6, lean=0.1, **s)
+        for i in range(6)
+    ]
+    lunge = [
+        dict(staff_angle=0.5, front_arm=0.4, lean=-0.2, **s),
+        dict(staff_angle=0.2, front_arm=0.1, lean=0.2, staff_offset=20, **s),
+        dict(staff_angle=0.0, front_arm=0.0, lean=0.55, staff_offset=52, front_foot=42, **s),
+        dict(staff_angle=0.0, front_arm=0.0, lean=0.6, staff_offset=58, front_foot=46, **s),
+        dict(staff_angle=0.15, front_arm=-0.2, lean=0.3, staff_offset=24, **s),
+    ]
+    air = [
+        dict(hip_y=110, front_foot=10, rear_foot=-8, staff_angle=-0.55, front_arm=-0.6, **s),
+        dict(hip_y=110, front_foot=12, rear_foot=-6, staff_angle=-0.75, front_arm=-0.8,
+             staff_offset=12, **s),
+        dict(hip_y=110, front_foot=12, rear_foot=-6, staff_angle=-0.75, front_arm=-0.8,
+             staff_offset=16, **s),
+        dict(hip_y=110, front_foot=10, rear_foot=-8, staff_angle=-0.55, front_arm=-0.6, **s),
+    ]
+    hit = [
+        dict(lean=-0.45, front_arm=1.8, rear_arm=1.4, staff_angle=0.9, **s),
+        dict(lean=-0.6, front_arm=2.0, rear_arm=1.7, staff_angle=1.1, hip_y=122, **s),
+    ]
+    jump = [
+        dict(hip_y=112, front_foot=12, rear_foot=-10, staff_angle=0.4, **s),
+        dict(hip_y=104, front_foot=6, rear_foot=-4, staff_angle=0.35, **s),
+        dict(hip_y=112, front_foot=14, rear_foot=-12, staff_angle=0.4, **s),
+    ]
+    crouch = [
+        dict(hip_y=146, front_foot=30, rear_foot=-24, staff_angle=0.5, **s),
+        dict(hip_y=148, front_foot=30, rear_foot=-24, staff_angle=0.5, **s),
+    ]
+    knockdown = [
+        dict(lean=-0.8, hip_y=140, front_arm=2.2, rear_arm=1.9, **s),
+        dict(lying=1.0),
+        dict(lying=1.0),
+    ]
+    return {
+        "idle": (8, idle),
+        "walk": (10, walk),
+        "poke": (20, poke),
+        "low_poke": (18, low_poke),
+        "spin": (14, spin),
+        "lunge": (16, lunge),
+        "ex_lunge": (18, lunge),
+        "super_spin": (16, spin + spin[:3] + [lunge[3]] * 2),
+        "air_poke": (15, air),
+        "hit": (12, hit),
+        "jump": (8, jump),
+        "crouch": (8, crouch),
+        "knockdown": (10, knockdown),
+    }
+
+
 def write_strips(character: str, animations: dict) -> None:
     out_dir = Path("assets/sprites") / character
     out_dir.mkdir(parents=True, exist_ok=True)
@@ -185,3 +266,4 @@ def write_strips(character: str, animations: dict) -> None:
 
 if __name__ == "__main__":
     write_strips("bengal_lathi", lathiyal_animations())
+    write_strips("tamilnadu_silambam", silambar_animations())
