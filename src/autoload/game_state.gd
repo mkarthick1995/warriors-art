@@ -9,6 +9,18 @@ signal mode_changed(new_mode: Mode)
 
 enum Mode { NONE, VERSUS_1V1, VERSUS_2V2, TRAINING, ARCADE }
 
+## The launch roster, in select-screen order (single source of truth).
+const ROSTER: Array[String] = [
+	"res://src/characters/bengal_lathi/bengal_lathi.tres",
+	"res://src/characters/varanasi_musti/varanasi_musti.tres",
+	"res://src/characters/tamilnadu_silambam/tamilnadu_silambam.tres",
+	"res://src/characters/punjab_gatka/punjab_gatka.tres",
+	"res://src/characters/kerala_kalari/kerala_kalari.tres",
+	"res://src/characters/manipur_thangta/manipur_thangta.tres",
+	"res://src/characters/maharashtra_mardani/maharashtra_mardani.tres",
+	"res://src/characters/bihar_parikhanda/bihar_parikhanda.tres",
+]
+
 var current_mode: Mode = Mode.NONE
 ## Best-of-N rounds for a match (default best of 3 → first to 2).
 var rounds_to_win: int = 2

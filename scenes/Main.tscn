@@ -28,6 +28,5 @@ text = "WARRIOR'S ART"
 [node name="Subtitle" type="Label" parent="UI/Center/VBox"]
 layout_mode = 2
 horizontal_alignment = 1
-text = "[1-8] pick P2 · [Shift+1-8] pick P1 · [Enter] fight · [T] training · [Esc] in-game pause
-1 Lathi · 2 Musti · 3 Silambam · 4 Gatka · 5 Kalari · 6 Thang-Ta · 7 Mardani · 8 Pari-Khanda
-P1: WASD + J/K (J+K throw) · P2: arrows + numpad 1/2 · gamepads supported"
+text = "[Enter]  Versus — choose your fighters
+[T]  Training mode        [Esc] in-game: pause + full controls"
