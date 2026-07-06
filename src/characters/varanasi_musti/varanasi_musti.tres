@@ -1,8 +1,9 @@
-[gd_resource type="Resource" script_class="CharacterData" load_steps=21 format=3]
+[gd_resource type="Resource" script_class="CharacterData" load_steps=22 format=3]
 
 [ext_resource type="Script" path="res://src/data/character_data.gd" id="1"]
 [ext_resource type="Script" path="res://src/data/move_data.gd" id="2"]
 [ext_resource type="Script" path="res://src/data/frame_data.gd" id="3"]
+[ext_resource type="SpriteFrames" path="res://src/characters/varanasi_musti/varanasi_musti_frames.tres" id="4"]
 
 [sub_resource type="Resource" id="frame_jab"]
 script = ExtResource("3")
@@ -219,4 +220,5 @@ max_health = 1050
 weight = 1.1
 moves = Array[ExtResource("2")]([SubResource("move_jab"), SubResource("move_low"), SubResource("move_cross"), SubResource("move_elbow"), SubResource("move_rising"), SubResource("move_ex_rising")])
 super_move = SubResource("move_super")
+sprite_frames = ExtResource("4")
 percussion = "pakhawaj"

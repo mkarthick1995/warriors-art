@@ -648,6 +648,86 @@ def parikhanda_animations() -> dict:
     }
 
 
+def musti_animations() -> dict:
+    """Varanasi Musti Yuddha: unarmed brawler — no weapon, fists do the work."""
+    idle = [dict(hip_y=119 + bob, front_arm=-0.4, rear_arm=-2.7) for bob in (0, 1, 2, 1)]
+    walk = [
+        dict(
+            hip_y=117 + (2 if i % 3 == 0 else 0),
+            front_foot=lerp(28, -4, (i % 3) / 2.0),
+            rear_foot=lerp(-24, 6, (i % 3) / 2.0),
+            front_arm=-0.4, rear_arm=-2.7,
+        )
+        for i in range(6)
+    ]
+    jab = [
+        dict(front_arm=-0.35, rear_arm=-2.7),
+        dict(front_arm=-0.05, rear_arm=-2.7, lean=0.25),
+        dict(front_arm=0.0, rear_arm=-2.7, lean=0.35),
+        dict(front_arm=-0.3, rear_arm=-2.7, lean=0.1),
+    ]
+    low_palm = [dict(**{**p, "hip_y": 150}) for p in jab]
+    cross = [
+        dict(front_arm=-0.5, rear_arm=-2.9, lean=-0.2),
+        dict(front_arm=-1.0, rear_arm=-1.2, lean=0.1),
+        dict(front_arm=-1.4, rear_arm=0.05, lean=0.45),
+        dict(front_arm=-1.2, rear_arm=0.0, lean=0.5),
+        dict(front_arm=-0.8, rear_arm=-1.6, lean=0.2),
+    ]
+    rising = [
+        dict(hip_y=140, front_arm=-1.0, rear_arm=-2.5, lean=0.1),
+        dict(hip_y=118, front_arm=1.35, rear_arm=-2.6, lean=0.05),
+        dict(hip_y=106, front_arm=1.55, rear_arm=-2.7, lean=-0.05, front_foot=8, rear_foot=-6),
+        dict(hip_y=112, front_arm=1.5, rear_arm=-2.7, lean=0.0),
+    ]
+    elbow = [
+        dict(hip_y=110, front_foot=10, rear_foot=-8, front_arm=-0.9, rear_arm=-2.6),
+        dict(hip_y=110, front_foot=12, rear_foot=-6, front_arm=-1.2, rear_arm=-2.6, lean=0.2),
+        dict(hip_y=110, front_foot=12, rear_foot=-6, front_arm=-1.25, rear_arm=-2.6, lean=0.25),
+    ]
+    flurry = [
+        dict(front_arm=0.0, rear_arm=-2.7, lean=0.35),
+        dict(front_arm=-1.3, rear_arm=0.05, lean=0.4),
+        dict(front_arm=0.05, rear_arm=-2.6, lean=0.35),
+        dict(front_arm=-1.35, rear_arm=0.0, lean=0.45),
+        dict(front_arm=0.0, rear_arm=-2.7, lean=0.4),
+        dict(front_arm=-1.4, rear_arm=0.05, lean=0.5),
+    ]
+    hit = [
+        dict(lean=-0.45, front_arm=1.8, rear_arm=1.4),
+        dict(lean=-0.6, front_arm=2.0, rear_arm=1.7, hip_y=122),
+    ]
+    jump = [
+        dict(hip_y=113, front_foot=12, rear_foot=-10, front_arm=-0.5, rear_arm=-2.7),
+        dict(hip_y=106, front_foot=6, rear_foot=-4, front_arm=-0.5, rear_arm=-2.7),
+        dict(hip_y=113, front_foot=14, rear_foot=-12, front_arm=-0.5, rear_arm=-2.7),
+    ]
+    crouch = [
+        dict(hip_y=147, front_foot=28, rear_foot=-22, front_arm=-0.5, rear_arm=-2.7),
+        dict(hip_y=149, front_foot=28, rear_foot=-22, front_arm=-0.5, rear_arm=-2.7),
+    ]
+    knockdown = [
+        dict(lean=-0.8, hip_y=141, front_arm=2.2, rear_arm=1.9),
+        dict(lying=1.0),
+        dict(lying=1.0),
+    ]
+    return {
+        "idle": (8, idle),
+        "walk": (10, walk),
+        "jab": (20, jab),
+        "low_palm": (18, low_palm),
+        "cross": (16, cross),
+        "rising_musti": (16, rising),
+        "ex_rising_musti": (18, rising),
+        "super_kashi": (18, flurry + [cross[3]] * 2),
+        "air_elbow": (15, elbow),
+        "hit": (12, hit),
+        "jump": (8, jump),
+        "crouch": (8, crouch),
+        "knockdown": (10, knockdown),
+    }
+
+
 def write_strips(character: str, animations: dict) -> None:
     out_dir = Path("assets/sprites") / character
     out_dir.mkdir(parents=True, exist_ok=True)
@@ -665,6 +745,7 @@ def write_strips(character: str, animations: dict) -> None:
 
 if __name__ == "__main__":
     write_strips("bengal_lathi", lathiyal_animations())
+    write_strips("varanasi_musti", musti_animations())
     write_strips("tamilnadu_silambam", silambar_animations())
     write_strips("punjab_gatka", gatka_animations())
     write_strips("kerala_kalari", kalari_animations())

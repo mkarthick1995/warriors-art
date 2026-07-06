@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=3]
+[gd_scene load_steps=18 format=3]
 
 [ext_resource type="Script" path="res://src/game/match/match_controller.gd" id="1_controller"]
 [ext_resource type="PackedScene" path="res://scenes/Fighter.tscn" id="2_fighter"]
@@ -14,6 +14,7 @@
 [ext_resource type="PackedScene" path="res://scenes/stages/WheatFields.tscn" id="12_wheat"]
 [ext_resource type="PackedScene" path="res://scenes/stages/HillVillage.tscn" id="13_hill"]
 [ext_resource type="PackedScene" path="res://scenes/stages/FortRampart.tscn" id="14_fort"]
+[ext_resource type="Script" path="res://src/ui/pause_menu.gd" id="15_pause"]
 
 [sub_resource type="RectangleShape2D" id="floor_shape"]
 size = Vector2(4400, 200)
@@ -86,6 +87,9 @@ p2 = NodePath("../P2")
 script = ExtResource("6_juice")
 controller = NodePath("..")
 camera = NodePath("../Camera")
+
+[node name="PauseMenu" type="CanvasLayer" parent="."]
+script = ExtResource("15_pause")
 
 [node name="HUD" type="CanvasLayer" parent="." node_paths=PackedStringArray("controller")]
 script = ExtResource("5_hud")
