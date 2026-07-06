@@ -23,6 +23,11 @@ const BLOCK_PUSHBACK_SCALE := 0.6
 const DASH_TICKS := 14
 const BACKDASH_TICKS := 10
 const KNOCKDOWN_TICKS := 45
+## Throw timeline (system mechanic, same for every character for now;
+## per-character command grabs come later as data).
+const THROW_STARTUP := 5
+const THROW_ACTIVE := 2
+const THROW_WHIFF_RECOVERY := 14
 ## Extra motion-window ticks granted per motion digit (longer inputs need
 ## more time: QCF gets ~20 ticks, a double-QCF super ~32).
 const MOTION_LENIENCY_BASE := 8
@@ -50,6 +55,8 @@ var _sorted_moves: Array[MoveData] = []
 var _dash_dir: int = 1
 ## Set per hit from FrameData.knockdown: fall into knockdown when landing.
 var _knockdown_pending: bool = false
+## True while the MatchController is resolving our successful grab.
+var _throw_holding: bool = false
 
 @onready var _hitbox: Hitbox = $Hitbox
 @onready var _hurtbox: Hurtbox = $Hurtbox
@@ -120,6 +127,55 @@ func debug_hitbox() -> Rect2:
 	return _hitbox.debug_rect()
 
 
+## True on the tick the throw input (light+medium together) is entered.
+## Tolerates a 1-tick offset: one button just pressed while the other is held.
+func wants_throw() -> bool:
+	var now := _inputs.current()
+	var l_new := _inputs.just_pressed(&"light")
+	var m_new := _inputs.just_pressed(&"medium")
+	return (l_new and now.medium) or (m_new and now.light)
+
+
+## True during the ticks a throw attempt can grab (controller checks range).
+func is_throw_active() -> bool:
+	if _sm.current != FighterStateMachine.State.THROW or _throw_holding:
+		return false
+	var t := _sm.time_in_state
+	return t >= THROW_STARTUP and t < THROW_STARTUP + THROW_ACTIVE
+
+
+## Can this fighter be grabbed right now? Grounded and free (blocking counts:
+## throws beat block — that's the point of the strike/block/throw triangle).
+func is_throwable() -> bool:
+	return is_on_floor() and _sm.is_actionable()
+
+
+## Attacker side: lock into the hold while the controller resolves the grab.
+func hold_throw() -> void:
+	_throw_holding = true
+
+
+## Attacker side: hold resolved (hit or tech) — return to neutral.
+func release_throw() -> void:
+	_throw_holding = false
+	if _sm.current == FighterStateMachine.State.THROW:
+		_sm.change_to(FighterStateMachine.State.IDLE)
+
+
+## Victim side: grabbed. Held long enough for the controller to resolve first.
+func get_thrown(hold_ticks: int) -> void:
+	velocity = Vector2.ZERO
+	_interrupt_attack()
+	_sm.enter_stun(FighterStateMachine.State.THROWN, hold_ticks)
+
+
+## Either side after a successful tech: pushed apart with brief recovery.
+func throw_teched(push_x: float, stun_ticks: int) -> void:
+	_throw_holding = false
+	velocity = Vector2(push_x, 0)
+	_sm.enter_stun(FighterStateMachine.State.BLOCKSTUN, stun_ticks)
+
+
 func is_stunned() -> bool:
 	return _sm.is_stunned()
 
@@ -132,6 +188,7 @@ func reset_for_round(spawn: Vector2, face: int) -> void:
 	health = data.max_health
 	hitstop_ticks = 0
 	_knockdown_pending = false
+	_throw_holding = false
 	_interrupt_attack()
 	_sm.reset()
 
@@ -157,6 +214,8 @@ func _tick_state() -> void:
 			_tick_dash()
 		FighterStateMachine.State.ATTACK:
 			_tick_attack()
+		FighterStateMachine.State.THROW:
+			_tick_throw()
 		FighterStateMachine.State.KO:
 			_apply_gravity()
 			velocity.x = move_toward(velocity.x, 0.0, data.walk_speed * TICK_DELTA * 10.0)
@@ -168,17 +227,14 @@ func _tick_grounded() -> void:
 	if not is_on_floor():  # Walked off an edge or exited a state mid-air.
 		_sm.change_to(FighterStateMachine.State.JUMP)
 		return
+	if wants_throw():  # Checked before attacks — the throw input contains L.
+		velocity.x = 0
+		_sm.change_to(FighterStateMachine.State.THROW)
+		return
 	if _try_start_attack():
 		return
-	# No dash while a down-based motion (QCF etc.) is being rolled — the
-	# re-tapped forward of a double-QCF super must not read as a dash.
-	if not _recent_down():
-		if _inputs.double_tapped(1):
-			_start_dash(1)
-			return
-		if _inputs.double_tapped(-1):
-			_start_dash(-1)
-			return
+	if _try_dash():
+		return
 	var now := _inputs.current()
 	var x := now.direction().x
 	if _inputs_jump_pressed():
@@ -209,6 +265,18 @@ func _tick_airborne() -> void:
 	if is_on_floor() and velocity.y >= 0:
 		velocity.x = 0
 		_sm.change_to(FighterStateMachine.State.IDLE)
+
+
+## No dash while a down-based motion (QCF etc.) is being rolled — the
+## re-tapped forward of a double-QCF super must not read as a dash.
+func _try_dash() -> bool:
+	if _recent_down():
+		return false
+	for dir in [1, -1]:
+		if _inputs.double_tapped(dir):
+			_start_dash(dir)
+			return true
+	return false
 
 
 ## Dash covers a fixed distance in a fixed time; not actionable until it ends.
@@ -247,7 +315,18 @@ func _tick_attack() -> void:
 		_sm.change_to(FighterStateMachine.State.IDLE if landed else FighterStateMachine.State.JUMP)
 
 
+func _tick_throw() -> void:
+	velocity.x = 0
+	if _throw_holding:
+		return  # The MatchController resolves the grab (damage or tech).
+	if _sm.time_in_state >= THROW_STARTUP + THROW_ACTIVE + THROW_WHIFF_RECOVERY:
+		_sm.change_to(FighterStateMachine.State.IDLE)
+
+
 func _tick_stunned() -> void:
+	if _sm.current == FighterStateMachine.State.THROWN:
+		velocity = Vector2.ZERO  # Held in the grab.
+		return
 	_apply_gravity()
 	if _sm.current == FighterStateMachine.State.HITSTUN and _knockdown_pending:
 		if is_on_floor() and velocity.y >= 0:

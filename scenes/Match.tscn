@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3]
+[gd_scene load_steps=10 format=3]
 
 [ext_resource type="Script" path="res://src/game/match/match_controller.gd" id="1_controller"]
 [ext_resource type="PackedScene" path="res://scenes/Fighter.tscn" id="2_fighter"]
@@ -6,6 +6,7 @@
 [ext_resource type="Script" path="res://src/game/match/match_camera.gd" id="4_camera"]
 [ext_resource type="Script" path="res://src/ui/match_hud.gd" id="5_hud"]
 [ext_resource type="Script" path="res://src/game/match/juice.gd" id="6_juice"]
+[ext_resource type="Resource" path="res://src/characters/varanasi_musti/varanasi_musti.tres" id="7_musti"]
 
 [sub_resource type="RectangleShape2D" id="floor_shape"]
 size = Vector2(4400, 200)
@@ -18,16 +19,75 @@ script = ExtResource("1_controller")
 p1 = NodePath("P1")
 p2 = NodePath("P2")
 
-[node name="Background" type="CanvasLayer" parent="."]
-layer = -1
+[node name="Background" type="ParallaxBackground" parent="."]
 
-[node name="Sky" type="ColorRect" parent="Background"]
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-color = Color(0.09, 0.08, 0.14, 1)
+[node name="SkyLayer" type="ParallaxLayer" parent="Background"]
+motion_scale = Vector2(0.05, 0.02)
+
+[node name="Sky" type="Polygon2D" parent="Background/SkyLayer"]
+polygon = PackedVector2Array(-6000, -2600, 6000, -2600, 6000, 600, -6000, 600)
+vertex_colors = PackedColorArray(0.09, 0.07, 0.22, 1, 0.09, 0.07, 0.22, 1, 0.82, 0.42, 0.2, 1, 0.82, 0.42, 0.2, 1)
+
+[node name="FarLayer" type="ParallaxLayer" parent="Background"]
+motion_scale = Vector2(0.15, 0.05)
+
+[node name="Sun" type="Polygon2D" parent="Background/FarLayer"]
+polygon = PackedVector2Array(680, -430, 758, -398, 790, -320, 758, -242, 680, -210, 602, -242, 570, -320, 602, -398)
+color = Color(1, 0.63, 0.3, 1)
+
+[node name="HorizonBand" type="Polygon2D" parent="Background/FarLayer"]
+polygon = PackedVector2Array(-6000, -220, 6000, -220, 6000, 600, -6000, 600)
+color = Color(0.16, 0.1, 0.24, 1)
+
+[node name="MidLayer" type="ParallaxLayer" parent="Background"]
+motion_scale = Vector2(0.35, 0.12)
+
+[node name="Temple1" type="Polygon2D" parent="Background/MidLayer"]
+polygon = PackedVector2Array(-950, -300, -650, -300, -650, 250, -950, 250)
+color = Color(0.12, 0.07, 0.16, 1)
+
+[node name="Spire1" type="Polygon2D" parent="Background/MidLayer"]
+polygon = PackedVector2Array(-880, -300, -720, -300, -800, -540)
+color = Color(0.12, 0.07, 0.16, 1)
+
+[node name="Temple2" type="Polygon2D" parent="Background/MidLayer"]
+polygon = PackedVector2Array(320, -240, 580, -240, 580, 250, 320, 250)
+color = Color(0.12, 0.07, 0.16, 1)
+
+[node name="Spire2" type="Polygon2D" parent="Background/MidLayer"]
+polygon = PackedVector2Array(360, -240, 540, -240, 450, -450, 450, -450)
+color = Color(0.12, 0.07, 0.16, 1)
+
+[node name="Ghat1" type="Polygon2D" parent="Background/MidLayer"]
+polygon = PackedVector2Array(-220, -160, 20, -160, 20, 250, -220, 250)
+color = Color(0.12, 0.07, 0.16, 1)
+
+[node name="Temple3" type="Polygon2D" parent="Background/MidLayer"]
+polygon = PackedVector2Array(-2600, -260, -2340, -260, -2340, 250, -2600, 250)
+color = Color(0.12, 0.07, 0.16, 1)
+
+[node name="Ghat2" type="Polygon2D" parent="Background/MidLayer"]
+polygon = PackedVector2Array(2200, -190, 2480, -190, 2480, 250, 2200, 250)
+color = Color(0.12, 0.07, 0.16, 1)
+
+[node name="NearLayer" type="ParallaxLayer" parent="Background"]
+motion_scale = Vector2(0.6, 0.25)
+
+[node name="Tree1" type="Polygon2D" parent="Background/NearLayer"]
+polygon = PackedVector2Array(-1620, -180, -1520, -400, -1380, -430, -1280, -330, -1300, -160, -1450, -80, -1620, -100)
+color = Color(0.07, 0.05, 0.1, 1)
+
+[node name="Trunk1" type="Polygon2D" parent="Background/NearLayer"]
+polygon = PackedVector2Array(-1480, -140, -1430, -140, -1430, 250, -1480, 250)
+color = Color(0.07, 0.05, 0.1, 1)
+
+[node name="Tree2" type="Polygon2D" parent="Background/NearLayer"]
+polygon = PackedVector2Array(1180, -260, 1300, -500, 1480, -520, 1600, -380, 1560, -200, 1380, -120, 1200, -140)
+color = Color(0.07, 0.05, 0.1, 1)
+
+[node name="Trunk2" type="Polygon2D" parent="Background/NearLayer"]
+polygon = PackedVector2Array(1360, -160, 1420, -160, 1420, 250, 1360, 250)
+color = Color(0.07, 0.05, 0.1, 1)
 
 [node name="Stage" type="Node2D" parent="."]
 
@@ -69,7 +129,7 @@ body_color = Color(1, 0.55, 0.15, 1)
 
 [node name="P2" parent="." instance=ExtResource("2_fighter")]
 position = Vector2(400, 0)
-data = ExtResource("3_lathi")
+data = ExtResource("7_musti")
 facing = -1
 player_index = 2
 body_color = Color(0.15, 0.7, 0.35, 1)

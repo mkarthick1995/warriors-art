@@ -38,7 +38,7 @@ Build order (each item is testable on its own):
 6. [x] **Game-feel pass** — hit-stop, hit-flash, screen-shake (trauma model), hit sparks, KO + super slow-mo. Real *tuning* still needs human playtests.
 7. [~] **Stage + camera** — flat placeholder stage with walls; camera tracks/zooms/shakes. Parallax backdrop TODO.
 
-Also landed early from Phase 2: **training mode** (frozen timer, auto-refill, hitbox/state/input overlay — toggle H) and the **meter economy** (EX + super costs).
+Also landed early from Phase 2: **training mode** (frozen timer, auto-refill, hitbox/state/input overlay — toggle H), the **meter economy** (EX + super costs), **throws + throw-tech** (completing the strike/block/throw triangle), **gamepad support** (device 0/1 → P1/P2), a **parallax dusk-ghat stage**, and **character #2** — Varanasi Musti Yuddha ("Malla"), built purely from `.tres` data with zero engine changes, which satisfies the Phase 2 exit gate. See [`CHARACTER_AUTHORING.md`](CHARACTER_AUTHORING.md) for how to build the rest of the roster.
 
 Verified by headless tests (`tests/run_tests.gd` unit, `tests/run_sim_smoke.gd` end-to-end) — both run in CI.
 

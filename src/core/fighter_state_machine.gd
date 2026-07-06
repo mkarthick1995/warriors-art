@@ -20,6 +20,8 @@ enum State {
 	BLOCKSTUN,
 	KNOCKDOWN,
 	KO,
+	THROW,  ## Attempting/holding a throw (attacker side).
+	THROWN,  ## Grabbed by the opponent (victim side).
 }
 
 var current: State = State.IDLE
@@ -46,7 +48,12 @@ func tick() -> void:
 
 
 func is_stunned() -> bool:
-	return current == State.HITSTUN or current == State.BLOCKSTUN or current == State.KNOCKDOWN
+	return (
+		current == State.HITSTUN
+		or current == State.BLOCKSTUN
+		or current == State.KNOCKDOWN
+		or current == State.THROWN
+	)
 
 
 func is_actionable() -> bool:
@@ -81,7 +88,14 @@ func change_to(to: State) -> void:
 ## can_transition because stun is never refusable; re-entering the same stun
 ## refreshes it (combos extend stun rather than being ignored).
 func enter_stun(kind: State, ticks: int) -> void:
-	assert(kind == State.HITSTUN or kind == State.BLOCKSTUN or kind == State.KNOCKDOWN)
+	assert(
+		(
+			kind == State.HITSTUN
+			or kind == State.BLOCKSTUN
+			or kind == State.KNOCKDOWN
+			or kind == State.THROWN
+		)
+	)
 	if current == State.KO:
 		return
 	_stun_ticks = ticks

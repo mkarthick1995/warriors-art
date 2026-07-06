@@ -80,6 +80,12 @@ func _test_motion_parser() -> void:
 		buf3.push(_buttons())
 	buf3.push(_buttons(1, 0))
 	_check(not buf3.has_motion("236", true, 12), "motion: stale inputs outside leniency rejected")
+	var dp := InputBuffer.new()
+	dp.push(_buttons(1, 0))  # 6
+	dp.push(_buttons(0, 1))  # 2
+	dp.push(_buttons(1, 1))  # 3
+	_check(dp.has_motion("623", true), "motion: DP (623) recognized")
+	_check(not dp.has_motion("236", true), "motion: DP input does not satisfy QCF")
 
 
 func _test_double_tap() -> void:
@@ -141,23 +147,32 @@ func _test_move_data_parsing() -> void:
 
 
 func _test_character_resource_loads() -> void:
-	var data: CharacterData = load("res://src/characters/bengal_lathi/bengal_lathi.tres")
-	_check(data != null, "resource: slice character loads")
-	if data == null:
-		return
-	_check(data.moves.size() == 6, "resource: 6 moves authored")
-	_check(data.max_health > 0 and data.walk_speed > 0, "resource: sane stats")
-	_check(
-		(
-			data.super_move != null
-			and data.super_move.technique_cam
-			and data.super_move.meter_cost > 0
-		),
-		"resource: super has technique cam and a meter cost"
-	)
-	for m in data.moves:
+	var paths: Array[String] = [
+		"res://src/characters/bengal_lathi/bengal_lathi.tres",
+		"res://src/characters/varanasi_musti/varanasi_musti.tres",
+	]
+	for path in paths:
+		var short := path.get_file()
+		var data: CharacterData = load(path)
+		_check(data != null, "resource: %s loads" % short)
+		if data == null:
+			continue
+		_check(data.moves.size() == 6, "resource: %s has 6 moves" % short)
+		_check(data.max_health > 0 and data.walk_speed > 0, "resource: %s sane stats" % short)
 		_check(
-			not m.hitbox_frames.is_empty() and m.duration() > 0,
-			"resource: move '%s' has frames and timing" % m.display_name
+			(
+				data.super_move != null
+				and data.super_move.technique_cam
+				and data.super_move.meter_cost > 0
+			),
+			"resource: %s super has technique cam and a meter cost" % short
 		)
-		_check(m.button_part() != &"", "resource: move '%s' input parses" % m.display_name)
+		for m in data.moves:
+			_check(
+				not m.hitbox_frames.is_empty() and m.duration() > 0,
+				"resource: %s move '%s' has frames and timing" % [short, m.display_name]
+			)
+			_check(
+				m.button_part() != &"",
+				"resource: %s move '%s' input parses" % [short, m.display_name]
+			)

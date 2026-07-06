@@ -65,7 +65,25 @@ func _run(scene: Node) -> void:
 	_check(dashed, "double-tap forward dashes")
 	await _until(func() -> bool: return p1.state() == FighterStateMachine.State.IDLE)
 
-	# 6. QCF special launches P2 into a knockdown, then P2 wakes up.
+	# 6. Throw: light+medium at point-blank grabs, damages, knocks down.
+	await _until(func() -> bool: return not p1.is_stunned() and not p2.is_stunned())
+	var hp_before_throw: int = p2.health
+	await _walk_into_range(p1, p2, 90.0)
+	Input.action_press("p1_light")
+	Input.action_press("p1_medium")
+	await _frames(2)
+	Input.action_release("p1_light")
+	Input.action_release("p1_medium")
+	await _until(func() -> bool: return p2.state() == FighterStateMachine.State.THROWN)
+	_check(true, "throw grabs at point-blank")
+	await _until(func() -> bool: return p2.state() == FighterStateMachine.State.KNOCKDOWN)
+	_check(
+		p2.health == hp_before_throw - MatchController.THROW_DAMAGE,
+		"throw dealt its damage after the hold"
+	)
+	await _until(func() -> bool: return p2.state() == FighterStateMachine.State.IDLE)
+
+	# 7. QCF special launches P2 into a knockdown, then P2 wakes up.
 	await _walk_into_range(p1, p2)
 	await _qcf("p1", "light")
 	await _until(func() -> bool: return p2.state() == FighterStateMachine.State.KNOCKDOWN)
@@ -73,7 +91,7 @@ func _run(scene: Node) -> void:
 	await _until(func() -> bool: return p2.state() == FighterStateMachine.State.IDLE)
 	_check(true, "p2 wakes up from knockdown")
 
-	# 7. Super: double-QCF with full meter spends it all and hits big.
+	# 8. Super: double-QCF with full meter spends it all and hits big.
 	p1.meter = Fighter.MAX_METER
 	var hp_before_super: int = p2.health
 	await _walk_into_range(p1, p2)
@@ -84,7 +102,7 @@ func _run(scene: Node) -> void:
 	_check(p2.health <= hp_before_super - 80, "super connected for major damage")
 	await _until(func() -> bool: return p2.state() == FighterStateMachine.State.IDLE)
 
-	# 8. Force a KO and confirm the round ends and the next round resets health.
+	# 9. Force a KO and confirm the round ends and the next round resets health.
 	p2.health = 1
 	await _until(func() -> bool: return not p2.is_stunned())
 	await _walk_into_range(p1, p2)  # Knockback/pushback moved P2 out of reach.
@@ -130,9 +148,9 @@ func _tap(action: String) -> void:
 	Input.action_release(action)
 
 
-func _walk_into_range(p1: Fighter, p2: Fighter) -> void:
+func _walk_into_range(p1: Fighter, p2: Fighter, gap: float = 130.0) -> void:
 	Input.action_press("p1_right")
-	await _until(func() -> bool: return p2.global_position.x - p1.global_position.x < 130.0)
+	await _until(func() -> bool: return p2.global_position.x - p1.global_position.x < gap)
 	Input.action_release("p1_right")
 	await _frames(1)
 
