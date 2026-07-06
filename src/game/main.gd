@@ -38,9 +38,23 @@ func _unhandled_input(event: InputEvent) -> void:
 		elif key >= KEY_KP_1 and key <= KEY_KP_8:  # Numpad works too.
 			idx = key - KEY_KP_1
 		if idx >= 0:
-			GameState.p2_character_path = ROSTER[idx]
-			var picked: CharacterData = load(ROSTER[idx])
+			# Shift+number picks P1; plain number picks P2.
+			if (event as InputEventKey).shift_pressed:
+				GameState.p1_character_path = ROSTER[idx]
+			else:
+				GameState.p2_character_path = ROSTER[idx]
+			var picks := [
+				_pick_name(GameState.p1_character_path),
+				_pick_name(GameState.p2_character_path),
+			]
 			_subtitle.text = (
-				">>> P2 OPPONENT: %s — %s (%s) <<<\n[Enter] fight · [T] training · [1-8] change"
-				% [picked.martial_art, picked.display_name, picked.state_region]
+				">>> P1: %s   vs   P2: %s <<<\n[Shift+1-8] pick P1 · [Enter] fight · [T] training"
+				% picks
 			)
+
+
+func _pick_name(path: String) -> String:
+	if path == "":
+		return "(default)"
+	var data: CharacterData = load(path)
+	return "%s — %s" % [data.martial_art, data.state_region]

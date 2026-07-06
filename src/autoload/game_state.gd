@@ -12,8 +12,9 @@ enum Mode { NONE, VERSUS_1V1, VERSUS_2V2, TRAINING, ARCADE }
 var current_mode: Mode = Mode.NONE
 ## Best-of-N rounds for a match (default best of 3 → first to 2).
 var rounds_to_win: int = 2
-## P2 character override path chosen on the title screen ("" = scene default).
+## Character override paths chosen on the title screen ("" = scene default).
 ## The real character-select screen (Phase 4) replaces this.
+var p1_character_path := ""
 var p2_character_path := ""
 
 
