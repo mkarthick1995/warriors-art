@@ -28,5 +28,6 @@ text = "WARRIOR'S ART"
 [node name="Subtitle" type="Label" parent="UI/Center/VBox"]
 layout_mode = 2
 horizontal_alignment = 1
-text = "[Enter]  Versus — choose your fighters
+text = "[Enter]  Versus — two players
+[A]  Arcade — solo ladder vs the CPU
 [T]  Training mode        [Esc] in-game: pause + full controls"

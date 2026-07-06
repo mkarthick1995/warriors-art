@@ -47,6 +47,10 @@ var timer_ticks: int = ROUND_SECONDS * 60
 ## Transient center-screen banner (technique cam move names etc.). The HUD
 ## shows it whenever no phase message is active.
 var announcement := ""
+## Match-over message override (arcade victory/defeat); "" = versus default.
+var match_over_message := ""
+## Where Enter goes from MATCH_OVER: "" = rematch, else "next"/"title".
+var _after_match := ""
 
 var _phase_ticks: int = 0
 var _center := Vector2.ZERO
@@ -70,6 +74,8 @@ func _ready() -> void:
 			p1.set_character(load(gs.p1_character_path))
 		if p2_character == null and gs.p2_character_path != "":
 			p2.set_character(load(gs.p2_character_path))
+		if gs.has_method("is_arcade") and gs.is_arcade():
+			_setup_arcade(gs)
 	_center = (p1.global_position + p2.global_position) * 0.5
 	p1.landed_hit.connect(_on_hit.bind(p1))
 	p2.landed_hit.connect(_on_hit.bind(p2))
@@ -105,7 +111,13 @@ func _physics_process(_delta: float) -> void:
 				_start_round()
 		Phase.MATCH_OVER:
 			if Input.is_action_just_pressed("ui_accept"):
-				_rematch()
+				match _after_match:
+					"next":
+						get_tree().change_scene_to_file.call_deferred("res://scenes/Match.tscn")
+					"title":
+						get_tree().change_scene_to_file.call_deferred("res://scenes/Main.tscn")
+					_:
+						_rematch()
 
 
 func time_left_seconds() -> int:
@@ -177,6 +189,34 @@ func _clear_throw() -> void:
 	_throw_ticks = 0
 
 
+## Arcade: P2 becomes the next ladder opponent, CPU-controlled.
+func _setup_arcade(gs: Node) -> void:
+	p2.set_character(load(gs.arcade_opponent()))
+	var brain := FighterAI.new()
+	brain.setup(p2, p1, gs.arcade_difficulty(), 20260706 + gs.arcade_index)
+	p2.ai_brain = brain
+	announce(
+		"BATTLE %d / %d — %s" % [gs.arcade_index + 1, gs.arcade_total(), p2.data.martial_art], 140
+	)
+
+
+## Sets the arcade continuation (next battle / champion / defeat) at match end.
+func _resolve_arcade_outcome() -> void:
+	var gs: Node = get_node_or_null("/root/GameState")
+	if gs == null or not gs.has_method("is_arcade") or not gs.is_arcade():
+		return
+	if wins[0] > wins[1]:
+		if gs.arcade_advance():
+			match_over_message = "VICTORY!\n[Enter] next battle"
+			_after_match = "next"
+		else:
+			match_over_message = "CHAMPION OF ALL STATES!\n[Enter] title"
+			_after_match = "title"
+	else:
+		match_over_message = "DEFEAT\n[Enter] title"
+		_after_match = "title"
+
+
 ## Projectile hits: victim takes the hit and hit-stop; the firer (far away)
 ## gets none. Knockback follows the projectile's travel direction.
 func _on_projectile_hit(victim: Fighter, frame: FrameData, dir: int) -> void:
@@ -215,6 +255,7 @@ func _end_round(winner_index: int) -> void:
 	round_ended.emit(winner_index)
 	if wins.max() >= rounds_to_win:
 		phase = Phase.MATCH_OVER
+		_resolve_arcade_outcome()
 		match_ended.emit(1 if wins[0] > wins[1] else 2)
 
 

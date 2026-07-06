@@ -47,6 +47,9 @@ const MOTION_LENIENCY_PER_DIGIT := 4
 
 var health: int = 0
 var meter: int = 0
+## When set, this fighter is CPU-controlled: inputs come from the brain
+## instead of the p1_/p2_ actions (same pipeline, so determinism holds).
+var ai_brain: FighterAI = null
 ## Ticks of sim freeze for game feel. The MatchController sets it on BOTH
 ## fighters when a hit connects.
 var hitstop_ticks: int = 0
@@ -472,6 +475,8 @@ func _on_projectile_landed(victim: Fighter, frame: FrameData, dir: int, gain: in
 
 ## Read this player's mapped actions into an InputButtons snapshot.
 func _sample_inputs() -> InputButtons:
+	if ai_brain != null:
+		return ai_brain.decide()
 	var b := InputButtons.new()
 	var p := "p%d_" % player_index
 	b.left = Input.is_action_pressed(p + "left")

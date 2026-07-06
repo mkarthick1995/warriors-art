@@ -16,9 +16,12 @@ var _starting := false
 
 var _grid: GridContainer
 var _status: Array[Label] = []
+## Arcade: only P1 picks; P2 is the CPU ladder.
+var _arcade := false
 
 
 func _ready() -> void:
+	_arcade = GameState.is_arcade()
 	for path in GameState.ROSTER:
 		_datas.append(load(path))
 	_build_ui()
@@ -38,6 +41,8 @@ func _unhandled_input(event: InputEvent) -> void:
 
 
 func _handle_player(event: InputEvent, p: int) -> void:
+	if _arcade and p == 1:
+		return
 	var prefix := "p%d_" % (p + 1)
 	if _locked[p]:
 		if event.is_action_pressed(prefix + "medium"):
@@ -59,15 +64,18 @@ func _handle_player(event: InputEvent, p: int) -> void:
 	if event.is_action_pressed(prefix + "light"):
 		_locked[p] = true
 		Sfx.hit(1)
-		if _locked[0] and _locked[1]:
+		if _locked[0] and (_arcade or _locked[1]):
 			_start_match()
 
 
 func _start_match() -> void:
 	_starting = true
-	GameState.p1_character_path = GameState.ROSTER[_cursor[0]]
-	GameState.p2_character_path = GameState.ROSTER[_cursor[1]]
-	GameState.set_mode(GameState.Mode.VERSUS_1V1)
+	if _arcade:
+		GameState.start_arcade(GameState.ROSTER[_cursor[0]])
+	else:
+		GameState.p1_character_path = GameState.ROSTER[_cursor[0]]
+		GameState.p2_character_path = GameState.ROSTER[_cursor[1]]
+		GameState.set_mode(GameState.Mode.VERSUS_1V1)
 	await get_tree().create_timer(START_DELAY).timeout
 	GameState.change_scene("res://scenes/Match.tscn")
 
@@ -90,6 +98,9 @@ func _refresh() -> void:
 			style.border_color = Color(0.25, 0.22, 0.32)
 		_tiles[i].add_theme_stylebox_override("panel", style)
 	for p in 2:
+		if _arcade and p == 1:
+			_status[p].text = "CPU LADDER\n%d battles await" % (GameState.ROSTER.size() - 1)
+			continue
 		var data := _datas[_cursor[p]]
 		var state := "LOCKED IN" if _locked[p] else "choosing…"
 		_status[p].text = "P%d: %s (%s)\n%s" % [p + 1, data.martial_art, data.state_region, state]

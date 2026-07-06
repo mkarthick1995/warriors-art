@@ -50,3 +50,6 @@ jobs:
 
       - name: Gameplay smoke test
         run: godot --headless --path . -s res://tests/run_sim_smoke.gd
+
+      - name: CPU AI smoke test
+        run: godot --headless --path . -s res://tests/run_ai_smoke.gd

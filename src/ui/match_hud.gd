@@ -41,6 +41,8 @@ func _phase_message() -> String:
 		MatchController.Phase.ROUND_OVER:
 			return "K.O." if controller.timer_ticks > 0 else "TIME"
 		MatchController.Phase.MATCH_OVER:
+			if controller.match_over_message != "":
+				return controller.match_over_message
 			var winner := 1 if controller.wins[0] > controller.wins[1] else 2
 			return "PLAYER %d WINS\n[Enter] rematch" % winner
 	# No phase message → transient banners (technique cam move names).

@@ -29,12 +29,47 @@ var rounds_to_win: int = 2
 var p1_character_path := ""
 var p2_character_path := ""
 
+## Arcade ladder: every other roster fighter, fought in order with rising
+## difficulty. (The MatchController reads these via duck-typed access.)
+var arcade_ladder: Array[String] = []
+var arcade_index := 0
+
 
 func set_mode(mode: Mode) -> void:
 	if mode == current_mode:
 		return
 	current_mode = mode
 	mode_changed.emit(mode)
+
+
+func is_arcade() -> bool:
+	return current_mode == Mode.ARCADE
+
+
+func start_arcade(player_path: String) -> void:
+	p1_character_path = player_path
+	p2_character_path = ""
+	arcade_ladder.assign(ROSTER.filter(func(p: String) -> bool: return p != player_path))
+	arcade_index = 0
+
+
+func arcade_opponent() -> String:
+	return arcade_ladder[arcade_index]
+
+
+## Difficulty ramps 1..7 through the ladder.
+func arcade_difficulty() -> int:
+	return arcade_index + 1
+
+
+func arcade_total() -> int:
+	return arcade_ladder.size()
+
+
+## Advance after a win; returns true while opponents remain.
+func arcade_advance() -> bool:
+	arcade_index += 1
+	return arcade_index < arcade_ladder.size()
 
 
 func change_scene(path: String) -> void:
