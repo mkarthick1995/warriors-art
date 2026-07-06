@@ -32,6 +32,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          lfs: true  # Sprite PNGs are LFS; tests load SpriteFrames built on them.
 
       - name: Set up Godot 4.3
         uses: chickensoft-games/setup-godot@v2
