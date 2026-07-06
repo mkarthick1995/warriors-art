@@ -17,6 +17,7 @@ func _initialize() -> void:
 	_test_state_machine_ko()
 	_test_move_data_parsing()
 	_test_character_resource_loads()
+	_test_audio_assets()
 	print("=== %d checks, %d failures ===" % [_checks, _failures])
 	quit(1 if _failures > 0 else 0)
 
@@ -176,6 +177,13 @@ func _test_character_resource_loads() -> void:
 				m.button_part() != &"",
 				"resource: %s move '%s' input parses" % [short, m.display_name]
 			)
+		if data.percussion != "":
+			_check(
+				ResourceLoader.exists(
+					"res://assets/audio/percussion/%s_loop.wav" % data.percussion
+				),
+				"audio: %s percussion loop '%s' exists" % [short, data.percussion]
+			)
 		if data.sprite_frames != null:
 			# Sprite contract: idle/walk must exist; attack anims should match
 			# the moves so the right animation plays (fallback is idle).
@@ -189,3 +197,11 @@ func _test_character_resource_loads() -> void:
 					data.sprite_frames.has_animation(m.animation_name),
 					"sprites: %s has animation for move '%s'" % [short, m.display_name]
 				)
+
+
+func _test_audio_assets() -> void:
+	for sound in ["hit_light", "hit_heavy", "block", "whiff", "throw", "ko"]:
+		_check(
+			ResourceLoader.exists("res://assets/audio/sfx/%s.wav" % sound),
+			"audio: sfx '%s' exists" % sound
+		)

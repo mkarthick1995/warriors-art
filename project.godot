@@ -18,6 +18,7 @@ config/icon="res://icon.svg"
 GameState="*res://src/autoload/game_state.gd"
 Rng="*res://src/autoload/rng.gd"
 Log="*res://src/autoload/log.gd"
+Sfx="*res://src/autoload/sfx.gd"
 
 [display]
 

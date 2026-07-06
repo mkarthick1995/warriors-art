@@ -6,6 +6,8 @@ extends Node2D
 signal round_started(round_number: int)
 signal round_ended(winner_index: int)  ## 0 = draw, 1/2 = player.
 signal match_ended(winner_index: int)
+## A throw grab connected (presentation plays the grab sound).
+signal throw_connected
 
 enum Phase { PREROUND, FIGHTING, ROUND_OVER, MATCH_OVER }
 
@@ -37,11 +39,16 @@ var round_number: int = 1
 var wins: Array[int] = [0, 0]
 var timer_ticks: int = ROUND_SECONDS * 60
 
+## Transient center-screen banner (technique cam move names etc.). The HUD
+## shows it whenever no phase message is active.
+var announcement := ""
+
 var _phase_ticks: int = 0
 var _center := Vector2.ZERO
 var _throw_attacker: Fighter = null
 var _throw_victim: Fighter = null
 var _throw_ticks: int = 0
+var _announce_ticks: int = 0
 
 
 func _ready() -> void:
@@ -56,6 +63,10 @@ func _ready() -> void:
 
 func _physics_process(_delta: float) -> void:
 	_phase_ticks += 1
+	if _announce_ticks > 0:
+		_announce_ticks -= 1
+		if _announce_ticks == 0:
+			announcement = ""
 	match phase:
 		Phase.PREROUND:
 			if _phase_ticks >= PREROUND_TICKS:
@@ -80,6 +91,12 @@ func _physics_process(_delta: float) -> void:
 
 func time_left_seconds() -> int:
 	return ceili(timer_ticks / 60.0)
+
+
+## Show a center-screen banner for `ticks` (technique cam move names etc.).
+func announce(text: String, ticks: int) -> void:
+	announcement = text
+	_announce_ticks = ticks
 
 
 ## Central hit resolution: victim takes the hit, BOTH fighters share hit-stop
@@ -110,6 +127,7 @@ func _tick_throws() -> void:
 				_throw_ticks = 0
 				attacker.hold_throw()
 				victim.get_thrown(THROW_HOLD_TICKS + 30)
+				throw_connected.emit()
 				break
 		return
 	_throw_ticks += 1

@@ -8,6 +8,8 @@ extends CharacterBody2D
 signal landed_hit(victim: Fighter, frame: FrameData)
 signal took_damage(amount: int, health_remaining: int)
 signal knocked_out
+## Emitted whenever any attack begins (presentation plays the whiff/swing).
+signal attack_started(move: MoveData)
 ## Emitted when a technique_cam move starts — presentation runs the slow-mo cam.
 signal super_started(move: MoveData)
 
@@ -99,18 +101,20 @@ func apply_hit(frame: FrameData, attacker_facing: int) -> void:
 		_apply_blocked_hit(frame, attacker_facing)
 		return
 	health = maxi(0, health - frame.damage)
-	took_damage.emit(frame.damage, health)
 	_interrupt_attack()
 	_knockdown_pending = frame.knockdown
 	# Weight scales knockback taken (heavier fighters move less) — NOT damage.
 	# Only x flips with facing; vertical knockback keeps its authored direction.
 	var kb := Vector2(frame.knockback.x * attacker_facing, frame.knockback.y)
 	velocity = kb / maxf(data.weight, 0.1)
+	# State first, THEN signals — listeners (audio/VFX) read the new state.
 	if health == 0:
 		_sm.change_to(FighterStateMachine.State.KO)
+		took_damage.emit(frame.damage, health)
 		knocked_out.emit()
 	else:
 		_sm.enter_stun(FighterStateMachine.State.HITSTUN, frame.hitstun)
+		took_damage.emit(frame.damage, health)
 
 
 func state() -> FighterStateMachine.State:
@@ -374,6 +378,7 @@ func _try_start_attack() -> bool:
 			velocity.x = 0  # Air attacks keep jump momentum.
 		_current_move = move
 		_sm.change_to(FighterStateMachine.State.ATTACK)
+		attack_started.emit(move)
 		if move.technique_cam:
 			super_started.emit(move)
 		return true
@@ -410,12 +415,13 @@ func _is_blocking(attacker_facing: int) -> bool:
 func _apply_blocked_hit(frame: FrameData, attacker_facing: int) -> void:
 	var chip := frame.damage / CHIP_DIVISOR
 	health = maxi(1, health - chip)  # Chip never KOs.
-	if chip > 0:
-		took_damage.emit(chip, health)
 	velocity.x = frame.knockback.x * attacker_facing * BLOCK_PUSHBACK_SCALE
+	# State first, THEN the signal — listeners distinguish block by state.
 	_sm.enter_stun(
 		FighterStateMachine.State.BLOCKSTUN, maxi(1, frame.hitstun - BLOCKSTUN_REDUCTION)
 	)
+	if chip > 0:
+		took_damage.emit(chip, health)
 
 
 func _interrupt_attack() -> void:

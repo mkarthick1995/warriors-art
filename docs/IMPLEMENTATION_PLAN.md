@@ -17,11 +17,11 @@ Three principles:
 
 Goal: repo, tooling, and a project everyone can open and run.
 
-- [x] GitHub repo, `.gitignore`, Git LFS, branch protection, CI. *(this scaffold)*
-- [ ] Godot 4.x project opens clean on all three machines (document the exact version in `docs/ONBOARDING.md`).
-- [ ] Task board (GitHub Projects / Trello / Notion) with columns: Backlog → Ready → In Progress → Review → Done.
-- [ ] Research split: each person deep-dives 2 states — confirm techniques, gather reference video, draft a one-page character concept (name, personality, 3 special moves). Use the `character_design` issue template.
-- [ ] Agree the input/frame-data conventions in [Architecture](ARCHITECTURE.md).
+- [x] GitHub repo, `.gitignore`, Git LFS, CI. *(Branch protection unavailable on the free-plan private repo — PR discipline by convention.)*
+- [ ] Godot 4.3-stable opens clean on all three machines — **tracked as issue #8** (team action; the only open Phase 0 item).
+- [x] Task board: [GitHub Project — Dev Board](https://github.com/users/mkarthick1995/projects/1), linked to the repo with all open issues.
+- [x] Research split filed as issues #1–#6 (2 states per dev, per the Roadmap table) using the `character_design` template flow.
+- [x] Input/frame-data conventions agreed and documented ([Architecture](ARCHITECTURE.md), [Character Authoring](CHARACTER_AUTHORING.md)).
 
 **Exit criteria:** everyone can clone, open, and run an empty scene; task board live; research assignments made.
 
@@ -36,7 +36,9 @@ Build order (each item is testable on its own):
 4. [x] **Moveset** — slice character has 3 ground normals, 1 air normal, QCF special, EX special (meter), double-QCF super with technique cam (`src/characters/bengal_lathi/`). Placeholder colored-box sprites.
 5. [x] **Round loop** — health/meter bars, round timer, best-of-3, KO/timeout, rematch. (`src/game/match/`)
 6. [x] **Game-feel pass** — hit-stop, hit-flash, screen-shake (trauma model), hit sparks, KO + super slow-mo. Real *tuning* still needs human playtests.
-7. [~] **Stage + camera** — flat placeholder stage with walls; camera tracks/zooms/shakes. Parallax backdrop TODO.
+7. [x] **Stage + camera** — parallax dusk river-ghat backdrop (sky/sun/temples/trees layers); camera tracks, zooms, shakes, and punches in.
+
+**Exit gate:** the outside playtest is the one remaining Phase 1 item — **tracked as issue #7** (inherently a human gate).
 
 Also landed early from Phase 2: **training mode** (frozen timer, auto-refill, hitbox/state/input overlay — toggle H), the **meter economy** (EX + super costs), **throws + throw-tech** (completing the strike/block/throw triangle), **gamepad support** (device 0/1 → P1/P2), a **parallax dusk-ghat stage**, and **character #2** — Varanasi Musti Yuddha ("Malla"), built purely from `.tres` data with zero engine changes, which satisfies the Phase 2 exit gate. See [`CHARACTER_AUTHORING.md`](CHARACTER_AUTHORING.md) for how to build the rest of the roster.
 
@@ -48,14 +50,14 @@ Verified by headless tests (`tests/run_tests.gd` unit, `tests/run_sim_smoke.gd` 
 
 Goal: make adding characters cheap and the combat model complete.
 
-- [ ] Finalize the **character data format** (resource `.tres`): frame data, move list, hitbox timelines, meter costs. Document it so an artist/designer can add moves without a programmer.
-- [ ] **Animation import pipeline** — Aseprite/PSD → sprite sheets → Godot `SpriteFrames`, with a naming convention and an import checklist.
-- [ ] Full defensive kit: throws + tech, chip, pushback, meter gain/spend, EX specials, one super with a **technique cam**.
-- [ ] Training mode (hitbox display, frame-data overlay, input display) — this is also our primary dev/debug tool.
-- [ ] Audio system: per-character percussion hooks, SFX bus, hit-sound layers.
-- [ ] Character authoring guide in `docs/` so all three devs can build fighters in parallel.
+- [x] Finalize the **character data format** (resource `.tres`): frame data, move list, hitbox timelines, meter costs. Documented in [Character Authoring](CHARACTER_AUTHORING.md).
+- [x] **Animation import pipeline** — sprite strips → `SpriteFrames` via `tools/build_sprite_frames.gd`; see [Art Pipeline](ART_PIPELINE.md). Placeholder generator included.
+- [x] Full defensive kit: throws + tech, chip, pushback, meter gain/spend, EX specials, super with a **technique cam** (slow-mo + move-name banner + camera punch-in).
+- [x] Training mode: hitbox display, frame-data readout (move phase + S/A/R), input display, auto-refill. Our primary dev/debug tool (`T`, then `H`).
+- [x] Audio system: SFX bus + hit/block/whiff/throw/KO layers, per-character percussion hooks; see [Audio Pipeline](AUDIO_PIPELINE.md). Placeholder WAVs generated.
+- [x] Character authoring guide in `docs/` so all three devs can build fighters in parallel.
 
-**Exit criteria:** a second character built *entirely from data + art*, no core-engine changes required.
+**Exit criteria:** a second character built *entirely from data + art*, no core-engine changes required. ✅ **Met** — Varanasi Musti Yuddha ("Malla") is pure `.tres` data.
 
 ## Phase 3 — Roster & stages (Week 12–20)
 

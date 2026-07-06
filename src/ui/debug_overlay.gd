@@ -64,3 +64,31 @@ func _draw_fighter(f: Fighter) -> void:
 		14,
 		TEXT_COLOR
 	)
+	_draw_frame_data(f)
+
+
+## Second readout line during attacks: move name + startup/active/recovery
+## phase and tick position — the training-mode frame-data display.
+func _draw_frame_data(f: Fighter) -> void:
+	var move := f.current_move()
+	if move == null:
+		return
+	var t := f.state_ticks()
+	var phase := "startup"
+	if t >= move.startup + move.active:
+		phase = "recovery"
+	elif t >= move.startup:
+		phase = "ACTIVE"
+	var line := (
+		"%s %s %d/%d (S%d A%d R%d)"
+		% [move.display_name, phase, t, move.duration(), move.startup, move.active, move.recovery]
+	)
+	draw_string(
+		_font,
+		f.global_position + Vector2(-110, 58),
+		line,
+		HORIZONTAL_ALIGNMENT_LEFT,
+		260,
+		13,
+		Color(1.0, 0.85, 0.4, 0.95)
+	)
