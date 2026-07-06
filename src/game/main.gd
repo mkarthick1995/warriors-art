@@ -32,11 +32,15 @@ func _unhandled_input(event: InputEvent) -> void:
 			GameState.set_mode(GameState.Mode.TRAINING)
 			GameState.change_scene("res://scenes/Training.tscn")
 			return
+		var idx := -1
 		if key >= KEY_1 and key <= KEY_8:
-			var idx := key - KEY_1
+			idx = key - KEY_1
+		elif key >= KEY_KP_1 and key <= KEY_KP_8:  # Numpad works too.
+			idx = key - KEY_KP_1
+		if idx >= 0:
 			GameState.p2_character_path = ROSTER[idx]
 			var picked: CharacterData = load(ROSTER[idx])
 			_subtitle.text = (
-				"P2: %s (%s)\n[Enter] fight · [T] training"
-				% [picked.display_name, picked.martial_art]
+				">>> P2 OPPONENT: %s — %s (%s) <<<\n[Enter] fight · [T] training · [1-8] change"
+				% [picked.martial_art, picked.display_name, picked.state_region]
 			)
