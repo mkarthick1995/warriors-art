@@ -6,8 +6,8 @@ const CONTROLS_TEXT := """PAUSED
 
                  PLAYER 1                    PLAYER 2
 Move             W A S D                     Arrow keys
-Light / Medium   J / K                       Numpad 1 / 2
-Throw            J + K together              Numpad 1 + 2
+Light / Medium   R / T                       I / O
+Throw            R + T together              I + O together
 Dash             double-tap A or D           double-tap arrow
 Block            hold away from opponent     hold away
 

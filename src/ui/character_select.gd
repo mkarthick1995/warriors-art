@@ -139,7 +139,7 @@ func _build_ui() -> void:
 		_status.append(status)
 
 	var hint := Label.new()
-	hint.text = "move: WASD / arrows · lock: J / numpad 1 · unlock: K / numpad 2 · Esc: back"
+	hint.text = "move: WASD / arrows · lock: R / I · unlock: T / O · Esc: back"
 	hint.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	hint.add_theme_font_size_override("font_size", 20)
 	hint.modulate = Color(1, 1, 1, 0.6)
