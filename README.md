@@ -38,6 +38,7 @@ See [`docs/GAME_DESIGN.md`](docs/GAME_DESIGN.md) for the full design brief.
 | [Character Authoring](docs/CHARACTER_AUTHORING.md) | Build a fighter from data — no engine code |
 | [Art Pipeline](docs/ART_PIPELINE.md) | Sprite-strip convention → SpriteFrames build |
 | [Audio Pipeline](docs/AUDIO_PIPELINE.md) | SFX layers + regional percussion hooks |
+| [Asset Licenses](docs/ASSET_LICENSES.md) | Provenance ledger — REQUIRED for every art/audio asset |
 | [Coding Standards](docs/CODING_STANDARDS.md) | GDScript style, naming, review rules |
 | [Git Workflow](docs/GIT_WORKFLOW.md) | Branching, commits, PRs, LFS |
 | [Onboarding](docs/ONBOARDING.md) | New-contributor setup (start here) |

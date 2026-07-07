@@ -20,6 +20,7 @@
 - [ ] Tests pass (or N/A).
 - [ ] No stray `print()` / debug scenes committed.
 - [ ] New binaries are Git LFS-tracked (`git lfs status`).
+- [ ] New art/audio assets have a row in `docs/ASSET_LICENSES.md` (provenance + license).
 - [ ] Sim changes preserve determinism (no wall-clock, no unseeded RNG — see Coding Standards §4).
 - [ ] Frame data / tuning is in `.tres` resources, not hard-coded.
 - [ ] Docs updated if behaviour or design changed.
