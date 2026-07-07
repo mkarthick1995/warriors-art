@@ -31,6 +31,8 @@ See [`docs/GAME_DESIGN.md`](docs/GAME_DESIGN.md) for the full design brief.
 
 | Doc | Purpose |
 |---|---|
+| [Game Status](docs/GAME_STATUS.md) | **Start here** — everything built so far, current state |
+| [Changelog](CHANGELOG.md) | Development history by milestone |
 | [Implementation Plan](docs/IMPLEMENTATION_PLAN.md) | How we build it — phases, systems, vertical slice |
 | [Roadmap](docs/ROADMAP.md) | Milestones, timeline, ownership |
 | [Game Design](docs/GAME_DESIGN.md) | Roster, mechanics, modes, art & audio direction |
@@ -48,9 +50,9 @@ See [`docs/GAME_DESIGN.md`](docs/GAME_DESIGN.md) for the full design brief.
 1. Install **Godot 4.3-stable (standard, GDScript build)** — https://godotengine.org/download
 2. Install **Git** and **Git LFS**: `git lfs install`
 3. Clone: `git clone https://github.com/mkarthick1995/warriors-art.git`
-4. Open `project.godot` in Godot and press F5 — keys **1–8** pick P2's fighter (the full eight-style roster is playable), **Enter** starts a local 1v1 on one of six random stages, **T** starts training mode (H toggles the hitbox overlay).
-   **P1:** WASD move, R/T light/medium, R+T throw, double-tap dash, motion specials (QCF+R, QCF·QCF+R super on full meter) · **P2:** arrows + I/O (I+O throw). Legacy J/K (P1) and numpad 1/2 (P2) still work.
-   **Gamepads:** controller 1 → P1, controller 2 → P2 (D-pad/stick + bottom/left face buttons; bottom+left together = throw).
+4. Open `project.godot` in Godot and press F5. Title menu: **Enter** = two-player Versus (character select grid), **A** = solo Arcade ladder vs the CPU, **T** = Training (H toggles hitboxes). **Esc** in-game shows the full controls and can quit to the title.
+   **P1:** WASD move, R/T light/medium, R+T throw, double-tap dash, motion specials (QCF+R; QCF·QCF+R super on full meter) · **P2:** arrows + I/O (I+O throw). Legacy J/K and numpad bindings still work.
+   **Gamepads:** controller 1 → P1, controller 2 → P2 (D-pad/stick + face buttons).
 5. Read [`docs/ONBOARDING.md`](docs/ONBOARDING.md).
 
 Headless tests: `godot --headless --path . -s res://tests/run_tests.gd` (unit) and `-s res://tests/run_sim_smoke.gd` (end-to-end). CI runs both plus `gdformat`/`gdlint`.

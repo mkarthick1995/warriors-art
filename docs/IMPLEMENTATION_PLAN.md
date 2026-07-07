@@ -76,12 +76,12 @@ Goal: build out to 6–8 characters and 4–6 stages, in parallel.
 
 ## Phase 4 — Modes, UI & polish (Week 21–26)
 
-- [ ] Full front-end: main menu, character select, stage select, options, controls remap.
-- [ ] **2v2 Team Battles** (tag mechanic, rival-school framing).
-- [ ] Arcade/CPU ladder + basic AI.
-- [ ] Options: audio/video, controller config, accessibility (input display, colorblind-safe UI).
-- [ ] Pause, rematch, results screens; save/settings persistence.
-- [ ] Art/audio polish pass; performance profiling; build pipeline for Windows + Linux.
+- [~] Front-end: title menu + **character select** done (grid, dual cursors, sprite portraits, arcade variant); stage select and options remain.
+- [ ] **2v2 Team Battles** — **on hold by team decision (2026-07-07)** to prioritize art & music.
+- [x] **Arcade/CPU ladder + basic AI** — input-level deterministic FighterAI, difficulty 1–7, champion flow; AI smoke test in CI.
+- [ ] Options: audio/video, controller remap, accessibility (input display, colorblind-safe UI).
+- [~] **Pause** (Esc: controls + quit-to-title) and rematch/results done; save/settings persistence remains.
+- [ ] Art/audio polish pass (**current focus** — see [Asset Licenses](ASSET_LICENSES.md) for sourcing rules); performance profiling; build pipeline for Windows + Linux.
 
 **Exit criteria:** feature-complete v1 candidate; external playtest round; bug-bash.
 

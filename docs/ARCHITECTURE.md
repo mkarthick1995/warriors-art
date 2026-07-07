@@ -30,20 +30,20 @@ Chosen over Unity because: free/open-source (no per-seat licensing for a 3-perso
 warriors-art/
 ├── project.godot
 ├── src/
-│   ├── autoload/            # singletons (GameState, Rng, Log; InputManager in Phase 1)
+│   ├── autoload/            # singletons (GameState, Rng, Log, Sfx)
 │   ├── core/               # deterministic sim
 │   │   ├── fighter_state_machine.gd
-│   │   ├── fighter.gd
-│   │   ├── input_buffer.gd
-│   │   └── combat/         # hitbox.gd, hurtbox.gd, hit_resolver.gd
-│   ├── data/               # resource *classes* (CharacterData, MoveData, FrameData)
-│   ├── characters/         # one folder per fighter: scene + .tres + sprites ref
-│   ├── stages/             # region backdrops (parallax)
-│   ├── game/               # match/round loop, mode controllers (1v1, 2v2)
-│   └── ui/                 # menus, HUD, character select
-├── assets/                 # sprites/, audio/, fonts/  (Git LFS)
-├── scenes/                 # top-level composed scenes (main menu, match)
-├── tests/                  # GUT unit tests
+│   │   ├── fighter.gd, fighter_ai.gd
+│   │   ├── input_buffer.gd, input_buttons.gd
+│   │   └── combat/         # hitbox.gd, hurtbox.gd, projectile.gd
+│   ├── data/               # resource classes (CharacterData, MoveData, FrameData, ProjectileData)
+│   ├── characters/         # one folder per fighter: .tres data + generated SpriteFrames
+│   ├── game/               # main/title, match/ (controller, camera, juice, backdrop), fighter_visual
+│   └── ui/                 # HUD, character select, pause menu, debug overlay
+├── assets/                 # sprites/, audio/ (Git LFS; all generated placeholders)
+├── scenes/                 # Main, CharacterSelect, Match, Training, Fighter, stages/
+├── tests/                  # headless runners: unit, gameplay smoke, AI smoke
+├── tools/                  # generators (sprites, audio), SpriteFrames builder, screenshot
 └── docs/
 ```
 
@@ -71,8 +71,17 @@ CharacterData (.tres)
 ```
 A character = animations + these resources. **Adding a fighter must not require engine changes** — that's the Phase 2 exit gate.
 
+### Projectiles
+`ProjectileData` (speed, lifetime, spawn offset, FrameData, pierce) is referenced from `MoveData.projectile` and fired once on the move's first active tick. The `Projectile` node advances on the fixed tick and polls hurtbox overlaps exactly like `Hitbox`; hits resolve through the controller (victim-only hit-stop, knockback follows travel direction). Lifetime doubles as a range limit (the vita's tether). Projectiles are swept on round reset.
+
+### Throws
+System-level (per-character command grabs are future data): light+medium together attempts a grab; the `MatchController` resolves range/throwability during the active window, gives the victim an 8-tick tech window, then deals damage into a knockdown. Throws beat blocking — the strike/block/throw triangle.
+
+### CPU AI
+`FighterAI` (`src/core/fighter_ai.gd`) is an **input-level** brain: each tick it returns an `InputButtons` snapshot (motions are rolled frame-by-frame from a queue), which `Fighter._sample_inputs` consumes instead of the keyboard. The AI has no privileged sim access and uses a locally seeded RNG, so CPU matches remain deterministic/replayable. Difficulty 1–7 scales reaction cooldown, block reactions, and special/EX usage.
+
 ### Round / match loop
-`MatchController` owns rounds, timer, best-of-3, win/KO/rematch, and (for 2v2) tag state. Mode controllers (`OneVsOne`, `TwoVsTwo`) configure it.
+`MatchController` owns rounds, timer, best-of-3, win/KO/rematch, central hit + throw + projectile resolution, arcade ladder continuation (via duck-typed GameState access — sim scripts never name autoloads at compile time so headless `-s` test runs still load them), and the announcement banner. Training mode is the same controller with `training = true`.
 
 ### Presentation
 `AnimationPlayer`/`SpriteFrames` for sprites; a VFX layer for dust/rim-light/impact particles; a camera that frames both fighters; a "juice" service for screen-shake + hit-stop that *reads* sim events. Technique cams are short scripted camera cuts triggered by super activation.
@@ -88,12 +97,14 @@ See [Coding Standards §4](CODING_STANDARDS.md) for how these are reviewed.
 
 ## Autoloads (singletons)
 
-| Name | Responsibility | Status |
-|---|---|---|
-| `GameState` | current mode, match config, scene routing | in repo |
-| `Rng` | seeded deterministic RNG for the sim (`seed_match`, `next_int`, `next_float`) | in repo |
-| `Log` | leveled logging (replaces stray `print`) | in repo |
-| `InputManager` | device→player mapping, remap config | planned (Phase 1) — fighters read `p1_/p2_` actions directly until then |
+| Name | Responsibility |
+|---|---|
+| `GameState` | mode, roster list, character picks, arcade ladder, scene routing |
+| `Rng` | seeded deterministic RNG for the sim (`seed_match`, `next_int`, `next_float`) |
+| `Log` | leveled logging (replaces stray `print`) |
+| `Sfx` | audio buses (SFX/Music), pooled players, percussion loops; disabled headless |
+
+(Device→player mapping lives in the input actions themselves — `p1_*`/`p2_*` carry keyboard + per-device gamepad events; a dedicated InputManager autoload proved unnecessary. Remapping UI is a Phase 4 options-menu item.)
 
 ## Post-v1 seam: rollback netcode
 
