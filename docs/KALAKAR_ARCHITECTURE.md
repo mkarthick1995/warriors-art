@@ -1,6 +1,6 @@
 # Kalakar — Asset Forge Architecture (Design Proposal)
 
-*Kalakar ("artist"): a tool that turns one hand-drawn character sheet into the hundreds of game-ready animation assets a fighter needs.* Status: **proposed** (2026-07-07); decisions pending at the bottom.
+*Kalakar ("artist"): a tool that turns one hand-drawn character sheet into the hundreds of game-ready animation assets a fighter needs.* Status: **v0.1 MVP built** (2026-07-07) at `C:\Workspace\kalakar` (own project, per team decision) — template, full pipeline (ingest→segment→render→export), `bengal_lathi` pose set, synthetic end-to-end test passing. Next: first real hand-drawn sheet.
 
 ## 1. Purpose & product shape
 
