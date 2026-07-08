@@ -1,6 +1,6 @@
 # Kalaignar — Asset Forge Architecture (Design Proposal)
 
-*Kalaignar (கலைஞர், Tamil for "artist"): a tool that turns one hand-drawn character sheet into the hundreds of game-ready animation assets a fighter needs.* Status: **v0.1 MVP built** (2026-07-07) at `C:\Workspace\kalaignar` (own project, per team decision) — template, full pipeline (ingest→segment→render→export), `bengal_lathi` pose set, synthetic end-to-end test passing. Next: first real hand-drawn sheet.
+*Kalaignar (கலைஞர், Tamil for "artist"): a tool that turns one hand-drawn character sheet into the hundreds of game-ready animation assets a fighter needs.* Status: **v0.1 MVP built** (2026-07-07) at [github.com/mkarthick1995/kalaignar](https://github.com/mkarthick1995/kalaignar) (private; local checkout `C:\Workspace\kalaignar`) — template, full pipeline (ingest→segment→render→export), `bengal_lathi` pose set, synthetic end-to-end test passing. Next: first real hand-drawn sheet.
 
 ## 1. Purpose & product shape
 
