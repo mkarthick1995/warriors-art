@@ -54,7 +54,7 @@ workspace/<character>/
 - **Pipeline core: Python** (OpenCV, Pillow, potrace binding) — matches our existing generator code, easy for the whole team, trivially CI-tested with sample drawings.
 - **Preview/QA + final export: Godot** — the game is the ground truth for how assets read; `build_sprite_frames.gd` already exists.
 - **No ML/AI in the core path** (keeps it deterministic + ledger-clean). An *optional* stylization stage (AI shading of drawn parts) can slot between stages 3–4 later, clearly flagged for Steam disclosure.
-- Repo: start under `C:\Workspace\kalaignar (standalone)` in this repo (shares conventions, pose library, and CI); extract to its own repo if it matures toward a product.
+- Repo: standalone project at `C:\Workspace\kalaignar` (team decision, 2026-07-07); pose data currently duplicated from the game's generator - unify to one source if drift becomes a problem.
 
 ## 6. Build plan
 
