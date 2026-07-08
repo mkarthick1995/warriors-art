@@ -1,6 +1,6 @@
-# Kalakar — Asset Forge Architecture (Design Proposal)
+# Kalaignar — Asset Forge Architecture (Design Proposal)
 
-*Kalakar ("artist"): a tool that turns one hand-drawn character sheet into the hundreds of game-ready animation assets a fighter needs.* Status: **v0.1 MVP built** (2026-07-07) at `C:\Workspace\kalakar` (own project, per team decision) — template, full pipeline (ingest→segment→render→export), `bengal_lathi` pose set, synthetic end-to-end test passing. Next: first real hand-drawn sheet.
+*Kalaignar (கலைஞர், Tamil for "artist"): a tool that turns one hand-drawn character sheet into the hundreds of game-ready animation assets a fighter needs.* Status: **v0.1 MVP built** (2026-07-07) at `C:\Workspace\kalaignar` (own project, per team decision) — template, full pipeline (ingest→segment→render→export), `bengal_lathi` pose set, synthetic end-to-end test passing. Next: first real hand-drawn sheet.
 
 ## 1. Purpose & product shape
 
@@ -18,7 +18,7 @@ photo of drawing ──► clean parts ──► rigged puppet ──► posed p
                      (segmentation)   (skeleton+pivots)  (pose library)      (exporter)
 ```
 
-Validated approach (cf. Meta's open-source *Animated Drawings*). Our advantage: the **pose library already exists** — `tools/generate_placeholder_sprites.py` defines 13 animations of per-frame joint poses per archetype, already tuned against real gameplay (reach distances match hitbox data). Kalakar re-targets those poses from stick limbs to drawn parts.
+Validated approach (cf. Meta's open-source *Animated Drawings*). Our advantage: the **pose library already exists** — `tools/generate_placeholder_sprites.py` defines 13 animations of per-frame joint poses per archetype, already tuned against real gameplay (reach distances match hitbox data). Kalaignar re-targets those poses from stick limbs to drawn parts.
 
 ## 3. Pipeline stages (each a module with a file-based I/O contract)
 
@@ -30,7 +30,7 @@ Validated approach (cf. Meta's open-source *Animated Drawings*). Our advantage: 
 | 4 | **Rig** | parts + skeleton spec → `rig.json` | pivots/joints per part, z-order, attachment points (weapon in hand), scale normalization to our 128×192 frame space |
 | 5 | **Pose** | `rig.json` + pose library → per-frame part transforms | the existing pose sets (idle/walk/attacks/hit/knockdown…), extended with per-archetype parameters (staff length → weapon part length, etc.) |
 | 6 | **Render** | posed frames → `anim@NxF.png` strips | compose parts per frame (rotate/translate around pivots), rasterize at target resolution; optional outline/rim-light pass for the cinematic look |
-| 7 | **Export** | strips → engine assets | reuse `tools/build_sprite_frames.gd` for SpriteFrames; select-screen portrait; auto-append `docs/ASSET_LICENSES.md` row ("hand-drawn by X, processed by Kalakar") |
+| 7 | **Export** | strips → engine assets | reuse `tools/build_sprite_frames.gd` for SpriteFrames; select-screen portrait; auto-append `docs/ASSET_LICENSES.md` row ("hand-drawn by X, processed by Kalaignar") |
 | 8 | **Preview/QA** | assets → human eyes | a Godot scene that hot-loads the character into training mode — the game itself is the previewer |
 
 Every stage reads/writes files in a character workspace dir → stages are independently testable, resumable, and re-runnable (change the drawing, re-run from stage 1; tweak a pivot, re-run from 5).
@@ -54,7 +54,7 @@ workspace/<character>/
 - **Pipeline core: Python** (OpenCV, Pillow, potrace binding) — matches our existing generator code, easy for the whole team, trivially CI-tested with sample drawings.
 - **Preview/QA + final export: Godot** — the game is the ground truth for how assets read; `build_sprite_frames.gd` already exists.
 - **No ML/AI in the core path** (keeps it deterministic + ledger-clean). An *optional* stylization stage (AI shading of drawn parts) can slot between stages 3–4 later, clearly flagged for Steam disclosure.
-- Repo: start under `tools/kalakar/` in this repo (shares conventions, pose library, and CI); extract to its own repo if it matures toward a product.
+- Repo: start under `C:\Workspace\kalaignar (standalone)` in this repo (shares conventions, pose library, and CI); extract to its own repo if it matures toward a product.
 
 ## 6. Build plan
 
@@ -67,13 +67,14 @@ workspace/<character>/
 
 | Risk | Reality check |
 |---|---|
-| Puppet look vs hand-drawn feel | Cutout animation reads "animated cartoon," not "key-framed anime." Mitigations: more parts (forearm/hand split), rotation smears, secondary motion. If the team wants true frame-by-frame anime, that's human-artist territory — Kalakar still saves them 80% by generating pose-accurate underlays to draw over. |
+| Puppet look vs hand-drawn feel | Cutout animation reads "animated cartoon," not "key-framed anime." Mitigations: more parts (forearm/hand split), rotation smears, secondary motion. If the team wants true frame-by-frame anime, that's human-artist territory — Kalaignar still saves them 80% by generating pose-accurate underlays to draw over. |
 | Photo quality variance | Template with corner marks + a "retake photo" QA gate in stage 1 solves most of it. |
 | One front-facing drawing = one view | Fighting games live in profile — the template asks for a **side-view** drawing, matching gameplay. |
 | Scope creep into "app" | The pipeline is the product. CLI + game-as-previewer until v0.3. |
 
-## 8. Decisions needed
+## 8. Decisions (resolved 2026-07-07)
 
-1. Go/no-go on the **parts-sheet template** approach (artist draws parts separately — this is what makes it deterministic).
-2. Tool lives in `tools/kalakar/` (recommended) vs new repo.
-3. MVP target character (recommend Lathiyal).
+1. **Parts-sheet template approach: approved** — the artist draws parts separately on the printed template.
+2. **Standalone project** at `C:\Workspace\kalaignar` (local git; GitHub remote pending owner decision).
+3. **MVP character: Lathiyal** (bengal_lathi pose set) — shipped in v0.1.
+4. **Name: Kalaignar** (கலைஞர், Tamil for "artist"), renamed from the Kalakar codename.
